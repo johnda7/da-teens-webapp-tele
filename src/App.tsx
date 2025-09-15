@@ -6,12 +6,14 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Toaster } from '@/components/ui/sonner'
-import { Heart, Users, Calendar, BookOpen, Target, Shield } from '@phosphor-icons/react'
+import { Heart, Users, Calendar, BookOpen, Target, Shield, Trophy } from '@phosphor-icons/react'
 import ModuleGrid from '@/components/ModuleGrid'
 import ModuleDetail from '@/components/ModuleDetail'
 import CheckInPanel from '@/components/CheckInPanel'
 import CohortSchedule from '@/components/CohortSchedule'
 import SOSButton from '@/components/SOSButton'
+import BadgeGrid from '@/components/BadgeGrid'
+import ProgressStats from '@/components/ProgressStats'
 
 interface UserProfile {
   name: string
@@ -44,6 +46,7 @@ function App() {
     cohortId: 'teens-14-16-cohort-a'
   })
   
+  const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
   const [lastCheckIn, setLastCheckIn] = useKV<CheckInData | null>('last-checkin', null)
 
   return (
@@ -115,7 +118,7 @@ function App() {
 
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="dashboard" className="gap-1">
               <BookOpen className="w-4 h-4" />
               Modules
@@ -127,6 +130,10 @@ function App() {
             <TabsTrigger value="cohort" className="gap-1">
               <Users className="w-4 h-4" />
               Group
+            </TabsTrigger>
+            <TabsTrigger value="badges" className="gap-1">
+              <Trophy className="w-4 h-4" />
+              Badges
             </TabsTrigger>
             <TabsTrigger value="profile" className="gap-1">
               <Target className="w-4 h-4" />
@@ -159,27 +166,24 @@ function App() {
             <CohortSchedule cohortId={userProfile?.cohortId || 'default'} />
           </TabsContent>
 
+          <TabsContent value="badges" className="mt-6">
+            <BadgeGrid userBadges={userBadges || []} />
+          </TabsContent>
+
           <TabsContent value="profile" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Your Progress</CardTitle>
-                <CardDescription>Track your wellness journey</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span>Current streak</span>
-                  <Badge variant="secondary">{userProfile?.streak || 0} days</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Modules completed</span>
-                  <Badge variant="secondary">{userProfile?.completedModules || 0} / 12</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Cohort</span>
-                  <Badge>Teens 14-16 Group A</Badge>
-                </div>
-              </CardContent>
-            </Card>
+            <ProgressStats 
+              userProfile={userProfile || {
+                name: 'Alex',
+                age: 16,
+                currentModule: 1,
+                currentWeek: 2,
+                completedModules: 0,
+                streak: 7,
+                cohortId: 'teens-14-16-cohort-a'
+              }}
+              checkIns={lastCheckIn ? [lastCheckIn] : []}
+              badgeCount={userBadges?.length || 0}
+            />
           </TabsContent>
         </Tabs>
       </main>

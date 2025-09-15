@@ -1,129 +1,275 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Heart, 
-  Users, 
-  Brain, 
-  ChatCircle, 
-  Target, 
-  Clock, 
-  CurrencyDollar, 
-  Path,
-  DeviceMobile,
-  Leaf,
-  TreeStructure,
-  ShieldCheck
-} from '@phosphor-icons/react'
+import { Play, CheckCircle, Lock, Calendar } from '@phosphor-icons/react'
+
+interface Module {
+  id: number
+  title: string
+  description: string
+  duration: string
+  isCompleted: boolean
+  isLocked: boolean
+  isCurrent: boolean
+  completionRate: number
+  weekCount: number
+}
 
 interface ModuleGridProps {
   currentModule: number
-  onModuleSelect?: (moduleId: number) => void
+  onModuleSelect: (moduleId: number) => void
 }
 
-const modules = [
-  { id: 1, title: 'Confidence', icon: Heart, description: 'Self-discovery and inner strength', color: 'bg-rose-100 text-rose-700' },
-  { id: 2, title: 'Friendship', icon: Users, description: 'Building healthy relationships', color: 'bg-blue-100 text-blue-700' },
-  { id: 3, title: 'Communication', icon: ChatCircle, description: 'Express yourself clearly', color: 'bg-green-100 text-green-700' },
-  { id: 4, title: 'Stress Management', icon: Brain, description: 'Breathing and body techniques', color: 'bg-purple-100 text-purple-700' },
-  { id: 5, title: 'Self-Image', icon: Target, description: 'Body positivity and acceptance', color: 'bg-orange-100 text-orange-700' },
-  { id: 6, title: 'Time & Focus', icon: Clock, description: 'Productivity and study habits', color: 'bg-teal-100 text-teal-700' },
-  { id: 7, title: 'Financial Literacy', icon: CurrencyDollar, description: 'Budgeting and money goals', color: 'bg-emerald-100 text-emerald-700' },
-  { id: 8, title: 'Career Path', icon: Path, description: 'Explore interests and skills', color: 'bg-indigo-100 text-indigo-700' },
-  { id: 9, title: 'Digital Wellness', icon: DeviceMobile, description: 'Healthy social media habits', color: 'bg-pink-100 text-pink-700' },
-  { id: 10, title: 'Healthy Habits', icon: Leaf, description: 'Sleep, nutrition, and movement', color: 'bg-lime-100 text-lime-700' },
-  { id: 11, title: 'Decision Making', icon: TreeStructure, description: 'Smart choices and consequences', color: 'bg-amber-100 text-amber-700' },
-  { id: 12, title: 'Resilience', icon: ShieldCheck, description: 'Bounce back from setbacks', color: 'bg-cyan-100 text-cyan-700' }
+// 12 modules curriculum for DA Teens
+const modules: Module[] = [
+  {
+    id: 1,
+    title: "Confidence & Self-Discovery",
+    description: "Explore your strengths and build inner confidence",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: false,
+    isCurrent: true,
+    completionRate: 45,
+    weekCount: 3
+  },
+  {
+    id: 2, 
+    title: "Healthy Friendships",
+    description: "Build meaningful connections with empathy and boundaries",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 3,
+    title: "Communication Skills", 
+    description: "Master active listening and assertive expression",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 4,
+    title: "Stress Management",
+    description: "Learn breathing techniques and coping strategies",
+    duration: "3 weeks", 
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 5,
+    title: "Body Image & Self-Acceptance",
+    description: "Develop a healthy relationship with your body and self",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 6,
+    title: "Time Management & Focus",
+    description: "Build productive habits and manage priorities",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 7,
+    title: "Financial Literacy",
+    description: "Learn budgeting basics and money mindset",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 8,
+    title: "Career Exploration",
+    description: "Discover interests and explore future paths",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 9,
+    title: "Digital Wellness",
+    description: "Healthy social media and screen time habits",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 10,
+    title: "Healthy Lifestyle",
+    description: "Sleep, nutrition, and movement for wellbeing",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 11,
+    title: "Decision Making",
+    description: "Learn to make thoughtful choices and handle consequences",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  },
+  {
+    id: 12,
+    title: "Resilience & Growth",
+    description: "Bounce back from setbacks and embrace challenges",
+    duration: "3 weeks",
+    isCompleted: false,
+    isLocked: true,
+    isCurrent: false,
+    completionRate: 0,
+    weekCount: 3
+  }
 ]
 
 export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGridProps) {
+  // Update module states based on current progress
+  const updatedModules = modules.map(module => ({
+    ...module,
+    isLocked: module.id > currentModule,
+    isCurrent: module.id === currentModule,
+    isCompleted: module.id < currentModule
+  }))
+
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Your Wellness Modules</h2>
-        <p className="text-muted-foreground">12 modules designed specifically for teens</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {modules.map((module) => {
-          const isCompleted = module.id < currentModule
-          const isCurrent = module.id === currentModule
-          const isLocked = module.id > currentModule
-          
-          return (
-            <Card 
-              key={module.id}
-              className={`transition-all duration-200 ${
-                isCurrent 
-                  ? 'ring-2 ring-primary shadow-lg' 
-                  : isCompleted 
-                    ? 'bg-muted/50' 
-                    : isLocked 
-                      ? 'opacity-60' 
-                      : ''
-              } ${!isLocked ? 'cursor-pointer hover:shadow-md' : 'cursor-not-allowed'}`}
-              onClick={() => !isLocked && onModuleSelect?.(module.id)}
+      {/* Current Module Highlight */}
+      {updatedModules.find(m => m.isCurrent) && (
+        <Card className="border-primary bg-primary/5">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Play className="w-5 h-5 text-primary" weight="fill" />
+              <CardTitle className="text-lg">Continue Your Journey</CardTitle>
+            </div>
+            <CardDescription>You're currently working on Module {currentModule}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              size="lg" 
+              className="w-full"
+              onClick={() => onModuleSelect(currentModule)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className={`w-12 h-12 rounded-lg ${module.color} flex items-center justify-center`}>
-                    <module.icon className="w-6 h-6" weight={isCurrent ? 'fill' : 'regular'} />
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <Badge variant={isCompleted ? 'default' : isCurrent ? 'secondary' : 'outline'}>
-                      {isCompleted ? 'Complete' : isCurrent ? 'Current' : `Week ${module.id}`}
-                    </Badge>
-                    {isCurrent && (
-                      <div className="flex items-center gap-1">
-                        <Progress value={66} className="w-16 h-1" />
-                        <span className="text-xs text-muted-foreground">66%</span>
-                      </div>
+              Continue Module {currentModule}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Module Grid */}
+      <div className="grid gap-4">
+        {updatedModules.map((module) => (
+          <Card 
+            key={module.id}
+            className={`transition-all duration-200 ${
+              module.isLocked 
+                ? 'opacity-60 cursor-not-allowed' 
+                : 'cursor-pointer hover:shadow-md hover:-translate-y-0.5'
+            } ${
+              module.isCurrent ? 'ring-2 ring-primary/20' : ''
+            }`}
+            onClick={() => !module.isLocked && onModuleSelect(module.id)}
+          >
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-muted-foreground">
+                      Module {module.id}
+                    </span>
+                    {module.isCompleted && (
+                      <CheckCircle className="w-4 h-4 text-green-600" weight="fill" />
+                    )}
+                    {module.isLocked && (
+                      <Lock className="w-4 h-4 text-muted-foreground" />
                     )}
                   </div>
+                  <CardTitle className="text-lg leading-tight">{module.title}</CardTitle>
+                  <CardDescription className="mt-1">{module.description}</CardDescription>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <CardTitle className="text-lg mb-1">{module.title}</CardTitle>
-                <CardDescription className="text-sm">{module.description}</CardDescription>
-                
-                {isCurrent && (
-                  <Button 
-                    className="w-full mt-4" 
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onModuleSelect?.(module.id)
-                    }}
-                  >
-                    Continue Week 2
-                  </Button>
-                )}
-                
-                {isCompleted && (
-                  <Button 
-                    variant="ghost" 
-                    className="w-full mt-4" 
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      onModuleSelect?.(module.id)
-                    }}
-                  >
-                    Review Module
-                  </Button>
-                )}
-                
-                {isLocked && (
-                  <div className="mt-4 text-center">
-                    <p className="text-xs text-muted-foreground">Unlocks after Module {module.id - 1}</p>
+              </div>
+            </CardHeader>
+            
+            <CardContent className="pt-0">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Calendar className="w-4 h-4" />
+                  {module.duration}
+                </div>
+                <Badge variant={module.isCurrent ? "default" : "secondary"}>
+                  {module.isCompleted ? 'Completed' : 
+                   module.isCurrent ? 'In Progress' : 
+                   module.isLocked ? 'Locked' : 'Available'}
+                </Badge>
+              </div>
+
+              {(module.isCurrent || module.isCompleted) && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Progress</span>
+                    <span className="text-muted-foreground">
+                      {module.isCompleted ? '100' : module.completionRate}%
+                    </span>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          )
-        })}
+                  <Progress 
+                    value={module.isCompleted ? 100 : module.completionRate} 
+                    className="h-2" 
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
       </div>
+
+      {/* Journey Progress Summary */}
+      <Card className="bg-muted/30">
+        <CardContent className="p-6 text-center">
+          <div className="mb-2">
+            <span className="text-2xl font-bold text-primary">
+              {updatedModules.filter(m => m.isCompleted).length}
+            </span>
+            <span className="text-muted-foreground ml-1">/ 12 modules completed</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Each step forward is progress worth celebrating
+          </p>
+        </CardContent>
+      </Card>
     </div>
   )
 }
