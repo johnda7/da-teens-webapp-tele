@@ -1,20 +1,27 @@
-import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
+import { Progress } from '@/components/ui/progress'
 import { 
+  User, 
   TrendUp, 
-  TrendDown, 
-  Minus, 
-  Target, 
   Calendar, 
-  BookOpen,
+  Heart, 
+  Brain, 
+  Moon, 
   Trophy,
-  Heart,
-  Users,
-  CheckCircle
+  CheckCircle,
+  Flame
 } from '@phosphor-icons/react'
-import { progressUtils, wellnessUtils, textUtils } from '@/lib/utils/helpers'
+
+interface UserProfile {
+  name: string
+  age: number
+  currentModule: number
+  currentWeek: number
+  completedModules: number
+  streak: number
+  cohortId: string
+}
 
 interface CheckInData {
   date: string
@@ -25,271 +32,260 @@ interface CheckInData {
 }
 
 interface ProgressStatsProps {
-  userProfile: {
-    name: string
-    age: number
-    currentModule: number
-    currentWeek: number
-    completedModules: number
-    streak: number
-    cohortId: string
-  }
+  userProfile: UserProfile
   checkIns: CheckInData[]
   badgeCount: number
 }
 
 export default function ProgressStats({ userProfile, checkIns, badgeCount }: ProgressStatsProps) {
-  // Calculate various stats
-  const programProgress = progressUtils.calculateProgramProgress(userProfile.completedModules)
-  const moodTrend = wellnessUtils.analyzeMoodTrend(checkIns.map(c => ({
-    id: c.date,
-    userId: 'current',
-    date: c.date,
-    mood: c.mood,
-    anxiety: c.anxiety,
-    sleepHours: c.sleepHours,
-    note: c.note,
-    createdAt: new Date()
-  })))
-  
-  const totalCheckIns = checkIns.length
-  const streakDays = userProfile.streak
-  const encouragementMessage = textUtils.getEncouragementMessage(streakDays, userProfile.completedModules)
+  // Calculate averages from check-ins
+  const avgMood = checkIns.length > 0 
+    ? Math.round(checkIns.reduce((sum, ci) => sum + ci.mood, 0) / checkIns.length)
+    : 5
 
-  // Calculate weekly stats
-  const thisWeekCheckIns = checkIns.filter(c => {
-    const checkInDate = new Date(c.date)
-    const now = new Date()
-    const weekStart = new Date(now.setDate(now.getDate() - now.getDay()))
-    return checkInDate >= weekStart
-  })
+  const avgAnxiety = checkIns.length > 0
+    ? Math.round(checkIns.reduce((sum, ci) => sum + ci.anxiety, 0) / checkIns.length)
+    : 3
 
-  const avgMoodThisWeek = thisWeekCheckIns.length > 0 
-    ? thisWeekCheckIns.reduce((sum, c) => sum + c.mood, 0) / thisWeekCheckIns.length
-    : 0
+  const avgSleep = checkIns.length > 0
+    ? Number((checkIns.reduce((sum, ci) => sum + ci.sleepHours, 0) / checkIns.length).toFixed(1))
+    : 7.5
 
-  const avgSleepThisWeek = thisWeekCheckIns.length > 0
-    ? thisWeekCheckIns.reduce((sum, c) => sum + c.sleepHours, 0) / thisWeekCheckIns.length
-    : 0
+  const totalProgress = Math.round(((userProfile.completedModules + (userProfile.currentWeek / 3)) / 12) * 100)
 
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'improving': return TrendUp
-      case 'declining': return TrendDown
-      default: return Minus
-    }
+  const getMoodEmoji = (mood: number) => {
+    const emojis = ['😢', '😔', '😐', '🙂', '😊', '😄', '🤗', '😍', '🥰', '✨']
+    return emojis[mood - 1] || '😐'
   }
 
-  const getTrendColor = (trend: string) => {
-    switch (trend) {
-      case 'improving': return 'text-green-600'
-      case 'declining': return 'text-red-600'
-      default: return 'text-yellow-600'
-    }
+  const getAnxietyColor = (anxiety: number) => {
+    if (anxiety <= 3) return 'text-green-600'
+    if (anxiety <= 6) return 'text-yellow-600'
+    return 'text-red-600'
+  }
+
+  const getSleepColor = (hours: number) => {
+    if (hours >= 7 && hours <= 9) return 'text-green-600'
+    if (hours >= 6 && hours <= 10) return 'text-yellow-600'
+    return 'text-red-600'
   }
 
   return (
     <div className="space-y-6">
-      {/* Header Card */}
-      <Card className="bg-gradient-to-r from-primary/5 to-accent/5">
+      {/* Profile Overview */}
+      <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
         <CardHeader>
-          <CardTitle className="text-xl">Hi {userProfile.name}! 👋</CardTitle>
-          <CardDescription className="text-base">
-            {encouragementMessage}
+          <CardTitle className="flex items-center gap-2">
+            <User className="w-6 h-6" />
+            Профиль участника
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm text-muted-foreground">Имя</p>
+              <p className="font-medium text-lg">{userProfile.name}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Возраст</p>
+              <p className="font-medium text-lg">{userProfile.age} лет</p>
+            </div>
+          </div>
+          
+          <div>
+            <p className="text-sm text-muted-foreground">Группа</p>
+            <Badge variant="secondary" className="mt-1">
+              {userProfile.cohortId.includes('14-16') ? 'A (14-16 лет)' : 'Группа участника'}
+            </Badge>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Learning Progress */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendUp className="w-5 h-5 text-primary" />
+            Прогресс обучения
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm">Общий прогресс</span>
+              <span className="font-medium">{totalProgress}%</span>
+            </div>
+            <Progress value={totalProgress} className="h-3" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-primary">{userProfile.completedModules}</div>
+              <div className="text-sm text-muted-foreground">Завершено модулей</div>
+            </div>
+            <div className="text-center p-3 bg-muted/50 rounded-lg">
+              <div className="text-2xl font-bold text-accent">{userProfile.currentWeek}</div>
+              <div className="text-sm text-muted-foreground">Текущая неделя</div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <CheckCircle className="w-5 h-5 text-green-600" weight="fill" />
+            <span className="text-sm font-medium text-green-800">
+              Модуль "{['Уверенность', 'Дружба', 'Общение'][userProfile.currentModule - 1] || 'Текущий'}" • Неделя {userProfile.currentWeek}
+            </span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Streak & Consistency */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Flame className="w-5 h-5 text-orange-500" />
+            Постоянство
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center p-4 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="text-3xl mb-2">🔥</div>
+            <div className="text-2xl font-bold text-orange-600">{userProfile.streak}</div>
+            <div className="text-sm text-orange-800">дней подряд</div>
+            {userProfile.streak >= 7 && (
+              <Badge className="mt-2 bg-orange-100 text-orange-800 border-orange-300">
+                Отличная серия!
+              </Badge>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Wellness Stats */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Heart className="w-5 h-5 text-red-500" />
+            Статистика самочувствия
+          </CardTitle>
+          <CardDescription>
+            На основе {checkIns.length} чек-инов
           </CardDescription>
         </CardHeader>
-      </Card>
-
-      {/* Overall Progress */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-primary" />
-            Program Progress
-          </CardTitle>
-          <CardDescription>{programProgress.stage} • {programProgress.description}</CardDescription>
-        </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Modules Completed</span>
-              <span className="font-medium">{userProfile.completedModules}/12</span>
+          {checkIns.length > 0 ? (
+            <>
+              {/* Mood */}
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">{getMoodEmoji(avgMood)}</div>
+                  <div>
+                    <p className="font-medium">Среднее настроение</p>
+                    <p className="text-sm text-muted-foreground">{avgMood}/10</p>
+                  </div>
+                </div>
+                <Badge variant="secondary">
+                  {avgMood >= 7 ? 'Отлично' : avgMood >= 5 ? 'Хорошо' : 'Работаем над этим'}
+                </Badge>
+              </div>
+
+              {/* Anxiety */}
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Brain className="w-6 h-6 text-purple-500" />
+                  <div>
+                    <p className="font-medium">Средняя тревога</p>
+                    <p className={`text-sm font-medium ${getAnxietyColor(avgAnxiety)}`}>
+                      {avgAnxiety}/10
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="secondary">
+                  {avgAnxiety <= 3 ? 'Спокойно' : avgAnxiety <= 6 ? 'Умеренно' : 'Высокая'}
+                </Badge>
+              </div>
+
+              {/* Sleep */}
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Moon className="w-6 h-6 text-indigo-500" />
+                  <div>
+                    <p className="font-medium">Средний сон</p>
+                    <p className={`text-sm font-medium ${getSleepColor(avgSleep)}`}>
+                      {avgSleep} часов
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="secondary">
+                  {avgSleep >= 7 && avgSleep <= 9 ? 'Норма' : 'Корректируем'}
+                </Badge>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-6 text-muted-foreground">
+              <Calendar className="w-12 h-12 mx-auto mb-3 opacity-50" />
+              <p>Начни делать ежедневные чек-ины,</p>
+              <p>чтобы видеть свою статистику</p>
             </div>
-            <Progress value={programProgress.percentage} className="h-3" />
-            <p className="text-xs text-muted-foreground">
-              {programProgress.percentage}% of your wellness journey complete
-            </p>
-          </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Key Stats Grid */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary mb-1">{streakDays}</div>
-            <p className="text-sm text-muted-foreground">Day Streak</p>
-            <div className="flex items-center justify-center gap-1 mt-1">
-              <Calendar className="w-3 h-3 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Daily check-ins</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-accent mb-1">{badgeCount}</div>
-            <p className="text-sm text-muted-foreground">Badges Earned</p>
-            <div className="flex items-center justify-center gap-1 mt-1">
-              <Trophy className="w-3 h-3 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Achievements</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Current Module Status */}
+      {/* Achievements */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-accent" />
-            Current Module
+            <Trophy className="w-5 h-5 text-yellow-600" />
+            Достижения
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium">Module {userProfile.currentModule}</h4>
-              <p className="text-sm text-muted-foreground">Week {userProfile.currentWeek} of 3</p>
-            </div>
-            <Badge variant="secondary">
-              Week {userProfile.currentWeek}
-            </Badge>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Week Progress</span>
-              <span>{userProfile.currentWeek}/3 weeks</span>
-            </div>
-            <Progress value={(userProfile.currentWeek / 3) * 100} className="h-2" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Wellness Trends */}
-      {checkIns.length >= 3 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-500" weight="fill" />
-              Wellness Trends
-            </CardTitle>
-            <CardDescription>Based on your recent check-ins</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Mood Trend */}
-            <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-full bg-background ${getTrendColor(moodTrend.trend)}`}>
-                  {React.createElement(getTrendIcon(moodTrend.trend), { className: "w-4 h-4" })}
-                </div>
-                <div>
-                  <p className="font-medium text-sm">Mood Trend</p>
-                  <p className="text-xs text-muted-foreground capitalize">{moodTrend.trend}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-lg font-bold">{moodTrend.average.toFixed(1)}</p>
-                <p className="text-xs text-muted-foreground">Average</p>
-              </div>
-            </div>
-
-            {/* This Week Stats */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 bg-muted/30 rounded-lg text-center">
-                <p className="text-sm font-medium">This Week</p>
-                <p className="text-lg font-bold text-primary">{avgMoodThisWeek.toFixed(1)}</p>
-                <p className="text-xs text-muted-foreground">Avg Mood</p>
-              </div>
-              <div className="p-3 bg-muted/30 rounded-lg text-center">
-                <p className="text-sm font-medium">Sleep</p>
-                <p className="text-lg font-bold text-accent">{avgSleepThisWeek.toFixed(1)}h</p>
-                <p className="text-xs text-muted-foreground">Avg per night</p>
-              </div>
-            </div>
-
-            {/* Recommendation */}
-            {moodTrend.recommendation && (
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-sm text-blue-800">{moodTrend.recommendation}</p>
-              </div>
+        <CardContent>
+          <div className="text-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="text-3xl mb-2">🏆</div>
+            <div className="text-2xl font-bold text-yellow-600">{badgeCount}</div>
+            <div className="text-sm text-yellow-800">наград получено</div>
+            {badgeCount > 0 && (
+              <Badge className="mt-2 bg-yellow-100 text-yellow-800 border-yellow-300">
+                Так держать!
+              </Badge>
             )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Community Stats */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-blue-600" />
-            Community Involvement
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Cohort</span>
-            <Badge>Teens 14-16 Group A</Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Total Check-ins</span>
-            <span className="font-medium">{totalCheckIns}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Engagement</span>
-            <Badge variant="secondary" className="text-green-700 bg-green-100">
-              Active
-            </Badge>
           </div>
         </CardContent>
       </Card>
 
-      {/* Milestones */}
+      {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-green-600" weight="fill" />
-            Recent Milestones
-          </CardTitle>
+          <CardTitle>Рекомендации</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {streakDays >= 7 && (
-            <div className="flex items-center gap-3 p-2 bg-green-50 rounded-lg">
-              <Calendar className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-800">7-day check-in streak achieved!</span>
+          {avgAnxiety > 6 && (
+            <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+              <p className="text-sm text-orange-800">
+                💡 Попробуй дыхательные практики для снижения тревоги
+              </p>
             </div>
           )}
           
-          {userProfile.completedModules >= 1 && (
-            <div className="flex items-center gap-3 p-2 bg-blue-50 rounded-lg">
-              <BookOpen className="w-4 h-4 text-blue-600" />
-              <span className="text-sm text-blue-800">First module completed</span>
+          {avgSleep < 7 && (
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                🌙 Работай над режимом сна — это основа хорошего самочувствия
+              </p>
             </div>
           )}
-
-          {badgeCount >= 3 && (
-            <div className="flex items-center gap-3 p-2 bg-yellow-50 rounded-lg">
-              <Trophy className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm text-yellow-800">Earned {badgeCount} achievement badges</span>
+          
+          {userProfile.streak >= 7 && (
+            <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800">
+                🔥 Потрясающая серия! Ты большой молодец
+              </p>
             </div>
           )}
-
-          {/* Encouragement if no milestones yet */}
-          {streakDays < 7 && userProfile.completedModules === 0 && badgeCount < 3 && (
-            <div className="text-center py-4">
-              <p className="text-sm text-muted-foreground">
-                Your first milestones are just around the corner! Keep up the great work. 🌟
+          
+          {badgeCount === 0 && (
+            <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg">
+              <p className="text-sm text-purple-800">
+                🏆 Сделай первые шаги, чтобы получить свои награды
               </p>
             </div>
           )}

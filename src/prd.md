@@ -1,139 +1,154 @@
-# DA Teens - MVP Product Requirements Document
+# DA Teens - Техническое задание продукта
 
-## Core Purpose & Success
+## Основная цель и успех
 
-**Mission Statement**: Create a safe, engaging digital wellness platform that helps teenagers (13-18) develop emotional resilience, healthy relationships, and life skills through structured 3-week group cohorts with expert guidance.
+**Миссия**: Создать безопасную и поддерживающую платформу для подростков 13-18 лет, которая поможет им развивать эмоциональную стабильность, здоровые навыки преодоления трудностей и уверенность в себе через структурированную групповую программу.
 
-**Success Indicators**: 
-- 80%+ completion rate for 3-week modules
-- Daily check-in engagement >70%
-- Positive feedback from curators on group dynamics
-- Measurable improvement in self-reported anxiety/confidence scores
+**Показатели успеха**: 
+- 80% участников завершают программу модуля (3 недели)
+- Снижение среднего уровня тревоги на 2+ пункта за модуль
+- 70% пользователей делают ежедневные чек-ины
+- Положительная обратная связь от родителей и кураторов
 
-**Experience Qualities**: Calming, Supportive, Empowering
+**Качества опыта**: Безопасный, Поддерживающий, Мотивирующий
 
-## Project Classification & Approach
+## Классификация проекта и подход
 
-**Complexity Level**: Light Application (multiple features with persistent state)
-**Primary User Activity**: Creating (journaling, reflecting) + Interacting (group sessions, peer support)
+**Уровень сложности**: Светлое приложение (несколько функций с базовым состоянием)
 
-## Thought Process for Feature Selection
+**Основная активность пользователя**: Взаимодействие (групповые сессии, чек-ины, практики)
 
-**Core Problem Analysis**: Teenagers need accessible mental health support in a familiar environment (Telegram) with peer connection and professional guidance.
+## Анализ основной проблемы
 
-**User Context**: Daily 3-5 minute check-ins, weekly group video sessions, homework assignments between sessions.
+**Основная проблема**: Подростки испытывают высокий уровень стресса, тревоги и неуверенности в себе, но не имеют доступа к структурированным, возрастным программам поддержки психического здоровья в групповом формате.
 
-**Critical Path**: Telegram auth → Join cohort → Complete daily check-ins → Attend weekly sessions → Submit reflections → Earn badges → Progress to next module
+**Контекст пользователя**: Подростки будут использовать приложение ежедневно для кратких чек-инов (2-3 минуты) и еженедельно для более глубокого взаимодействия (практики, групповые сессии).
 
-**Key Moments**: 
-1. First group session connection
-2. Daily mood tracking breakthrough
-3. Crisis support activation (SOS)
+**Критический путь**: Регистрация → Присоединение к группе → Ежедневные чек-ины → Участие в модуле → Завершение 3-недельной программы → Переход к следующему модулю
 
-## Essential Features
+**Ключевые моменты**: 
+1. Первый чек-ин (установление привычки)
+2. Первая групповая сессия (создание связи)
+3. Завершение первого модуля (чувство достижения)
 
-### Module System (12 modules × 3 weeks each)
-- **What it does**: Structured curriculum covering confidence, friendships, stress management, etc.
-- **Why it matters**: Provides clear progression and achievable goals
-- **Success criteria**: >75% weekly completion rate
+## Основные функции
 
-### Daily Check-ins 
-- **What it does**: Quick mood/anxiety/sleep tracking with optional reflection
-- **Why it matters**: Builds self-awareness and routine
-- **Success criteria**: 7-day streaks maintained by >60% of users
+### 1. Система ежедневных чек-инов
+**Что делает**: Позволяет пользователям отслеживать настроение, уровень тревоги, качество сна и добавлять краткие заметки  
+**Почему важно**: Создает привычку к самоанализу и предоставляет данные для персонализации  
+**Критерии успеха**: 70% пользователей делают чек-ины 5+ дней в неделю
 
-### Group Cohorts
-- **What it does**: 8-12 teens grouped by age, 3 weekly video sessions per module
-- **Why it matters**: Peer support and shared accountability
-- **Success criteria**: >80% attendance at weekly sessions
+### 2. Модульная учебная программа (12 модулей)
+**Что делает**: Предоставляет структурированный контент по темам: уверенность, дружба, общение, стресс-менеджмент и др.  
+**Почему важно**: Систематическое развитие навыков жизнестойкости  
+**Критерии успеха**: 60% пользователей завершают 3+ модуля в течение года
 
-### SOS/Crisis Support
-- **What it does**: Immediate escalation to curator/mental health professional
-- **Why it matters**: Safety net for vulnerable population
-- **Success criteria**: <2 hour response time for crisis flags
+### 3. Групповые занятия
+**Что делает**: Еженедельные виртуальные встречи с группой сверстников и кураторами  
+**Почему важно**: Социальная поддержка и чувство принадлежности  
+**Критерии успеха**: 80% посещаемости групповых сессий
 
-### Badge System
-- **What it does**: Recognition for milestones, streaks, and module completion
-- **Why it matters**: Positive reinforcement and progress visualization
-- **Success criteria**: Average 3+ badges earned per user per module
+### 4. Система безопасности и SOS
+**Что делает**: Позволяет пользователям быстро обратиться за помощью и предоставляет экстренные контакты  
+**Почему важно**: Обеспечивает безопасность в критических ситуациях  
+**Критерии успеха**: 100% SOS-запросов обрабатываются в течение 15 минут
 
-## Design Direction
+### 5. Система достижений и прогресса
+**Что делает**: Отслеживает прогресс и награждает за последовательность и достижения  
+**Почему важно**: Мотивирует продолжение участия  
+**Критерии успеха**: Пользователи с наградами имеют на 40% выше удержание
 
-### Visual Tone & Identity
-**Emotional Response**: Calm confidence, supported growth, gentle progress
-**Design Personality**: Warm minimalism - approachable yet sophisticated
-**Visual Metaphors**: Journey/path imagery, growth/plant metaphors, gentle weather/nature elements
-**Simplicity Spectrum**: Minimal interface with purposeful moments of warmth
+## Направление дизайна
 
-### Color Strategy
-**Color Scheme Type**: Analogous with warm accent
-**Primary Color**: Deep teal (oklch(0.45 0.15 200)) - trust, stability, depth
-**Secondary Colors**: Soft blue-grays for supporting elements
-**Accent Color**: Warm orange (oklch(0.7 0.15 45)) - encouragement, progress, positive actions
-**Color Psychology**: Teal creates sense of safety; orange provides gentle motivation without pressure
-**Color Accessibility**: All combinations meet WCAG AA standards (4.5:1 contrast)
+### Визуальный тон и идентичность
 
-**Foreground/Background Pairings**:
-- Background (light blue-white) + Foreground (deep blue-gray): 8.2:1 contrast ✓
-- Primary (deep teal) + Primary-foreground (white): 6.8:1 contrast ✓
-- Accent (warm orange) + Accent-foreground (deep blue): 5.1:1 contrast ✓
-- Card (pure white) + Card-foreground (deep blue-gray): 8.9:1 contrast ✓
+**Эмоциональный отклик**: Спокойствие, безопасность, надежда, расширение возможностей  
+**Личность дизайна**: Теплый, дружелюбный, современный, но не детский  
+**Визуальные метафоры**: Рост (растения, деревья), путешествие (тропы, карты), связь (круги, сети)  
+**Спектр простоты**: Минималистичный интерфейс с целенаправленным использованием цвета и типографики
 
-### Typography System
-**Font Pairing Strategy**: Single family (Inter) with varied weights for hierarchy
-**Typographic Hierarchy**: Bold headings (600-700), medium subheads (500), regular body (400)
-**Font Personality**: Clean, friendly, highly legible - conveys trustworthiness without clinical coldness
-**Readability Focus**: 1.5x line height, generous paragraph spacing, max 65 characters per line
-**Which fonts**: Inter (primary) - excellent for both digital displays and accessibility
-**Legibility Check**: Inter tested at all sizes 14px+ for optimal teen readability
+### Цветовая стратегия
 
-### Visual Hierarchy & Layout
-**Attention Direction**: Large CTAs, progress indicators, gentle color coding for urgency levels
-**White Space Philosophy**: Generous breathing room reduces anxiety, allows focus on one task at a time
-**Grid System**: 4-column mobile grid, 12-column desktop with consistent 24px gutters
-**Responsive Approach**: Mobile-first with progressive enhancement for tablet/desktop
-**Content Density**: Low density prioritizes comprehension over information volume
+**Тип цветовой схемы**: Аналоговая (успокаивающие сине-зеленые тона с теплыми акцентами)
 
-### Animations
-**Purposeful Meaning**: Gentle transitions reinforce progress and connection
-**Hierarchy of Movement**: Progress bars animate, mood selections provide tactile feedback
-**Contextual Appropriateness**: Subtle, supportive - never flashy or attention-seeking
+**Основной цвет**: Глубокий бирюзовый (trust, stability) - oklch(0.45 0.15 200)  
+**Вторичные цвета**: Мягкие сине-фиолетовые тона для поддерживающих элементов  
+**Акцентный цвет**: Теплый оранжевый для CTA и позитивной обратной связи - oklch(0.7 0.15 45)  
+**Психология цвета**: Сине-зеленые тона способствуют спокойствию и сосредоточенности, оранжевые акценты добавляют энергии  
+**Доступность цвета**: Все пары проверены на соответствие WCAG AA (коэффициент контраста 4.5:1+)
 
-### UI Elements & Component Selection
-**Component Usage**: 
-- Cards for module/week content grouping
-- Progress components for journey visualization  
-- Gentle buttons with satisfying hover states
-- Input fields with inline validation and encouragement
+**Сочетания переднего плана/фона**:
+- Основной текст (темно-серый) на фоне (очень светло-голубой)
+- Белый текст на основном цвете (бирюзовый)
+- Темный текст на акцентном цвете (оранжевый)
+- Приглушенный текст на карточках (белый фон)
 
-**Component Customization**: Increased border radius (0.75rem) for friendlier feel
-**Component States**: Clear focus states for accessibility, disabled states with explanatory text
-**Icon Selection**: Phosphor icons - consistent, friendly, accessible
-**Mobile Adaptation**: Touch-friendly sizing (44px minimum), swipe gestures for navigation
+### Типографская система
 
-### Accessibility & Readability
-**Contrast Goal**: Exceed WCAG AA (minimum 4.5:1) for all text, aim for AAA (7:1) where possible
+**Стратегия сочетания шрифтов**: Единый шрифт (Inter) с различными весами для иерархии  
+**Типографская иерархия**: 
+- H1: 24px/bold (заголовки экранов)
+- H2: 20px/semibold (заголовки разделов)  
+- H3: 16px/medium (заголовки карточек)
+- Body: 14px/regular (основной текст)
+- Caption: 12px/regular (метаданные)
 
-## Edge Cases & Problem Scenarios
+**Личность шрифта**: Современный, читаемый, дружелюбный
+**Фокус на читаемости**: Межстрочный интервал 1.5, максимальная ширина строки 65 символов
+**Последовательность типографики**: Единый масштаб и spacing для всех текстовых элементов
+**Используемые шрифты**: Inter (Google Fonts)
+**Проверка читаемости**: Шрифт оптимизирован для экранов мобильных устройств
 
-**Potential Obstacles**: 
-- Crisis situations requiring immediate intervention
-- Group dynamic issues (bullying, exclusion)
-- Low engagement/motivation dips
-- Technical barriers for less tech-savvy teens
+### Визуальная иерархия и макет
 
-**Edge Case Handling**:
-- Multiple SOS escalation paths
-- Curator tools for group management
-- Gentle re-engagement strategies
-- Simplified onboarding with video tutorials
+**Направление внимания**: Карточная структура направляет взгляд сверху вниз, акцентные цвета выделяют ключевые действия  
+**Философия пустого пространства**: Щедрое использование отступов для создания ощущения спокойствия  
+**Система сетки**: 4-колоночная сетка на мобильных, 12-колоночная на десктопе  
+**Адаптивный подход**: Mobile-first дизайн с прогрессивным улучшением  
+**Плотность контента**: Сбалансированное соотношение контента и пустого пространства
 
-## Implementation Considerations
+### Анимации
 
-**Scalability Needs**: Multi-language support, multiple cohort scheduling, expert content management
-**Testing Focus**: Crisis response times, group session connection quality, mobile performance
-**Critical Questions**: How do we measure real mental health improvement vs. engagement metrics?
+**Целенаправленное значение**: Мягкие переходы между состояниями, микровзаимодействия для обратной связи  
+**Иерархия движения**: Важные действия (SOS) имеют более заметную анимацию  
+**Контекстуальная уместность**: Успокаивающие, не отвлекающие анимации
 
-## Reflection
+### UI элементы и выбор компонентов
 
-This approach uniquely combines the accessibility of Telegram with structured mental health programming and peer support. The biggest assumption is that teens will engage consistently with daily check-ins - this needs early validation. Success depends on balancing professional mental health support with peer connection in a safe digital environment.
+**Использование компонентов**: shadcn/ui компоненты с кастомизацией под брендинг  
+**Кастомизация компонентов**: Увеличенные радиусы border (12px), мягкие тени, теплые цвета  
+**Состояния компонентов**: Четкие hover/focus состояния, успокаивающие переходы  
+**Выбор иконок**: Phosphor Icons для последовательности  
+**Иерархия компонентов**: Основные (CTA), вторичные (навигация), третичные (метаданные)  
+**Система отступов**: Tailwind spacing scale (4px базовая единица)  
+**Мобильная адаптация**: Touch-friendly размеры (44px минимум), упрощенная навигация
+
+### Фреймворк визуальной согласованности
+
+**Подход дизайн-системы**: Компонентный подход с переиспользуемыми элементами  
+**Элементы руководства по стилю**: Цветовая палитра, типографика, spacing, компоненты  
+**Визуальный ритм**: Последовательные паттерны в layout и interaction  
+**Соответствие бренду**: Дизайн подкрепляет ценности безопасности, роста и поддержки
+
+### Доступность и читаемость
+
+**Цель контраста**: WCAG AA соответствие как минимум для всего текста и значимых нетекстовых элементов  
+**Другие соображения**: Keyboard navigation, screen reader поддержка, не полагаться только на цвет для передачи информации
+
+## Граничные случаи и проблемные сценарии
+
+**Потенциальные препятствия**: Кризисы психического здоровья, кибербуллинг, нерегулярное участие  
+**Обработка граничных случаев**: Четкие протоколы эскалации, модерация контента, гибкие варианты повторного участия  
+**Технические ограничения**: Должна работать на старых устройствах, медленное интернет-соединение
+
+## Соображения по реализации
+
+**Потребности масштабируемости**: Архитектура должна поддерживать множественные языки и регионы  
+**Фокус тестирования**: Безопасность пользователей, функциональность чек-инов, групповое взаимодействие  
+**Критические вопросы**: Как обеспечить безопасность? Как мотивировать постоянное участие?
+
+## Рефлексия
+
+**Что делает этот подход уникально подходящим**: Сочетание индивидуального отслеживания с групповой поддержкой, адаптированное для подростков  
+**Предположения для проверки**: Подростки будут ежедневно взаимодействовать с приложением, групповой формат более эффективен, чем индивидуальный  
+**Что сделает это решение по-настоящему исключительным**: Создание настоящего сообщества, где подростки чувствуют себя понятыми и поддержанными

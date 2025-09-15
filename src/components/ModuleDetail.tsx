@@ -3,386 +3,265 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Separator } from '@/components/ui/separator'
-import { ArrowLeft, Play, CheckCircle, Clock, Users, BookOpen } from '@phosphor-icons/react'
-
-interface Week {
-  id: number
-  title: string
-  description: string
-  videoUrl?: string
-  videoDuration?: string
-  practices: Practice[]
-  reflectionQuestions: string[]
-  isCompleted: boolean
-  isCurrent: boolean
-}
-
-interface Practice {
-  title: string
-  duration: string
-  steps: string[]
-}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { ArrowLeft, Play, CheckCircle, Clock, BookOpen } from '@phosphor-icons/react'
 
 interface ModuleDetailProps {
   moduleId: number
   onBack: () => void
 }
 
-// Mock data for Module 1: Confidence & Self-Discovery
 const moduleData = {
   1: {
-    title: "Confidence & Self-Discovery",
-    description: "Explore your strengths, build inner confidence, and develop a positive self-image",
-    totalDuration: "3 weeks",
-    groupSessions: 3,
+    title: 'Уверенность',
+    description: 'Изучение своих сильных сторон, работа с самокритикой и развитие здоровой самооценки',
     weeks: [
       {
-        id: 1,
-        title: "Discovering Your Strengths",
-        description: "Learn to identify and appreciate your unique qualities and talents",
-        videoUrl: "https://example.com/week1-video",
-        videoDuration: "6 min",
+        title: 'Неделя 1: Твои сильные стороны',
+        description: 'Определяем, в чём ты действительно хорош, и учимся это ценить',
+        videoUrl: '#',
         practices: [
           {
-            title: "Strengths Wheel Exercise",
-            duration: "10 min",
+            title: 'Колесо сильных сторон',
             steps: [
-              "Draw a circle and divide it into 8 sections",
-              "In each section, write one of your strengths",
-              "Think of a time when you used each strength successfully",
-              "Share one strength story with your group this week"
+              'Нарисуй круг и раздели его на 8 частей',
+              'В каждой части напиши одну свою сильную сторону',
+              'Оцени каждую от 1 до 10 по уровню развития',
+              'Закрась сектора согласно оценкам'
             ]
           }
         ],
-        reflectionQuestions: [
-          "What strength surprised you the most when you wrote it down?",
-          "How did it feel to focus on your positive qualities?",
-          "Which strength would you like to develop further?"
-        ],
-        isCompleted: true,
-        isCurrent: false
+        reflection: [
+          'Какая сильная сторона удивила тебя больше всего?',
+          'В какой ситуации ты последний раз использовал свои сильные стороны?',
+          'Как ты можешь развить свою самую слабую сторону на 1 балл?'
+        ]
       },
       {
-        id: 2,
-        title: "Building Inner Confidence",
-        description: "Develop tools to boost self-confidence and overcome self-doubt",
-        videoUrl: "https://example.com/week2-video", 
-        videoDuration: "7 min",
+        title: 'Неделя 2: Внутренний критик',
+        description: 'Учимся распознавать негативные мысли и заменять их конструктивными',
+        videoUrl: '#',
         practices: [
           {
-            title: "Confidence Anchor Technique",
-            duration: "8 min",
+            title: 'Техника "Стоп-мысль"',
             steps: [
-              "Sit comfortably and close your eyes",
-              "Remember a time when you felt truly confident",
-              "Notice what you saw, heard, and felt in that moment",
-              "Create a physical 'anchor' (like touching your thumb to finger)",
-              "Practice this anchor daily to access confidence when needed"
+              'Заметь негативную мысль о себе',
+              'Мысленно скажи "Стоп!"',
+              'Задай себе вопрос: "Это правда или мнение?"',
+              'Переформулируй мысль более справедливо'
             ]
           }
         ],
-        reflectionQuestions: [
-          "What does confidence feel like in your body?",
-          "When do you feel most confident during the day?",
-          "What small step could you take tomorrow to practice confidence?"
-        ],
-        isCompleted: false,
-        isCurrent: true
+        reflection: [
+          'Какие фразы чаще всего говорит твой внутренний критик?',
+          'Откуда могли появиться эти убеждения?',
+          'Что бы ты сказал другу, если бы он думал о себе также?'
+        ]
       },
       {
-        id: 3,
-        title: "Positive Self-Talk",
-        description: "Transform your inner critic into your inner supporter",
-        videoUrl: "https://example.com/week3-video",
-        videoDuration: "5 min", 
+        title: 'Неделя 3: План уверенности',
+        description: 'Создаём персональную стратегию для поддержания уверенности в себе',
+        videoUrl: '#',
         practices: [
           {
-            title: "Inner Voice Makeover",
-            duration: "12 min",
+            title: 'Маленький смелый шаг',
             steps: [
-              "Notice your self-talk for one day without judgment",
-              "Write down any negative phrases you caught",
-              "For each negative phrase, create a kind alternative",
-              "Practice your new phrases 3 times daily",
-              "Imagine speaking to your best friend - use that tone with yourself"
+              'Выбери ситуацию, где хочешь быть увереннее',
+              'Придумай самое маленькое действие в эту сторону',
+              'Сделай это действие сегодня',
+              'Отметь, как ты себя чувствуешь после'
             ]
           }
         ],
-        reflectionQuestions: [
-          "What patterns did you notice in your self-talk?",
-          "How did it feel to speak to yourself more kindly?",
-          "What would you tell a friend who talks to themselves the way you do?"
-        ],
-        isCompleted: false,
-        isCurrent: false
+        reflection: [
+          'Какой шаг оказался для тебя самым сложным?',
+          'Что помогло тебе его сделать?',
+          'Как ты будешь поддерживать уверенность каждый день?'
+        ]
       }
     ]
   }
 }
 
 export default function ModuleDetail({ moduleId, onBack }: ModuleDetailProps) {
-  const [selectedWeek, setSelectedWeek] = useState<number | null>(null)
-  
+  const [currentWeek, setCurrentWeek] = useState(1)
   const module = moduleData[moduleId as keyof typeof moduleData]
-  
+
   if (!module) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <p className="text-muted-foreground">Module content coming soon...</p>
-          <Button onClick={onBack} className="mt-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Modules
-          </Button>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // If a week is selected, show week detail
-  if (selectedWeek) {
-    const week = module.weeks.find(w => w.id === selectedWeek)
-    if (!week) return null
-
-    return (
-      <div className="space-y-6">
-        {/* Week Header */}
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => setSelectedWeek(null)}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Module
-          </Button>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl">Week {week.id}: {week.title}</CardTitle>
-                <CardDescription className="mt-1">{week.description}</CardDescription>
-              </div>
-              {week.isCompleted && (
-                <CheckCircle className="w-6 h-6 text-green-600" weight="fill" />
-              )}
-            </div>
-          </CardHeader>
-        </Card>
-
-        {/* Video Section */}
-        {week.videoUrl && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Play className="w-5 h-5 text-primary" />
-                Weekly Video
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="bg-muted rounded-lg p-8 text-center">
-                <Play className="w-12 h-12 text-primary mx-auto mb-4" weight="fill" />
-                <p className="font-medium">{week.title}</p>
-                <p className="text-sm text-muted-foreground">{week.videoDuration}</p>
-                <Button className="mt-4">
-                  Watch Video
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Practices Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-accent" />
-              Practice Exercises
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {week.practices.map((practice, index) => (
-              <div key={index} className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium">{practice.title}</h4>
-                  <Badge variant="secondary" className="gap-1">
-                    <Clock className="w-3 h-3" />
-                    {practice.duration}
-                  </Badge>
-                </div>
-                <div className="space-y-2">
-                  {practice.steps.map((step, stepIndex) => (
-                    <div key={stepIndex} className="flex items-start gap-3">
-                      <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary text-sm font-medium rounded-full flex items-center justify-center">
-                        {stepIndex + 1}
-                      </span>
-                      <p className="text-sm text-muted-foreground">{step}</p>
-                    </div>
-                  ))}
-                </div>
-                <Button className="w-full mt-4" variant={week.isCompleted ? "secondary" : "default"}>
-                  {week.isCompleted ? "Completed" : "Start Practice"}
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Reflection Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Weekly Reflection</CardTitle>
-            <CardDescription>Take a few minutes to think about your experience</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {week.reflectionQuestions.map((question, index) => (
-                <div key={index} className="p-3 bg-muted/50 rounded-lg">
-                  <p className="text-sm font-medium text-foreground">{question}</p>
-                </div>
-              ))}
-            </div>
-            <Button className="w-full mt-4" variant="outline">
-              Submit Reflection
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="text-center py-12">
+        <h2 className="text-xl font-semibold text-foreground">Модуль не найден</h2>
+        <p className="text-muted-foreground mt-2">Этот модуль ещё в разработке</p>
+        <Button onClick={onBack} className="mt-4" variant="outline">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Назад к модулям
+        </Button>
       </div>
     )
   }
-
-  // Module overview
-  const completedWeeks = module.weeks.filter(w => w.isCompleted).length
-  const currentWeek = module.weeks.find(w => w.isCurrent)
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={onBack}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          All Modules
+        <Button onClick={onBack} variant="outline" size="sm">
+          <ArrowLeft className="w-4 h-4" />
         </Button>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">{module.title}</h1>
+          <p className="text-muted-foreground">{module.description}</p>
+        </div>
       </div>
 
-      {/* Module Info */}
+      {/* Progress Overview */}
       <Card>
         <CardHeader>
-          <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-2xl">{module.title}</CardTitle>
-              <CardDescription className="mt-2 text-base">
-                {module.description}
-              </CardDescription>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-6 mt-6 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              {module.totalDuration}
-            </div>
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              {module.groupSessions} group sessions
-            </div>
-          </div>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5" />
+            Прогресс по модулю
+          </CardTitle>
         </CardHeader>
-        
         <CardContent>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex justify-between text-sm">
-              <span>Module Progress</span>
-              <span>{completedWeeks}/3 weeks completed</span>
+              <span>Неделя {currentWeek} из 3</span>
+              <span className="font-medium">{Math.round((currentWeek / 3) * 100)}%</span>
             </div>
-            <Progress value={(completedWeeks / 3) * 100} className="h-2" />
+            <Progress value={(currentWeek / 3) * 100} className="h-3" />
+            <div className="flex gap-2">
+              {[1, 2, 3].map((week) => (
+                <Badge 
+                  key={week}
+                  variant={week <= currentWeek ? "default" : "secondary"}
+                  className="gap-1"
+                >
+                  {week < currentWeek && <CheckCircle className="w-3 h-3" weight="fill" />}
+                  {week === currentWeek && <Clock className="w-3 h-3" />}
+                  Неделя {week}
+                </Badge>
+              ))}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Current Week Highlight */}
-      {currentWeek && (
-        <Card className="border-primary bg-primary/5">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Play className="w-5 h-5 text-primary" weight="fill" />
-              Continue Week {currentWeek.id}
-            </CardTitle>
-            <CardDescription>{currentWeek.title}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              size="lg" 
-              className="w-full"
-              onClick={() => setSelectedWeek(currentWeek.id)}
-            >
-              Start Week {currentWeek.id}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+      {/* Week Content */}
+      <Tabs value={`week-${currentWeek}`} onValueChange={(value) => setCurrentWeek(parseInt(value.split('-')[1]))}>
+        <TabsList className="grid w-full grid-cols-3">
+          {module.weeks.map((_, index) => (
+            <TabsTrigger key={index} value={`week-${index + 1}`}>
+              Неделя {index + 1}
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-      {/* Week List */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold">3-Week Journey</h3>
-        
         {module.weeks.map((week, index) => (
-          <Card 
-            key={week.id}
-            className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-              week.isCurrent ? 'ring-2 ring-primary/20' : ''
-            }`}
-            onClick={() => setSelectedWeek(week.id)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-medium text-muted-foreground">
-                      Week {week.id}
-                    </span>
-                    {week.isCompleted && (
-                      <CheckCircle className="w-4 h-4 text-green-600" weight="fill" />
-                    )}
+          <TabsContent key={index} value={`week-${index + 1}`} className="space-y-6">
+            {/* Week Overview */}
+            <Card>
+              <CardHeader>
+                <CardTitle>{week.title}</CardTitle>
+                <CardDescription>{week.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="gap-2" size="lg">
+                  <Play className="w-4 h-4" weight="fill" />
+                  Начать неделю {index + 1}
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Video */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">📹 Видео урок</CardTitle>
+                <CardDescription>5-7 минут</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <Play className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Видео урок</p>
+                    <p className="text-sm text-muted-foreground">"{week.title}"</p>
                   </div>
-                  <CardTitle className="text-lg">{week.title}</CardTitle>
-                  <CardDescription className="mt-1">{week.description}</CardDescription>
                 </div>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  {week.videoDuration && (
-                    <span className="flex items-center gap-1">
-                      <Play className="w-3 h-3" />
-                      {week.videoDuration}
-                    </span>
-                  )}
-                  <span>{week.practices.length} practice{week.practices.length !== 1 ? 's' : ''}</span>
-                  <span>{week.reflectionQuestions.length} questions</span>
+                <Button className="w-full mt-4" variant="outline">
+                  Посмотреть видео
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Practice */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">🧘 Практика</CardTitle>
+                <CardDescription>10-15 минут</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {week.practices.map((practice, practiceIndex) => (
+                  <div key={practiceIndex}>
+                    <h4 className="font-medium mb-3">{practice.title}</h4>
+                    <ol className="space-y-2">
+                      {practice.steps.map((step, stepIndex) => (
+                        <li key={stepIndex} className="flex gap-3">
+                          <div className="w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center justify-center flex-shrink-0 mt-0.5">
+                            {stepIndex + 1}
+                          </div>
+                          <span className="text-sm">{step}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                ))}
+                <Button variant="outline" className="w-full mt-4">
+                  Начать практику
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Reflection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">💭 Рефлексия</CardTitle>
+                <CardDescription>3-5 минут на размышления</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  {week.reflection.map((question, questionIndex) => (
+                    <div key={questionIndex} className="p-4 bg-muted/50 rounded-lg">
+                      <p className="text-sm font-medium text-foreground">
+                        {questionIndex + 1}. {question}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                
-                <Badge variant={
-                  week.isCompleted ? "default" : 
-                  week.isCurrent ? "secondary" : "outline"
-                }>
-                  {week.isCompleted ? 'Completed' : 
-                   week.isCurrent ? 'Current' : 'Upcoming'}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
+                <Button variant="outline" className="w-full">
+                  Ответить на вопросы
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Week Assignment */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">📝 Задание на неделю</CardTitle>
+                <CardDescription>Практическое применение</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
+                  <p className="text-sm">
+                    Каждый день записывай одну ситуацию, где ты использовал свои сильные стороны. 
+                    В конце недели проанализируй, как это влияло на твоё настроение.
+                  </p>
+                </div>
+                <Button variant="outline" className="w-full mt-4">
+                  Сдать задание
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
         ))}
-      </div>
+      </Tabs>
     </div>
   )
 }

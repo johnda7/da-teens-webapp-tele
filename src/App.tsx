@@ -37,7 +37,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
   const [userProfile, setUserProfile] = useKV<UserProfile>('user-profile', {
-    name: 'Alex',
+    name: 'Алекс',
     age: 16,
     currentModule: 1,
     currentWeek: 2,
@@ -60,14 +60,14 @@ function App() {
             </div>
             <div>
               <h1 className="text-lg font-semibold text-foreground">DA Teens</h1>
-              <p className="text-sm text-muted-foreground">Week {userProfile?.currentWeek || 1} • Day {userProfile?.streak || 0}</p>
+              <p className="text-sm text-muted-foreground">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="gap-1">
               <Target className="w-3 h-3" />
-              {userProfile?.streak || 0} day streak
+              {userProfile?.streak || 0} дней
             </Badge>
             <SOSButton />
           </div>
@@ -81,12 +81,12 @@ function App() {
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-xl">Your Wellness Journey</CardTitle>
-                <CardDescription>Module {userProfile?.currentModule || 1} of 12 • {Math.round(((userProfile?.completedModules || 0) / 12) * 100)}% complete</CardDescription>
+                <CardTitle className="text-xl">Твой путь к благополучию</CardTitle>
+                <CardDescription>Модуль {userProfile?.currentModule || 1} из 12 • {Math.round(((userProfile?.completedModules || 0) / 12) * 100)}% пройдено</CardDescription>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-primary">{userProfile?.completedModules || 0}/12</div>
-                <div className="text-sm text-muted-foreground">modules</div>
+                <div className="text-sm text-muted-foreground">модулей</div>
               </div>
             </div>
           </CardHeader>
@@ -100,9 +100,9 @@ function App() {
           <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('checkin')}>
             <CardContent className="p-4 text-center">
               <Heart className="w-8 h-8 text-accent mx-auto mb-2" />
-              <h3 className="font-medium">Daily Check-in</h3>
+              <h3 className="font-medium">Ежедневный чек-ин</h3>
               <p className="text-sm text-muted-foreground">
-                {lastCheckIn ? 'Update today' : 'How are you feeling?'}
+                {lastCheckIn ? 'Обновить состояние' : 'Как дела сегодня?'}
               </p>
             </CardContent>
           </Card>
@@ -110,8 +110,8 @@ function App() {
           <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('cohort')}>
             <CardContent className="p-4 text-center">
               <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-              <h3 className="font-medium">My Group</h3>
-              <p className="text-sm text-muted-foreground">Next session in 2 days</p>
+              <h3 className="font-medium">Моя группа</h3>
+              <p className="text-sm text-muted-foreground">Встреча через 2 дня</p>
             </CardContent>
           </Card>
         </div>
@@ -121,23 +121,23 @@ function App() {
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="dashboard" className="gap-1">
               <BookOpen className="w-4 h-4" />
-              Modules
+              Модули
             </TabsTrigger>
             <TabsTrigger value="checkin" className="gap-1">
               <Heart className="w-4 h-4" />
-              Check-in
+              Чек-ин
             </TabsTrigger>
             <TabsTrigger value="cohort" className="gap-1">
               <Users className="w-4 h-4" />
-              Group
+              Группа
             </TabsTrigger>
             <TabsTrigger value="badges" className="gap-1">
               <Trophy className="w-4 h-4" />
-              Badges
+              Награды
             </TabsTrigger>
             <TabsTrigger value="profile" className="gap-1">
               <Target className="w-4 h-4" />
-              Progress
+              Прогресс
             </TabsTrigger>
           </TabsList>
 
@@ -173,7 +173,7 @@ function App() {
           <TabsContent value="profile" className="mt-6">
             <ProgressStats 
               userProfile={userProfile || {
-                name: 'Alex',
+                name: 'Алекс',
                 age: 16,
                 currentModule: 1,
                 currentWeek: 2,

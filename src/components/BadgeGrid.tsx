@@ -1,335 +1,225 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Star, 
-  Trophy, 
-  Target, 
-  Heart, 
-  BookOpen, 
-  Users, 
-  Calendar,
-  Medal,
-  Crown,
-  Fire
-} from '@phosphor-icons/react'
-
-interface BadgeData {
-  id: string
-  title: string
-  description: string
-  icon: React.ComponentType<any>
-  category: 'milestone' | 'habit' | 'social' | 'achievement'
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  earned: boolean
-  earnedDate?: string
-  progress?: number
-  maxProgress?: number
-  criteria: string
-}
+import { Trophy, Star, CheckCircle, Flame, Target } from '@phosphor-icons/react'
 
 interface BadgeGridProps {
-  userBadges: string[] // Array of earned badge IDs
+  userBadges: string[]
 }
 
+const availableBadges = [
+  {
+    id: 'first-step',
+    title: 'Первый шаг',
+    description: 'Прошёл регистрацию и начал путешествие',
+    icon: '🎯',
+    color: 'bg-blue-100 border-blue-300 text-blue-800',
+    criteria: 'Зарегистрироваться в приложении'
+  },
+  {
+    id: 'check-in-streak-7',
+    title: 'Неделя осознанности',
+    description: '7 дней подряд делал чек-ины',
+    icon: '🔥',
+    color: 'bg-orange-100 border-orange-300 text-orange-800',
+    criteria: 'Сделать чек-ин 7 дней подряд'
+  },
+  {
+    id: 'module-complete',
+    title: 'Покоритель модуля',
+    description: 'Полностью завершил первый модуль',
+    icon: '📚',
+    color: 'bg-green-100 border-green-300 text-green-800',
+    criteria: 'Завершить любой модуль'
+  },
+  {
+    id: 'practice-master',
+    title: 'Мастер практик',
+    description: 'Выполнил 20 дыхательных практик',
+    icon: '🧘',
+    color: 'bg-purple-100 border-purple-300 text-purple-800',
+    criteria: 'Выполнить 20 практик осознанности'
+  },
+  {
+    id: 'reflection-writer',
+    title: 'Мыслитель',
+    description: 'Написал 15 рефлексий',
+    icon: '✍️',
+    color: 'bg-indigo-100 border-indigo-300 text-indigo-800',
+    criteria: 'Написать 15 рефлексий'
+  },
+  {
+    id: 'community-helper',
+    title: 'Помощник сообщества',
+    description: 'Активно помогает другим участникам',
+    icon: '🤝',
+    color: 'bg-pink-100 border-pink-300 text-pink-800',
+    criteria: 'Получить 10 благодарностей от участников'
+  },
+  {
+    id: 'goal-achiever',
+    title: 'Достигатор целей',
+    description: 'Выполнил все задания месяца',
+    icon: '🎯',
+    color: 'bg-emerald-100 border-emerald-300 text-emerald-800',
+    criteria: 'Выполнить все задания в течение месяца'
+  },
+  {
+    id: 'anxiety-warrior',
+    title: 'Борец с тревогой',
+    description: 'Снизил уровень тревоги на 3 пункта',
+    icon: '💪',
+    color: 'bg-yellow-100 border-yellow-300 text-yellow-800',
+    criteria: 'Уменьшить средний уровень тревоги на 3 пункта'
+  },
+  {
+    id: 'early-bird',
+    title: 'Ранняя пташка',
+    description: 'Делал утренние чек-ины 14 дней',
+    icon: '🌅',
+    color: 'bg-cyan-100 border-cyan-300 text-cyan-800',
+    criteria: 'Чек-ины до 9:00 утра 14 дней подряд'
+  },
+  {
+    id: 'dream-guardian',
+    title: 'Хранитель снов',
+    description: 'Поддерживал здоровый сон 30 дней',
+    icon: '🌙',
+    color: 'bg-violet-100 border-violet-300 text-violet-800',
+    criteria: 'Спать 7-9 часов 30 дней подряд'
+  }
+]
+
 export default function BadgeGrid({ userBadges }: BadgeGridProps) {
-  const badges: BadgeData[] = [
-    {
-      id: 'first-step',
-      title: 'First Step',
-      description: 'Completed your first module week',
-      icon: Star,
-      category: 'milestone',
-      rarity: 'common',
-      earned: userBadges.includes('first-step'),
-      earnedDate: '2024-01-08',
-      criteria: 'Complete any module week'
-    },
-    {
-      id: 'check-in-streak-7',
-      title: 'Weekly Warrior',
-      description: 'Completed 7 days of check-ins in a row',
-      icon: Fire,
-      category: 'habit',
-      rarity: 'common',
-      earned: userBadges.includes('check-in-streak-7'),
-      earnedDate: '2024-01-10',
-      progress: 7,
-      maxProgress: 7,
-      criteria: '7 consecutive daily check-ins'
-    },
-    {
-      id: 'check-in-streak-30',
-      title: 'Monthly Champion',
-      description: 'Maintained daily check-ins for 30 days',
-      icon: Crown,
-      category: 'habit',
-      rarity: 'epic',
-      earned: false,
-      progress: 12,
-      maxProgress: 30,
-      criteria: '30 consecutive daily check-ins'
-    },
-    {
-      id: 'module-complete',
-      title: 'Module Master',
-      description: 'Completed your first full 3-week module',
-      icon: Trophy,
-      category: 'achievement',
-      rarity: 'rare',
-      earned: false,
-      progress: 2,
-      maxProgress: 3,
-      criteria: 'Complete all 3 weeks of any module'
-    },
-    {
-      id: 'support-seeker',
-      title: 'Courage to Ask',
-      description: 'Reached out for support when you needed it',
-      icon: Heart,
-      category: 'milestone',
-      rarity: 'rare',
-      earned: false,
-      criteria: 'Use SOS feature or message curator for help'
-    },
-    {
-      id: 'group-contributor',
-      title: 'Team Player',
-      description: 'Actively participated in 5 group sessions',
-      icon: Users,
-      category: 'social',
-      rarity: 'common',
-      earned: false,
-      progress: 2,
-      maxProgress: 5,
-      criteria: 'Attend and participate in 5 group video sessions'
-    },
-    {
-      id: 'practice-dedication',
-      title: 'Practice Makes Progress',
-      description: 'Completed 20 mindfulness practices',
-      icon: Target,
-      category: 'habit',
-      rarity: 'rare',
-      earned: false,
-      progress: 8,
-      maxProgress: 20,
-      criteria: 'Complete 20 guided practices'
-    },
-    {
-      id: 'reflection-master',
-      title: 'Deep Thinker',
-      description: 'Submitted thoughtful reflections for 10 weeks',
-      icon: BookOpen,
-      category: 'achievement',
-      rarity: 'epic',
-      earned: false,
-      progress: 3,
-      maxProgress: 10,
-      criteria: 'Submit quality reflections for 10 weeks'
-    },
-    {
-      id: 'year-journey',
-      title: 'Year-Long Explorer',
-      description: 'Completed all 12 modules in the program',
-      icon: Medal,
-      category: 'achievement',
-      rarity: 'legendary',
-      earned: false,
-      progress: 0,
-      maxProgress: 12,
-      criteria: 'Complete all 12 modules (entire year program)'
-    }
-  ]
-
-  const earnedBadges = badges.filter(b => b.earned)
-  const inProgressBadges = badges.filter(b => !b.earned && b.progress !== undefined)
-  const lockedBadges = badges.filter(b => !b.earned && b.progress === undefined)
-
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'common': return 'text-gray-600 bg-gray-100'
-      case 'rare': return 'text-blue-600 bg-blue-100'
-      case 'epic': return 'text-purple-600 bg-purple-100'
-      case 'legendary': return 'text-yellow-600 bg-yellow-100'
-      default: return 'text-gray-600 bg-gray-100'
-    }
-  }
-
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'milestone': return 'text-green-600'
-      case 'habit': return 'text-orange-600'
-      case 'social': return 'text-blue-600'
-      case 'achievement': return 'text-purple-600'
-      default: return 'text-gray-600'
-    }
-  }
-
-  const BadgeCard = ({ badge }: { badge: BadgeData }) => {
-    const IconComponent = badge.icon
-    const isEarned = badge.earned
-    const hasProgress = badge.progress !== undefined
-
-    return (
-      <Card className={`transition-all duration-200 ${
-        isEarned 
-          ? 'bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20 shadow-sm' 
-          : hasProgress 
-            ? 'hover:shadow-md cursor-pointer' 
-            : 'opacity-60'
-      }`}>
-        <CardHeader className="pb-3">
-          <div className="flex items-start justify-between">
-            <div className={`p-3 rounded-full ${
-              isEarned ? 'bg-primary/10' : 'bg-muted'
-            }`}>
-              <IconComponent 
-                className={`w-6 h-6 ${
-                  isEarned ? getCategoryColor(badge.category) : 'text-muted-foreground'
-                }`}
-                weight={isEarned ? 'fill' : 'regular'}
-              />
-            </div>
-            <div className="flex gap-1">
-              <Badge 
-                variant="outline" 
-                className={`text-xs ${getRarityColor(badge.rarity)}`}
-              >
-                {badge.rarity}
-              </Badge>
-              {isEarned && (
-                <Badge variant="default" className="text-xs">
-                  ✓ Earned
-                </Badge>
-              )}
-            </div>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="pt-0 space-y-3">
-          <div>
-            <CardTitle className="text-base leading-tight">{badge.title}</CardTitle>
-            <CardDescription className="text-sm mt-1">
-              {badge.description}
-            </CardDescription>
-          </div>
-
-          {/* Progress Bar */}
-          {hasProgress && badge.maxProgress && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span>Progress</span>
-                <span className="text-muted-foreground">
-                  {badge.progress}/{badge.maxProgress}
-                </span>
-              </div>
-              <Progress 
-                value={(badge.progress! / badge.maxProgress) * 100} 
-                className="h-2"
-              />
-            </div>
-          )}
-
-          {/* Earned Date */}
-          {isEarned && badge.earnedDate && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Calendar className="w-3 h-3" />
-              Earned {new Date(badge.earnedDate).toLocaleDateString()}
-            </div>
-          )}
-
-          {/* Criteria */}
-          <p className="text-xs text-muted-foreground border-t pt-2">
-            {badge.criteria}
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
+  const earnedBadges = availableBadges.filter(badge => userBadges.includes(badge.id))
+  const lockedBadges = availableBadges.filter(badge => !userBadges.includes(badge.id))
+  
+  const progress = Math.round((earnedBadges.length / availableBadges.length) * 100)
 
   return (
     <div className="space-y-6">
-      {/* Stats Overview */}
-      <Card>
+      {/* Progress Overview */}
+      <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
         <CardHeader>
-          <CardTitle className="text-xl">Your Achievements</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="w-6 h-6 text-yellow-600" weight="fill" />
+            Твои достижения
+          </CardTitle>
           <CardDescription>
-            Celebrating your progress and milestones on this wellness journey
+            {earnedBadges.length} из {availableBadges.length} наград получено
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-primary">{earnedBadges.length}</div>
-              <p className="text-sm text-muted-foreground">Earned</p>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-accent">{inProgressBadges.length}</div>
-              <p className="text-sm text-muted-foreground">In Progress</p>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-muted-foreground">{badges.length}</div>
-              <p className="text-sm text-muted-foreground">Total</p>
-            </div>
+        <CardContent className="space-y-4">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium">Прогресс</span>
+            <span className="text-2xl font-bold text-yellow-600">{progress}%</span>
           </div>
+          <Progress value={progress} className="h-3" />
+          
+          {earnedBadges.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Star className="w-4 h-4 text-yellow-500" weight="fill" />
+              <span className="text-sm text-muted-foreground">
+                Последняя награда: {earnedBadges[earnedBadges.length - 1]?.title}
+              </span>
+            </div>
+          )}
         </CardContent>
       </Card>
 
       {/* Earned Badges */}
       {earnedBadges.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-600" weight="fill" />
-            Earned Badges ({earnedBadges.length})
+        <div>
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <CheckCircle className="w-5 h-5 text-green-600" weight="fill" />
+            Полученные награды ({earnedBadges.length})
           </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {earnedBadges.map(badge => (
-              <BadgeCard key={badge.id} badge={badge} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* In Progress Badges */}
-      {inProgressBadges.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Target className="w-5 h-5 text-blue-600" />
-            In Progress ({inProgressBadges.length})
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {inProgressBadges.map(badge => (
-              <BadgeCard key={badge.id} badge={badge} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {earnedBadges.map((badge) => (
+              <Card key={badge.id} className={`${badge.color} relative overflow-hidden`}>
+                <div className="absolute top-2 right-2">
+                  <CheckCircle className="w-5 h-5 text-green-600" weight="fill" />
+                </div>
+                <CardHeader className="pb-3">
+                  <div className="flex items-start gap-3">
+                    <div className="text-3xl">{badge.icon}</div>
+                    <div className="flex-1">
+                      <CardTitle className="text-base">{badge.title}</CardTitle>
+                      <CardDescription className="text-sm mt-1">
+                        {badge.description}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Badge variant="secondary" className="text-xs">
+                    Получено ✨
+                  </Badge>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>
       )}
 
       {/* Available Badges */}
-      {lockedBadges.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Star className="w-5 h-5 text-gray-600" />
-            Available to Earn ({lockedBadges.length})
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {lockedBadges.map(badge => (
-              <BadgeCard key={badge.id} badge={badge} />
-            ))}
-          </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <Target className="w-5 h-5 text-muted-foreground" />
+          Доступные награды ({lockedBadges.length})
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {lockedBadges.map((badge) => (
+            <Card key={badge.id} className="opacity-60 border-dashed">
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3">
+                  <div className="text-3xl grayscale">{badge.icon}</div>
+                  <div className="flex-1">
+                    <CardTitle className="text-base text-muted-foreground">
+                      {badge.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm mt-1">
+                      {badge.description}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="space-y-2">
+                  <Badge variant="outline" className="text-xs">
+                    Как получить:
+                  </Badge>
+                  <p className="text-xs text-muted-foreground">
+                    {badge.criteria}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
+      </div>
 
-      {/* Motivation Message */}
-      <Card className="bg-gradient-to-r from-primary/5 to-accent/5">
-        <CardContent className="p-6 text-center">
-          <h4 className="font-medium mb-2">Keep Going! 🌟</h4>
-          <p className="text-sm text-muted-foreground">
-            Every small step counts. Each badge represents your commitment to growth and wellbeing.
-          </p>
-        </CardContent>
-      </Card>
+      {/* Next Badge Suggestion */}
+      {lockedBadges.length > 0 && (
+        <Card className="bg-accent/10 border-accent/30">
+          <CardHeader>
+            <CardTitle className="text-lg">Следующая цель</CardTitle>
+            <CardDescription>Рекомендуем попробовать получить</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">{lockedBadges[0].icon}</div>
+              <div className="flex-1">
+                <h4 className="font-medium">{lockedBadges[0].title}</h4>
+                <p className="text-sm text-muted-foreground">{lockedBadges[0].criteria}</p>
+              </div>
+              <Badge className="bg-accent/20 text-accent-foreground">
+                Попробовать
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
