@@ -21,8 +21,6 @@ export default function PracticePlayer({ practiceId, onComplete }: PracticePlaye
   const practice = breathingPractices.find(p => p.id === selectedPractice)
   const quickPractice = quickPractices.find(p => p.id === selectedPractice)
 
-  const currentPractice = practice || quickPractice
-
   const startTimer = (duration: number) => {
     setTimeLeft(duration)
     setIsPlaying(true)

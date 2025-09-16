@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Trophy, Star, CheckCircle, Flame, Target } from '@phosphor-icons/react'
+import { Trophy, Star, CheckCircle, Target } from '@phosphor-icons/react'
 
 interface BadgeGridProps {
   userBadges: string[]

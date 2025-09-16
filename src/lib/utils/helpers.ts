@@ -2,7 +2,7 @@
  * Utility functions for DA Teens platform
  */
 
-import { CheckIn, BadgeCriteria, UserBadge } from '@/lib/types'
+import { CheckIn, BadgeCriteria } from '@/lib/types'
 
 /**
  * Date utilities

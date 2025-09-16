@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useKV } from '@github/spark/hooks'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Toaster } from '@/components/ui/sonner'
-import { Heart, Users, Calendar, BookOpen, Target, Shield, Trophy } from '@phosphor-icons/react'
+import { Heart, Users, BookOpen, Target, Trophy } from '@phosphor-icons/react'
 import ModuleGrid from '@/components/ModuleGrid'
 import ModuleDetail from '@/components/ModuleDetail'
 import CheckInPanel from '@/components/CheckInPanel'
@@ -36,7 +35,7 @@ interface CheckInData {
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
-  const [userProfile, setUserProfile] = useKV<UserProfile>('user-profile', {
+  const [userProfile] = useKV<UserProfile>('user-profile', {
     name: 'Алекс',
     age: 16,
     currentModule: 1,
@@ -46,7 +45,7 @@ function App() {
     cohortId: 'teens-14-16-cohort-a'
   })
   
-  const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
+  const [userBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
   const [lastCheckIn, setLastCheckIn] = useKV<CheckInData | null>('last-checkin', null)
 
   return (
