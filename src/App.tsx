@@ -14,6 +14,7 @@ import CohortSchedule from '@/components/CohortSchedule'
 import SOSButton from '@/components/SOSButton'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
+import PersonalizedGreeting from '@/components/PersonalizedGreeting'
 
 interface UserProfile {
   name: string
@@ -59,7 +60,7 @@ function App() {
               <Heart className="w-5 h-5 text-primary-foreground" weight="fill" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">DA Teens</h1>
+              <PersonalizedGreeting userName={userProfile?.name || 'Пользователь'} />
               <p className="text-sm text-muted-foreground">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
             </div>
           </div>
