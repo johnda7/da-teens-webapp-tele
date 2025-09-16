@@ -56,7 +56,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
       if (!hasCheckedInToday) {
         setNote('')
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Что-то пошло не так', {
         description: 'Попробуй ещё раз через минутку'
       })

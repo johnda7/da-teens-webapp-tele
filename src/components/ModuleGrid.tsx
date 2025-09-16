@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { CheckCircle, Circle, Lock, Play } from '@phosphor-icons/react'
+import { CheckCircle, Lock, Play } from '@phosphor-icons/react'
 
 interface ModuleGridProps {
   currentModule: number

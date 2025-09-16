@@ -10,7 +10,6 @@ import {
   ChatCircle, 
   BookOpen, 
   Clock,
-  MapPin,
   Phone
 } from '@phosphor-icons/react'
 

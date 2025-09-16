@@ -1,4 +1,4 @@
-import { Module, ModuleWeek, Practice } from '@/lib/types'
+import { Module, ModuleWeek } from '@/lib/types'
 
 // Seed data for all 12 modules in DA Teens program
 export const modulesData: Array<Module & { weeks: ModuleWeek[] }> = [

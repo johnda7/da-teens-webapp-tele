@@ -155,7 +155,6 @@ export function awardBadge(userId: string, badgeId: string, reason: string) {
 // Check if user should get new badges based on activity
 export function checkForNewBadges(userId: string): string[] {
   const user = getUserById(userId);
-  const userCheckIns = getUserCheckIns(userId);
   
   if (!user) return [];
 
