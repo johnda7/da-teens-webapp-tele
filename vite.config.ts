@@ -10,6 +10,7 @@ const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/da-teens-webapp-tele/',
   plugins: [
     react(),
     tailwindcss(),
@@ -25,7 +26,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5000,
-    strictPort: true,
+    strictPort: false, // Позволит выбрать другой порт если 5000 занят
     allowedHosts: true,
   },
 });
