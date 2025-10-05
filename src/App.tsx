@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,6 +14,7 @@ import CohortSchedule from '@/components/CohortSchedule'
 import SOSButton from '@/components/SOSButton'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
+import { useTelegram } from '@/hooks/useTelegram'
 
 interface UserProfile {
   name: string
@@ -34,10 +35,14 @@ interface CheckInData {
 }
 
 function App() {
+  const { user, isTelegramWebApp, colorScheme, tg } = useTelegram()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
+  
+  const defaultName = user?.first_name || 'Алекс'
+  
   const [userProfile, setUserProfile] = useKV<UserProfile>('user-profile', {
-    name: 'Алекс',
+    name: defaultName,
     age: 16,
     currentModule: 1,
     currentWeek: 2,
@@ -48,6 +53,15 @@ function App() {
   
   const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
   const [lastCheckIn, setLastCheckIn] = useKV<CheckInData | null>('last-checkin', null)
+
+  useEffect(() => {
+    if (user && userProfile && userProfile.name !== user.first_name) {
+      setUserProfile({
+        ...userProfile,
+        name: user.first_name
+      })
+    }
+  }, [user, userProfile, setUserProfile])
 
   return (
     <div className="min-h-screen bg-background">
