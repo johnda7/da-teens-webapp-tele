@@ -2,7 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { CheckCircle, Circle, Lock, Play } from '@phosphor-icons/react'
+import { CheckCircle, Circle, Lock, Play, Sparkle } from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
 
 interface ModuleGridProps {
   currentModule: number
@@ -57,94 +58,140 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
     }
   }
 
+  const currentModuleData = modules.find(m => m.id === currentModule)
+
   return (
-    <div className="space-y-6">
-      {/* Current Module Highlight */}
-      <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-foreground">Текущий модуль</h3>
-              <p className="text-2xl font-bold text-primary mt-1">
-                {modules.find(m => m.id === currentModule)?.title || 'Модуль не найден'}
-              </p>
-              <p className="text-muted-foreground mt-1">
-                {modules.find(m => m.id === currentModule)?.description}
-              </p>
+    <div className="space-y-6 safe-x">
+      {/* Current Module Highlight - iOS 26 Liquid Glass */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      >
+        <Card className="glass rounded-ios-lg overflow-hidden border-0">
+          <CardContent className="p-6 md:p-8">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkle className="w-5 h-5 text-purple-600" weight="fill" />
+                  <h3 className="text-ios-footnote font-medium text-purple-600 uppercase tracking-wide">
+                    Текущий модуль
+                  </h3>
+                </div>
+                <p className="text-ios-title1 font-bold text-foreground mt-1">
+                  {currentModuleData?.title || 'Модуль не найден'}
+                </p>
+                <p className="text-ios-callout text-muted-foreground mt-2 leading-relaxed">
+                  {currentModuleData?.description}
+                </p>
+              </div>
+              <Button 
+                size="lg" 
+                onClick={() => onModuleSelect(currentModule)}
+                className="gap-2 touch-feedback rounded-ios-md h-touch-min min-w-[140px] text-ios-body font-semibold shadow-elevated"
+              >
+                <Play className="w-5 h-5" weight="fill" />
+                Продолжить
+              </Button>
             </div>
-            <Button 
-              size="lg" 
-              onClick={() => onModuleSelect(currentModule)}
-              className="gap-2"
-            >
-              <Play className="w-4 h-4" weight="fill" />
-              Продолжить
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* All Modules Grid */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Все модули программы</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {modules.map((module) => {
+        <h3 className="text-ios-title2 font-semibold mb-6 px-1">Все модули программы</h3>
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+          variants={{
+            animate: {
+              transition: {
+                staggerChildren: 0.05
+              }
+            }
+          }}
+          initial="initial"
+          animate="animate"
+        >
+          {modules.map((module, index) => {
             const status = getModuleStatus(module.id)
             const isClickable = status === 'current' || status === 'completed'
+            const isAdaptive = (module as any).isAdaptive
             
             return (
-              <Card 
-                key={module.id} 
-                className={`${module.color} ${isClickable ? 'cursor-pointer hover:shadow-md' : 'opacity-60'} transition-all duration-200`}
-                onClick={() => isClickable && onModuleSelect(module.id)}
+              <motion.div
+                key={module.id}
+                variants={{
+                  initial: { opacity: 0, y: 20 },
+                  animate: { opacity: 1, y: 0 }
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                  delay: index * 0.03
+                }}
+                whileHover={isClickable ? { scale: 1.02, y: -4 } : {}}
+                whileTap={isClickable ? { scale: 0.98 } : {}}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="text-3xl mb-2">{module.icon}</div>
-                    {getStatusIcon(status)}
+                <Card 
+                  className={`
+                    ${isAdaptive ? 'glass border-0' : module.color} 
+                    ${isClickable ? 'cursor-pointer shadow-elevated hover:shadow-elevated-lg' : 'opacity-60'} 
+                    transition-all duration-fast rounded-ios-lg overflow-hidden h-full
+                  `}
+                  onClick={() => isClickable && onModuleSelect(module.id)}
+                >
+                <CardHeader className="pb-4 p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="text-4xl">{module.icon}</div>
+                    <div className="mt-1">
+                      {getStatusIcon(status)}
+                    </div>
                   </div>
-                  <div className="space-y-1">
-                    <CardTitle className="text-base">
+                  <div className="space-y-2">
+                    <CardTitle className="text-ios-headline leading-tight">
                       {module.title}
                       {(module as any).badge && (
-                        <Badge className="ml-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                        <Badge className="ml-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 text-ios-caption2 px-2 py-0.5">
                           {(module as any).badge}
                         </Badge>
                       )}
                     </CardTitle>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Модуль {module.id}</span>
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-ios-footnote text-muted-foreground">Модуль {module.id}</span>
                       {getStatusBadge(status)}
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <CardDescription className="text-sm leading-relaxed">
+                <CardContent className="pt-0 px-6 pb-6">
+                  <CardDescription className="text-ios-subheadline leading-relaxed">
                     {module.description}
                   </CardDescription>
                   {status === 'completed' && (
-                    <div className="mt-3 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Прогресс</span>
-                        <span className="font-medium">100%</span>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-ios-footnote">
+                        <span className="text-muted-foreground">Прогресс</span>
+                        <span className="font-semibold text-green-600">100%</span>
                       </div>
                       <Progress value={100} className="h-2" />
                     </div>
                   )}
                   {status === 'current' && (
-                    <div className="mt-3 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Прогресс</span>
-                        <span className="font-medium">33%</span>
+                    <div className="mt-4 space-y-2">
+                      <div className="flex justify-between text-ios-footnote">
+                        <span className="text-muted-foreground">Прогресс</span>
+                        <span className="font-semibold text-primary">33%</span>
                       </div>
                       <Progress value={33} className="h-2" />
                     </div>
                   )}
                 </CardContent>
               </Card>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </div>
   )

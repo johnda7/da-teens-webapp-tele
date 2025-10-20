@@ -143,5 +143,73 @@ const defaultTheme = {
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: { ...defaultTheme, ...theme },
+  theme: { 
+    ...defaultTheme, 
+    ...theme,
+    extend: {
+      ...defaultTheme.extend,
+      ...(theme.extend || {}),
+      
+      // iOS 26 Liquid Glass Extensions
+      spacing: {
+        ...defaultTheme.spacing,
+        'touch-min': 'var(--touch-min)',
+        'touch-comfortable': 'var(--touch-comfortable)',
+        'touch-large': 'var(--touch-large)',
+      },
+      
+      borderRadius: {
+        ...defaultTheme.borderRadius,
+        'ios-sm': 'var(--radius-sm)',
+        'ios-md': 'var(--radius-md)',
+        'ios-lg': 'var(--radius-lg)',
+        'ios-xl': 'var(--radius-xl)',
+      },
+      
+      boxShadow: {
+        'glass-sm': 'var(--shadow-glass-sm)',
+        'glass': 'var(--shadow-glass-md)',
+        'glass-lg': 'var(--shadow-glass-lg)',
+        'elevated-sm': 'var(--shadow-elevated-sm)',
+        'elevated': 'var(--shadow-elevated-md)',
+        'elevated-lg': 'var(--shadow-elevated-lg)',
+      },
+      
+      backdropBlur: {
+        'glass': 'var(--glass-blur)',
+      },
+      
+      backdropSaturate: {
+        'glass': 'var(--glass-saturate)',
+      },
+      
+      transitionDuration: {
+        'instant': 'var(--duration-instant)',
+        'fast': 'var(--duration-fast)',
+        'normal': 'var(--duration-normal)',
+        'slow': 'var(--duration-slow)',
+      },
+      
+      transitionTimingFunction: {
+        'spring': 'var(--ease-spring)',
+        'smooth': 'var(--ease-smooth)',
+        'bounce': 'var(--ease-bounce)',
+      },
+      
+      // iOS 26 Typography
+      fontSize: {
+        'ios-caption': ['11px', { lineHeight: '13px' }],
+        'ios-caption2': ['12px', { lineHeight: '16px' }],
+        'ios-footnote': ['13px', { lineHeight: '18px' }],
+        'ios-subheadline': ['15px', { lineHeight: '20px' }],
+        'ios-callout': ['16px', { lineHeight: '21px' }],
+        'ios-body': ['17px', { lineHeight: '22px' }],
+        'ios-headline': ['17px', { lineHeight: '22px', fontWeight: '600' }],
+        'ios-title3': ['20px', { lineHeight: '25px', fontWeight: '400' }],
+        'ios-title2': ['22px', { lineHeight: '28px', fontWeight: '400' }],
+        'ios-title1': ['28px', { lineHeight: '34px', fontWeight: '400' }],
+        'ios-large': ['34px', { lineHeight: '41px', fontWeight: '400' }],
+      },
+    },
+  },
 };

@@ -260,3 +260,205 @@
     --color-bg-overlay: var(--color-neutral-3);
   }
 }
+
+/* ============================================
+   🎨 iOS 26 LIQUID GLASS DESIGN SYSTEM
+   ============================================ */
+
+@layer base {
+  :root {
+    /* iOS 26 Spacing System */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+
+    /* iOS 26 Border Radius */
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+    --radius-full: 9999px;
+
+    /* iOS 26 Touch Targets */
+    --touch-min: 44px;
+    --touch-comfortable: 48px;
+    --touch-large: 56px;
+
+    /* Liquid Glass Effects */
+    --glass-bg-light: rgba(255, 255, 255, 0.7);
+    --glass-bg-dark: rgba(0, 0, 0, 0.5);
+    --glass-border-light: rgba(255, 255, 255, 0.3);
+    --glass-border-dark: rgba(255, 255, 255, 0.1);
+    --glass-blur: 20px;
+    --glass-saturate: 180%;
+
+    /* Liquid Glass Shadows */
+    --shadow-glass-sm: 
+      0 2px 12px rgba(0, 0, 0, 0.08),
+      0 0 0 1px var(--glass-border-light);
+    
+    --shadow-glass-md: 
+      0 4px 30px rgba(0, 0, 0, 0.1),
+      0 0 0 1px var(--glass-border-light);
+    
+    --shadow-glass-lg: 
+      0 10px 50px rgba(0, 0, 0, 0.15),
+      0 0 0 1px var(--glass-border-light);
+
+    /* Elevated Card Shadows */
+    --shadow-elevated-sm: 
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+    
+    --shadow-elevated-md: 
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 2px 4px rgba(0, 0, 0, 0.06);
+    
+    --shadow-elevated-lg: 
+      0 10px 40px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.06);
+
+    /* iOS 26 Animation Timings */
+    --duration-instant: 100ms;
+    --duration-fast: 200ms;
+    --duration-normal: 300ms;
+    --duration-slow: 500ms;
+    
+    --ease-spring: cubic-bezier(0.5, 0, 0, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Dark theme adjustments */
+  #spark-app.dark-theme {
+    --glass-bg-light: rgba(255, 255, 255, 0.1);
+    --glass-bg-dark: rgba(0, 0, 0, 0.7);
+    
+    --shadow-glass-sm: 
+      0 2px 12px rgba(0, 0, 0, 0.3),
+      0 0 0 1px var(--glass-border-dark);
+    
+    --shadow-glass-md: 
+      0 4px 30px rgba(0, 0, 0, 0.4),
+      0 0 0 1px var(--glass-border-dark);
+    
+    --shadow-glass-lg: 
+      0 10px 50px rgba(0, 0, 0, 0.5),
+      0 0 0 1px var(--glass-border-dark);
+  }
+}
+
+/* ============================================
+   🔮 LIQUID GLASS UTILITY CLASSES
+   ============================================ */
+
+@layer utilities {
+  /* Liquid Glass base effect */
+  .glass {
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    background: var(--glass-bg-light);
+    box-shadow: var(--shadow-glass-md);
+    border: 1px solid var(--glass-border-light);
+  }
+
+  .dark-theme .glass {
+    background: var(--glass-bg-dark);
+    border-color: var(--glass-border-dark);
+  }
+
+  /* Liquid Glass variations */
+  .glass-sm {
+    backdrop-filter: blur(12px) saturate(150%);
+    box-shadow: var(--shadow-glass-sm);
+  }
+
+  .glass-lg {
+    backdrop-filter: blur(30px) saturate(200%);
+    box-shadow: var(--shadow-glass-lg);
+  }
+
+  /* Elevated cards (no blur, just shadows) */
+  .elevated {
+    background: white;
+    box-shadow: var(--shadow-elevated-md);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .dark-theme .elevated {
+    background: var(--color-neutral-2);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .elevated-lg {
+    box-shadow: var(--shadow-elevated-lg);
+  }
+
+  /* iOS 26 Animations */
+  .animate-spring {
+    transition: all var(--duration-normal) var(--ease-spring);
+  }
+
+  .animate-smooth {
+    transition: all var(--duration-normal) var(--ease-smooth);
+  }
+
+  .animate-bounce {
+    transition: all var(--duration-normal) var(--ease-bounce);
+  }
+
+  /* Touch feedback */
+  .touch-feedback {
+    transition: transform var(--duration-fast) var(--ease-smooth);
+  }
+
+  .touch-feedback:active {
+    transform: scale(0.96);
+  }
+
+  /* iOS 26 safe areas */
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), var(--spacing-md));
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), var(--spacing-md));
+  }
+
+  .safe-x {
+    padding-left: max(env(safe-area-inset-left), var(--spacing-md));
+    padding-right: max(env(safe-area-inset-right), var(--spacing-md));
+  }
+}
+
+/* ============================================
+   📱 MOBILE-FIRST RESPONSIVE
+   ============================================ */
+
+@layer base {
+  /* Smooth scrolling on mobile */
+  html {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent text size adjustment on iOS */
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Remove tap highlight on iOS */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Better touch scrolling */
+  .scroll-container {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}

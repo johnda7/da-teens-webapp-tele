@@ -18,6 +18,7 @@ import SOSButton from '@/components/SOSButton'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
 import AdaptiveLessonViewer from '@/components/AdaptiveLessonViewer'
+import DashboardHero from '@/components/DashboardHero'
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
@@ -340,25 +341,22 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="p-4 space-y-6">
-        {/* Progress Overview */}
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl">Твой путь к благополучию</CardTitle>
-                <CardDescription>Модуль {userProfile?.currentModule || 1} из 12 • {Math.round(((userProfile?.completedModules || 0) / 12) * 100)}% пройдено</CardDescription>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-primary">{userProfile?.completedModules || 0}/12</div>
-                <div className="text-sm text-muted-foreground">модулей</div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Progress value={((userProfile?.completedModules || 0) / 12) * 100} className="h-3" />
-          </CardContent>
-        </Card>
+      <main className="p-4 md:p-6 space-y-6">
+        {/* Dashboard Hero - iOS 26 */}
+        <DashboardHero
+          userName={userProfile?.name || defaultName}
+          currentModule={userProfile?.currentModule || 1}
+          streak={userProfile?.streak || 0}
+          totalXP={adaptiveProgress?.totalXP || 0}
+          completedModules={userProfile?.completedModules || 0}
+          cohortName={userProfile?.cohortId || 'Cohort A'}
+          onContinueLearning={() => {
+            if (userProfile?.currentModule) {
+              setSelectedModule(userProfile.currentModule)
+            }
+          }}
+          onCheckIn={() => setActiveTab('checkin')}
+        />
 
         {/* Adaptive Learning Stats */}
         {adaptiveProgress && adaptiveProgress.completedLessons.length > 0 && (
