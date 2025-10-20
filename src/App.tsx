@@ -14,7 +14,6 @@ import ModuleGrid from '@/components/ModuleGrid'
 import ModuleDetail from '@/components/ModuleDetail'
 import CheckInPanel from '@/components/CheckInPanel'
 import CohortSchedule from '@/components/CohortSchedule'
-import SOSButton from '@/components/SOSButton'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
 import AdaptiveLessonViewer from '@/components/AdaptiveLessonViewer'
@@ -315,27 +314,30 @@ function App() {
       <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <Heart className="w-5 h-5 text-primary-foreground" weight="fill" />
+            {/* iOS 26 Blue Brand Logo */}
+            <div className="w-10 h-10 rounded-full flex items-center justify-center"
+                 style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}>
+              <Heart className="w-5 h-5 text-white" weight="fill" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-foreground">DA Teens</h1>
+              <h1 className="text-lg font-semibold text-foreground">AI Подросток</h1>
               <p className="text-sm text-muted-foreground">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
             </div>
           </div>
           
           <div className="flex items-center gap-2">
             {adaptiveProgress && adaptiveProgress.totalXP > 0 && (
-              <Badge variant="secondary" className="gap-1 bg-purple-100 text-purple-800 border-purple-300">
+              <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
+                     style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
                 <Trophy className="w-3 h-3" />
                 Ур. {adaptiveProgress.level} • {adaptiveProgress.totalXP} XP
               </Badge>
             )}
-            <Badge variant="secondary" className="gap-1">
+            <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
+                   style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
               <Target className="w-3 h-3" />
               {userProfile?.streak || 0} дней
             </Badge>
-            <SOSButton />
           </div>
         </div>
       </header>
@@ -407,7 +409,8 @@ function App() {
                 <Button 
                   size="sm" 
                   onClick={() => setSelectedModule(13)}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600"
+                  style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
+                  className="text-white shadow-lg hover:shadow-xl"
                 >
                   {adaptiveProgress.completedLessons.length === 9 ? 'Пройти заново' : 'Продолжить'}
                 </Button>
@@ -613,13 +616,18 @@ function App() {
                     </div>
                   )}
 
-                  {/* Action buttons */}
+                  {/* Action buttons - iOS 26 Blue Style */}
                   <div className="flex gap-2 pt-2">
                     {!lastCheckIn && (
                       <Button 
                         onClick={() => setActiveTab('checkin')} 
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 backdrop-blur-xl"
+                        style={{ 
+                          background: 'rgba(0, 122, 255, 0.05)',
+                          border: '1px solid rgba(0, 122, 255, 0.3)',
+                          color: '#007AFF'
+                        }}
                       >
                         ❤️ Пройти Check-in
                       </Button>
@@ -627,7 +635,8 @@ function App() {
                     <Button 
                       onClick={selectNextLesson} 
                       disabled={isLoadingLesson}
-                      className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                      className="flex-1 shadow-lg hover:shadow-xl text-white"
+                      style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
                     >
                       {isLoadingLesson ? (
                         <>
@@ -651,7 +660,8 @@ function App() {
                   <Button 
                     variant="ghost" 
                     onClick={() => setSelectedModule(null)}
-                    className="w-full"
+                    className="w-full hover:bg-[rgba(0,122,255,0.1)]"
+                    style={{ color: '#007AFF' }}
                   >
                     ← Назад к модулям
                   </Button>
