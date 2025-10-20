@@ -1,26 +1,33 @@
+/**
+ * Dashboard Hero Widget
+ * 
+ * FSD Layer: Widgets
+ * Композитный UI компонент приветствия на главном экране
+ */
+
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Flame, Lightning, Target, TrendUp, Calendar, Users } from '@phosphor-icons/react'
+import { Flame, Lightning, Target, TrendUp } from '@phosphor-icons/react'
 
 interface DashboardHeroProps {
   userName: string
-  currentModule: number
+  currentWeek: number
   streak: number
   totalXP: number
-  completedModules: number
-  cohortName: string
+  level: number
+  completedLessons: number
   onContinueLearning: () => void
   onCheckIn: () => void
 }
 
-export default function DashboardHero({
+export function DashboardHero({
   userName,
-  currentModule,
+  currentWeek,
   streak,
   totalXP,
-  completedModules,
-  cohortName,
+  level,
+  completedLessons,
   onContinueLearning,
   onCheckIn
 }: DashboardHeroProps) {
@@ -29,7 +36,7 @@ export default function DashboardHero({
       initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="relative overflow-hidden rounded-ios-xl glass border-0 safe-x"
+      className="relative overflow-hidden rounded-2xl border-0"
     >
       {/* iOS 26 Blue Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#007AFF] via-[#5AC8FA] to-[#007AFF] opacity-95" />
@@ -70,14 +77,14 @@ export default function DashboardHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <p className="text-ios-subheadline text-white/90 mb-1">
+          <p className="text-sm text-white/90 mb-1">
             Привет, {userName}! 👋
           </p>
-          <h1 className="text-ios-large font-bold text-white mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
             Продолжай расти! 🌱
           </h1>
-          <p className="text-ios-callout text-white/80 max-w-2xl">
-            Ты проходишь модуль #{currentModule}. Каждый день делает тебя сильнее!
+          <p className="text-sm text-white/80 max-w-2xl">
+            Неделя {currentWeek}. Каждый день делает тебя сильнее!
           </p>
         </motion.div>
 
@@ -89,50 +96,52 @@ export default function DashboardHero({
           transition={{ delay: 0.2 }}
         >
           {/* Streak */}
-          <Card className="glass-sm border-white/20 bg-white/10">
+          <Card className="backdrop-blur-xl border-white/20 bg-white/10">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <Flame className="w-6 h-6 text-orange-300" weight="fill" />
-                <span className="text-ios-caption text-white/70">Streak</span>
+                <span className="text-xs text-white/70">Streak</span>
               </div>
-              <p className="text-ios-title2 font-bold text-white">{streak}</p>
-              <p className="text-ios-caption2 text-white/70">дней подряд</p>
+              <p className="text-2xl font-bold text-white">{streak}</p>
+              <p className="text-xs text-white/70">дней подряд</p>
             </CardContent>
           </Card>
 
-          {/* XP */}
-          <Card className="glass-sm border-white/20 bg-white/10">
+          {/* XP & Level */}
+          <Card className="backdrop-blur-xl border-white/20 bg-white/10">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <Lightning className="w-6 h-6 text-yellow-300" weight="fill" />
-                <span className="text-ios-caption text-white/70">XP</span>
+                <span className="text-xs text-white/70">XP</span>
               </div>
-              <p className="text-ios-title2 font-bold text-white">{totalXP}</p>
-              <p className="text-ios-caption2 text-white/70">очков опыта</p>
+              <p className="text-2xl font-bold text-white">{totalXP}</p>
+              <p className="text-xs text-white/70">Уровень {level}</p>
+            </CardContent>
+          </Card>
+
+          {/* Completed Lessons */}
+          <Card className="backdrop-blur-xl border-white/20 bg-white/10">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <Target className="w-6 h-6 text-green-300" weight="fill" />
+                <span className="text-xs text-white/70">Уроки</span>
+              </div>
+              <p className="text-2xl font-bold text-white">{completedLessons}</p>
+              <p className="text-xs text-white/70">завершено</p>
             </CardContent>
           </Card>
 
           {/* Progress */}
-          <Card className="glass-sm border-white/20 bg-white/10">
+          <Card className="backdrop-blur-xl border-white/20 bg-white/10">
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <Target className="w-6 h-6 text-green-300" weight="fill" />
-                <span className="text-ios-caption text-white/70">Progress</span>
+                <TrendUp className="w-6 h-6 text-blue-300" weight="fill" />
+                <span className="text-xs text-white/70">Прогресс</span>
               </div>
-              <p className="text-ios-title2 font-bold text-white">{completedModules}/12</p>
-              <p className="text-ios-caption2 text-white/70">модулей</p>
-            </CardContent>
-          </Card>
-
-          {/* Cohort */}
-          <Card className="glass-sm border-white/20 bg-white/10">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <Users className="w-6 h-6 text-blue-300" weight="fill" />
-                <span className="text-ios-caption text-white/70">Cohort</span>
-              </div>
-              <p className="text-ios-footnote font-semibold text-white truncate">{cohortName}</p>
-              <p className="text-ios-caption2 text-white/70">твоя группа</p>
+              <p className="text-2xl font-bold text-white">
+                {Math.round((completedLessons / 9) * 100)}%
+              </p>
+              <p className="text-xs text-white/70">модуль</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -144,25 +153,27 @@ export default function DashboardHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Button
-            size="lg"
+          <Button 
             onClick={onContinueLearning}
-            className="flex-1 bg-white text-purple-600 hover:bg-white/90 touch-feedback rounded-ios-md h-touch-min text-ios-body font-semibold shadow-elevated"
+            size="lg"
+            className="flex-1 bg-white text-[#007AFF] hover:bg-white/90 shadow-lg"
           >
-            <TrendUp className="w-5 h-5 mr-2" weight="bold" />
+            <Lightning weight="fill" className="w-5 h-5 mr-2" />
             Продолжить обучение
           </Button>
-          <Button
+          
+          <Button 
+            onClick={onCheckIn}
             size="lg"
             variant="outline"
-            onClick={onCheckIn}
-            className="bg-white/10 text-white border-white/30 hover:bg-white/20 backdrop-blur-md touch-feedback rounded-ios-md h-touch-min text-ios-body font-semibold"
+            className="flex-1 border-white/30 text-white hover:bg-white/10 backdrop-blur-xl"
           >
-            <Calendar className="w-5 h-5 mr-2" weight="bold" />
-            Check-in
+            ❤️ Чек-ин
           </Button>
         </motion.div>
       </div>
     </motion.div>
   )
 }
+
+export default DashboardHero

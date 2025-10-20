@@ -1,0 +1,45 @@
+{
+  "name": "@ai-podrostok/telegram-bot",
+  "version": "0.1.0",
+  "description": "AI Подросток - Telegram Bot for teen support. Inspired by Perplexity AI philosophy.",
+  "main": "dist/bot.js",
+  "types": "dist/bot.d.ts",
+  "scripts": {
+    "dev": "tsx watch bot.ts",
+    "build": "tsc",
+    "start": "node dist/bot.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"**/*.{ts,json,md}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "ai",
+    "teens",
+    "mental-health",
+    "education",
+    "perplexity"
+  ],
+  "author": "AI Подросток Team",
+  "license": "MIT",
+  "dependencies": {
+    "grammy": "^1.21.1",
+    "openai": "^4.28.0",
+    "dotenv": "^16.4.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.2",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
