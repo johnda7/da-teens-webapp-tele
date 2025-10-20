@@ -6,8 +6,10 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Toaster } from '@/components/ui/sonner'
+import { Toaster as HotToaster } from 'react-hot-toast'
 import { toast } from 'sonner'
 import { Heart, Users, Calendar, BookOpen, Target, Shield, Trophy, Brain, ArrowRight } from '@phosphor-icons/react'
+import BoundariesModule from '@/components/BoundariesModule'
 import ModuleGrid from '@/components/ModuleGrid'
 import ModuleDetail from '@/components/ModuleDetail'
 import CheckInPanel from '@/components/CheckInPanel'
@@ -463,26 +465,11 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-6">
-            {selectedModule === 13 && isLoadingLesson ? (
-              <Card>
-                <CardContent className="flex flex-col items-center justify-center py-12">
-                  <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mb-4" />
-                  <p className="text-lg font-semibold text-purple-900 mb-2">Анализируем твоё состояние...</p>
-                  <p className="text-sm text-muted-foreground text-center max-w-md">
-                    Учитываем твоё настроение, уровень тревожности и другие факторы для подбора идеального урока
-                  </p>
-                </CardContent>
-              </Card>
-            ) : selectedModule === 13 && currentLesson ? (
-              <AdaptiveLessonViewer
-                recommendation={currentLesson}
-                onComplete={handleLessonComplete}
-                onSkip={() => {
-                  setCurrentLesson(null)
-                  setSelectedModule(null)
-                }}
+            {selectedModule === 13 ? (
+              <BoundariesModule 
+                onBack={() => setSelectedModule(null)}
               />
-            ) : selectedModule === 13 ? (
+            ) : selectedModule === 13 && isLoadingLesson ? (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -718,6 +705,7 @@ function App() {
         </Tabs>
       </main>
       <Toaster />
+      <HotToaster position="top-center" />
     </div>
   )
 }
