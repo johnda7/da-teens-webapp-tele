@@ -1,13 +1,13 @@
 # DA Teens - Адаптивная платформа психологического благополучия для подростков
 
-[![Branch](https://img.shields.io/badge/branch-fsd--migration-blue)](https://github.com/johnda7/da-teens-webapp-tele/tree/fsd-migration)
+[![Branch](https://img.shields.io/badge/branch-main-blue)](https://github.com/johnda7/da-teens-webapp-tele)
 [![Architecture](https://img.shields.io/badge/architecture-FSD-green)](docs/FOR_AGENTS.md)
 [![Storage](https://img.shields.io/badge/storage-Google%20Sheets%20API-yellow)](docs/FOR_AGENTS.md)
+[![Status](https://img.shields.io/badge/status-production-success)](https://johnda7.github.io/da-teens-webapp-tele/)
 
 Telegram Mini App с **адаптивной системой обучения** для развития эмоциональных навыков у подростков 13-18 лет.
 
-> **⚠️ Важно:** Проект находится в процессе миграции на **FSD (Feature-Sliced Design)** архитектуру.  
-> Текущая ветка: `fsd-migration` → будет слита в `main` после завершения тестирования.
+> **✅ Статус:** FSD (Feature-Sliced Design) архитектура внедрена и задеплоена в production!
 
 ## ✨ Что нового? (Октябрь 2025)
 

@@ -324,9 +324,9 @@ npm install react-hot-toast
 - Генерация примеров на основе интересов
 
 ### Фаза 3: Backend и масштабирование (неделя 3-4)
-- FastAPI backend
-- PostgreSQL база данных
-- Airtable интеграция для кураторов
+- FastAPI backend (опционально)
+- PostgreSQL база данных (опционально)
+- Google Sheets API интеграция для кураторов (FINAL решение)
 
 ### Фаза 4: Социальные функции (неделя 5)
 - Peer support (поддержка ровесников)
