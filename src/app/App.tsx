@@ -104,9 +104,9 @@ export function App() {
     }
   }, [user, userProfile, setUserProfile])
 
-  // Auto-select lesson when Module #13 is opened
+  // Auto-select lesson when Module #1 (Личные границы) is opened
   useEffect(() => {
-    if (selectedModule === 13 && !currentLesson) {
+    if (selectedModule === 1 && !currentLesson) {
       selectNextLesson()
     }
   }, [selectedModule])
@@ -345,7 +345,7 @@ export function App() {
 
         {/* Tab Contents */}
         <TabsContent value="dashboard" className="mt-0 p-4">
-          {selectedModule === 13 ? (
+          {selectedModule === 1 ? (
             <BoundariesModule onBack={() => setSelectedModule(null)} />
           ) : (
             <>
