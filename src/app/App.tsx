@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { BookOpen, Heart, Users, Trophy, Target } from '@phosphor-icons/react'
 import BoundariesModule from '@/components/BoundariesModule'
@@ -60,7 +61,7 @@ interface CheckInData {
 }
 
 export function App() {
-  const { user } = useTelegram()
+  const { user, isTelegramWebApp } = useTelegram()
   const defaultName = user?.first_name || 'Алекс'
 
   // Tab navigation
@@ -317,7 +318,47 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background pb-20">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+        <div className="flex items-center justify-between p-4">
+          <div className="flex items-center gap-3">
+            {/* iOS 26 Blue Brand Logo */}
+            <div className="w-10 h-10 rounded-full flex items-center justify-center"
+                 style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}>
+              <Heart weight="fill" className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-semibold text-foreground">AI Подросток</h1>
+              <p className="text-sm text-muted-foreground">
+                {isTelegramWebApp && user ? (
+                  <>👤 {user.first_name} {user.last_name || ''}</>
+                ) : (
+                  <>Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</>
+                )}
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {adaptiveProgress && adaptiveProgress.totalXP > 0 && (
+              <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
+                     style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
+                <Trophy className="w-3 h-3" />
+                Ур. {adaptiveProgress.level} • {adaptiveProgress.totalXP} XP
+              </Badge>
+            )}
+            <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
+                   style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
+              <Target className="w-3 h-3" />
+              {userProfile?.streak || 0} дней
+            </Badge>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="pb-20">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Tab Navigation - Fixed Bottom Bar */}
         <TabsList className="fixed bottom-0 left-0 right-0 h-16 rounded-none border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-50 grid grid-cols-5">
@@ -402,6 +443,7 @@ export function App() {
           />
         </TabsContent>
       </Tabs>
+      </main>
     </div>
   )
 }
