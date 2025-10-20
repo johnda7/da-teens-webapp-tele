@@ -82,57 +82,103 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
   }
 
   return (
-    <motion.div 
-      className="space-y-8 px-4 md:px-6 pb-8"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
-      {/* Header - iOS 26 Style */}
-      <div className="text-center pt-6 pb-2">
+    <div className="min-h-screen relative">
+      {/* Background Gradient для Liquid Glass эффекта */}
+      <div className="fixed inset-0 -z-10">
+        {/* Subtle gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
+        
+        {/* Animated gradient orbs */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 25 }}
-        >
-          <div className="text-6xl mb-4">💙</div>
-          <h2 className="text-[34px] leading-[41px] tracking-tight font-bold mb-3">
-            Ежедневный чек-ин
-          </h2>
-          <p className="text-[17px] leading-[22px] tracking-tight text-gray-600 dark:text-gray-400">
-            {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Today's Status - Success Badge */}
-      {hasCheckedInToday && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-2xl"
-          style={{
-            boxShadow: '0 4px 16px 0 rgba(52, 199, 89, 0.2)'
+          className="absolute top-0 left-0 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, 50, 0],
           }}
-        >
-          <div 
-            className="absolute inset-0 bg-green-500/10"
-            style={{
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-            }}
-          />
-          <div className="absolute inset-0 rounded-2xl border border-green-500/30" />
-          <div className="relative p-4 flex items-center gap-3">
-            <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" weight="fill" />
-            <span className="text-[15px] leading-[20px] font-semibold text-green-800 dark:text-green-600">
-              Чек-ин на сегодня уже есть
-            </span>
-          </div>
-        </motion.div>
-      )}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute top-1/3 right-0 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 100, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div> {/* End of background gradient wrapper */}
 
-      <div className="space-y-8">
+      <motion.div 
+        className="relative space-y-8 px-4 md:px-6 pb-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Header - iOS 26 Style */}
+        <div className="text-center pt-6 pb-2">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          >
+            <div className="text-6xl mb-4">💙</div>
+            <h2 className="text-[34px] leading-[41px] tracking-tight font-bold mb-3">
+              Ежедневный чек-ин
+            </h2>
+            <p className="text-[17px] leading-[22px] tracking-tight text-gray-600 dark:text-gray-400">
+              {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
+            </p>
+          </motion.div>
+        </div>
+
+        {/* Today's Status - Success Badge */}
+        {hasCheckedInToday && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative overflow-hidden rounded-2xl"
+            style={{
+              boxShadow: '0 4px 16px 0 rgba(52, 199, 89, 0.2)'
+            }}
+          >
+            <div 
+              className="absolute inset-0 bg-green-500/10"
+              style={{
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+              }}
+            />
+            <div className="absolute inset-0 rounded-2xl border border-green-500/30" />
+            <div className="relative p-4 flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0" weight="fill" />
+              <span className="text-[15px] leading-[20px] font-semibold text-green-800 dark:text-green-600">
+                Чек-ин на сегодня уже есть
+              </span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* All Cards Container */}
+        <div className="space-y-8">
         {/* Mood Check - Liquid Glass Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -140,18 +186,21 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           transition={{ delay: 0.1 }}
           className="relative overflow-hidden rounded-2xl"
           style={{
-            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)'
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.2), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)'
           }}
         >
           {/* Liquid Glass Background */}
           <div 
-            className="absolute inset-0 bg-white/80 dark:bg-black/20"
+            className="absolute inset-0 bg-white/70 dark:bg-black/30"
             style={{
               backdropFilter: 'blur(40px) saturate(180%)',
               WebkitBackdropFilter: 'blur(40px) saturate(180%)',
             }}
           />
-          <div className="absolute inset-0 rounded-2xl border border-white/20" />
+          {/* Gradient overlay для видимости */}
+          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-purple-500/5 to-blue-500/5" />
+          
+          <div className="absolute inset-0 rounded-2xl border border-white/30 dark:border-white/10" />
           
           {/* Content */}
           <div className="relative z-10 p-8">
@@ -159,9 +208,11 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
             <div className="mb-6">
               <div className="flex items-center gap-2 mb-2">
                 <Heart className="w-6 h-6 text-[#FF2D55]" weight="fill" />
-                <h3 className="text-[20px] leading-[25px] font-bold">Настроение</h3>
+                <h3 className="text-[20px] leading-[25px] font-bold text-gray-900 dark:text-white">
+                  Настроение
+                </h3>
               </div>
-              <p className="text-[15px] leading-[20px] text-gray-600 dark:text-gray-400">
+              <p className="text-[15px] leading-[20px] text-gray-700 dark:text-gray-300">
                 Как ты себя чувствуешь прямо сейчас?
               </p>
             </div>
@@ -178,8 +229,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                     className={`
                       relative p-4 rounded-xl transition-all
                       ${mood === index + 1 
-                        ? 'bg-[#007AFF]/10 ring-2 ring-[#007AFF] shadow-lg' 
-                        : 'bg-white/50 hover:bg-white/70 dark:bg-black/10 dark:hover:bg-black/20'
+                        ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
+                        : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
                       }
                     `}
                     style={{
@@ -200,8 +251,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                     className={`
                       relative p-4 rounded-xl transition-all
                       ${mood === index + 6 
-                        ? 'bg-[#007AFF]/10 ring-2 ring-[#007AFF] shadow-lg' 
-                        : 'bg-white/50 hover:bg-white/70 dark:bg-black/10 dark:hover:bg-black/20'
+                        ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
+                        : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
                       }
                     `}
                     style={{
@@ -222,8 +273,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
               className="text-center p-6 rounded-2xl"
               style={{
-                background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.1) 0%, rgba(90, 200, 250, 0.1) 100%)',
-                border: '1px solid rgba(0, 122, 255, 0.2)'
+                background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.15) 0%, rgba(90, 200, 250, 0.15) 100%)',
+                border: '1px solid rgba(0, 122, 255, 0.3)'
               }}
             >
               <div className="text-6xl mb-3">{moodEmojis[mood - 1]}</div>
@@ -506,7 +557,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
             </div>
           </div>
         </motion.div>
-      </div>
-    </motion.div>
+        </div>
+      </motion.div>
+    </div>
   )
 }
