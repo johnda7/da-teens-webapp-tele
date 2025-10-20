@@ -22,10 +22,14 @@ const modules = [
   { id: 10, title: 'Здоровые привычки', description: 'Сон, питание, движение, экранное время', color: 'bg-teal-50 border-teal-200', icon: '🌱' },
   { id: 11, title: 'Принятие решений', description: 'Анализ последствий, эксперименты', color: 'bg-red-50 border-red-200', icon: '🤔' },
   { id: 12, title: 'Устойчивость', description: 'Работа с ошибками, план восстановления', color: 'bg-violet-50 border-violet-200', icon: '🛡️' },
+  { id: 13, title: '🧠 Личные границы (Адаптивный)', description: 'Новая система обучения с учетом твоих эмоций • 9 уроков • Множественные форматы', color: 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-300', icon: '🛡️', isAdaptive: true, badge: 'NEW!' },
 ]
 
 export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGridProps) {
   const getModuleStatus = (moduleId: number) => {
+    // Модуль #13 (адаптивный) всегда доступен для тестирования
+    if (moduleId === 13) return 'current'
+    
     if (moduleId < currentModule) return 'completed'
     if (moduleId === currentModule) return 'current'
     return 'locked'
@@ -100,7 +104,14 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
                     {getStatusIcon(status)}
                   </div>
                   <div className="space-y-1">
-                    <CardTitle className="text-base">{module.title}</CardTitle>
+                    <CardTitle className="text-base">
+                      {module.title}
+                      {(module as any).badge && (
+                        <Badge className="ml-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                          {(module as any).badge}
+                        </Badge>
+                      )}
+                    </CardTitle>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Модуль {module.id}</span>
                       {getStatusBadge(status)}
