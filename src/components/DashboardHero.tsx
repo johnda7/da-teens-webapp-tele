@@ -31,10 +31,10 @@ export default function DashboardHero({
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="relative overflow-hidden rounded-ios-xl glass border-0 safe-x"
     >
-      {/* Animated Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-blue-500 to-indigo-600 opacity-90" />
+      {/* iOS 26 Blue Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#007AFF] via-[#5AC8FA] to-[#007AFF] opacity-95" />
       
-      {/* Animated circles */}
+      {/* Animated Liquid Glass circles */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute -top-20 -right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"

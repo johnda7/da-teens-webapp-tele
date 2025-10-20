@@ -81,11 +81,11 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4">
       {/* Header */}
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-foreground">Ежедневный чек-ин</h2>
-        <p className="text-muted-foreground mt-1">
+      <div className="text-center py-4">
+        <h2 className="text-3xl font-bold text-foreground mb-2">Ежедневный чек-ин</h2>
+        <p className="text-lg text-muted-foreground">
           {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
         </p>
       </div>
@@ -113,27 +113,44 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
             <CardDescription>Как ты себя чувствуешь прямо сейчас?</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* Emoji Scale */}
-            <div className="grid grid-cols-5 gap-2">
-              {moodEmojis.map((emoji, index) => (
-                <button
-                  key={index}
-                  onClick={() => setMood(index + 1)}
-                  className={`p-3 rounded-lg border-2 transition-all ${
-                    mood === index + 1 
-                      ? 'border-primary bg-primary/10 scale-110' 
-                      : 'border-border hover:border-primary/50'
-                  }`}
-                >
-                  <div className="text-2xl">{emoji}</div>
-                </button>
-              ))}
+            {/* Emoji Scale - 2 rows of 5 */}
+            <div className="space-y-2">
+              <div className="grid grid-cols-5 gap-2">
+                {moodEmojis.slice(0, 5).map((emoji, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setMood(index + 1)}
+                    className={`p-4 rounded-2xl border-2 transition-all ${
+                      mood === index + 1 
+                        ? 'border-primary bg-primary/10 scale-105 shadow-md' 
+                        : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="text-3xl">{emoji}</div>
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-5 gap-2">
+                {moodEmojis.slice(5, 10).map((emoji, index) => (
+                  <button
+                    key={index + 5}
+                    onClick={() => setMood(index + 6)}
+                    className={`p-4 rounded-2xl border-2 transition-all ${
+                      mood === index + 6 
+                        ? 'border-primary bg-primary/10 scale-105 shadow-md' 
+                        : 'border-border hover:border-primary/50 hover:bg-muted/50'
+                    }`}
+                  >
+                    <div className="text-3xl">{emoji}</div>
+                  </button>
+                ))}
+              </div>
             </div>
             
-            {/* Current Selection */}
-            <div className="text-center p-3 bg-muted/50 rounded-lg">
-              <div className="text-3xl mb-1">{moodEmojis[mood - 1]}</div>
-              <div className="text-sm font-medium">{moodLabels[mood - 1]}</div>
+            {/* Current Selection - bigger display */}
+            <div className="text-center p-6 bg-gradient-to-br from-primary/5 to-primary/10 rounded-2xl border border-primary/20">
+              <div className="text-5xl mb-2">{moodEmojis[mood - 1]}</div>
+              <div className="text-lg font-semibold text-foreground">{moodLabels[mood - 1]}</div>
             </div>
           </CardContent>
         </Card>
