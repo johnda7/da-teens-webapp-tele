@@ -18,7 +18,7 @@ import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { BookOpen, Heart, Users, Trophy, Target, Brain } from '@phosphor-icons/react'
-import BoundariesModule from '@/components/BoundariesModule'
+import UniversalModuleViewer from '@/components/UniversalModuleViewer'
 import ModuleGrid from '@/components/ModuleGrid'
 import CheckInPanel from '@/components/CheckInPanel'
 import CohortSchedule from '@/components/CohortSchedule'
@@ -108,12 +108,12 @@ export function App() {
     }
   }, [user, userProfile, setUserProfile])
 
-  // Auto-select lesson when Module #1 (Личные границы) is opened
-  useEffect(() => {
-    if (selectedModule === 1 && !currentLesson) {
-      selectNextLesson()
-    }
-  }, [selectedModule])
+  // Removed auto-select lesson - user should click to start
+  // useEffect(() => {
+  //   if (selectedModule === 1 && !currentLesson) {
+  //     selectNextLesson()
+  //   }
+  // }, [selectedModule])
 
   // Adaptive Learning Functions
   const selectNextLesson = async () => {
@@ -389,8 +389,11 @@ export function App() {
 
         {/* Tab Contents */}
         <TabsContent value="dashboard" className="mt-0 p-4">
-          {selectedModule === 1 ? (
-            <BoundariesModule onBack={() => setSelectedModule(null)} />
+          {selectedModule ? (
+            <UniversalModuleViewer 
+              moduleId={selectedModule} 
+              onBack={() => setSelectedModule(null)} 
+            />
           ) : (
             <>
               <DashboardHero
