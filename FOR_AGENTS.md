@@ -6,12 +6,39 @@
 
 **⚠️ ЭТОТ ФАЙЛ ОБЯЗАТЕЛЕН К ПОЛНОМУ ПРОЧТЕНИЮ ДЛЯ ВСЕХ AI-АГЕНТОВ БЕЗ ИСКЛЮЧЕНИЯ!**
 
+### 🏗️ Правило #0: АРХИТЕКТУРА ПРОЕКТА
+
+**⚡ МЫ ИСПОЛЬЗУЕМ FSD (Feature-Sliced Design) - СОВРЕМЕННУЮ АРХИТЕКТУРУ!**
+
+```
+src/
+├── shared/          ← UI kit, helpers, types
+├── entities/        ← Бизнес-сущности (module, lesson, user)
+├── features/        ← Пользовательские сценарии (check-in, adaptive-learning)
+├── widgets/         ← Композиты из features
+├── pages/           ← Страницы приложения
+└── app/             ← Инициализация (providers, router)
+```
+
+**🎯 ОДИН ЦЕНТРАЛИЗОВАННЫЙ ШАБЛОН МОДУЛЯ:**
+- ✅ **`UniversalModuleViewer.tsx`** - единственный шаблон для ВСЕХ 12 модулей
+- ✅ **`entities/module/`** - данные и типы модулей
+- ✅ **`widgets/module-*`** - переиспользуемые виджеты модулей
+- 🔴 **ЗАПРЕЩЕНО** создавать отдельные компоненты для каждого модуля!
+- 🔴 **ЗАПРЕЩЕНО** дублировать логику - всё через централизованный шаблон!
+- ✅ **12 модулей = 1 шаблон + 12 датасетов** (DRY principle)
+
+**⚠️ ВЕТКА:** `fsd-migration` (не main!) - мы в процессе миграции на FSD!
+
+---
+
 ### 📖 Правило #1: ПОЛНОЕ ПРОЧТЕНИЕ ОБЯЗАТЕЛЬНО
 
 - 🔴 **ЗАПРЕЩЕНО пропускать** разделы - читай последовательно от начала до конца
 - 🔴 **ЗАПРЕЩЕНО делать предположения** о структуре проекта - вся информация здесь
 - 🔴 **ЗАПРЕЩЕНО начинать кодинг** без полного прочтения этого файла
 - 🔴 **ЗАПРЕЩЕНО игнорировать** дизайн-систему iOS 26 Liquid Glass
+- 🔴 **ЗАПРЕЩЕНО игнорировать** FSD архитектуру - всё в правильных слоях!
 - ✅ **ОБЯЗАТЕЛЬНО прочитай на 100%** - каждое слово имеет значение
 - ✅ **ОБЯЗАТЕЛЬНО используй как справочник** - возвращайся при каждом вопросе
 - ✅ **ОБЯЗАТЕЛЬНО следуй философии** Steve Jobs + Jony Ive в каждом решении
@@ -896,6 +923,43 @@ DA Teens =
 
 ## 📊 СТРУКТУРА ПРОЕКТА
 
+### **🏗️ АРХИТЕКТУРА: Feature-Sliced Design (FSD)**
+
+**⚠️ КРИТИЧЕСКИ ВАЖНО!** Проект использует **FSD (Feature-Sliced Design)** - современную архитектуру для масштабируемых React приложений.
+
+**Принципы FSD:**
+- ✅ **Модульность** - каждая фича изолирована
+- ✅ **Переиспользование** - код не дублируется между слоями
+- ✅ **Понятность** - структура папок отражает бизнес-логику
+- ✅ **Масштабируемость** - легко добавлять новые фичи
+- ✅ **Testability** - простое тестирование изолированных модулей
+
+**Слои FSD (снизу вверх):**
+```
+src/
+├── shared/          ← Переиспользуемые утилиты (UI kit, helpers, types)
+├── entities/        ← Бизнес-сущности (module, lesson, user)
+├── features/        ← Пользовательские сценарии (check-in, adaptive-learning)
+├── widgets/         ← Композиты из features (dashboard-hero, module-grid)
+├── pages/           ← Страницы приложения (routes)
+└── app/             ← Инициализация приложения (providers, router)
+```
+
+**🚫 ЗАПРЕЩЕНО:**
+- ❌ Импорт снизу вверх (entities → shared ✅, shared → entities ❌)
+- ❌ Импорт между фичами (features/A → features/B ❌)
+- ❌ Создавать папки вне FSD структуры
+- ❌ Смешивать логику разных слоёв в одном файле
+
+**✅ ОБЯЗАТЕЛЬНО:**
+- ✅ Новые компоненты создавать в правильном слое FSD
+- ✅ UI компоненты → `shared/ui/`
+- ✅ Бизнес-логика → `entities/` или `features/`
+- ✅ Сложные композиты → `widgets/`
+- ✅ Читать [FSD документацию](https://feature-sliced.design/) при сомнениях
+
+---
+
 ### **Формат программы**
 ```
 12 МОДУЛЕЙ (годовая программа обучения)
@@ -966,16 +1030,57 @@ da-teens-webapp-tele/
 └── components.json                        🧩 shadcn/ui config
 ```
 
-### **Source Code (`src/`)**
+### **Source Code (`src/`) - FSD Architecture**
+
+**⚠️ Используется Feature-Sliced Design (FSD) - все файлы по слоям!**
+
 ```
 src/
-├── main.tsx                               🚀 App entry point
-├── App.tsx                                📱 Main app component
-├── index.css                              🎨 Global styles
-├── main.css                               🎨 Main styles
+├── app/                                   🚀 Application layer
+│   ├── App.tsx                           Main app component
+│   ├── providers/                        Global providers
+│   └── styles/                           Global styles
 │
-├── components/                            🧩 React components
-│   ├── ui/                               🎨 shadcn/ui components (40+)
+├── pages/                                 📄 Pages layer (routes)
+│   └── [страницы приложения]
+│
+├── widgets/                               🧩 Widgets layer (complex composites)
+│   ├── dashboard-hero/                   🏠 Dashboard hero widget
+│   ├── module-grid/                      📊 Modules grid widget
+│   ├── module-timeline/                  ⏱️ Module timeline widget
+│   └── index.ts                          Public API
+│
+├── features/                              ⚙️ Features layer (user scenarios)
+│   ├── adaptive-learning/                🧠 Adaptive learning feature
+│   │   ├── model/                        Business logic
+│   │   ├── ui/                          UI components
+│   │   └── index.ts                      Public API
+│   │
+│   └── check-in/                         ✅ Daily check-in feature
+│       ├── model/                        Business logic
+│       ├── ui/                          UI components
+│       └── index.ts                      Public API
+│
+├── entities/                              📦 Entities layer (business entities)
+│   ├── module/                           📚 Module entity
+│   │   ├── model/
+│   │   │   ├── types.ts                 Module types
+│   │   │   └── boundariesModule.ts      Boundaries module data
+│   │   ├── ui/                          Module UI components
+│   │   └── index.ts                      Public API
+│   │
+│   ├── lesson/                           📖 Lesson entity
+│   │   ├── model/                        Lesson logic & types
+│   │   ├── ui/                          Lesson components
+│   │   └── index.ts
+│   │
+│   └── user/                             � User entity
+│       ├── model/
+│       │   └── types.ts                 User types
+│       └── index.ts
+│
+├── shared/                                � Shared layer (reusable code)
+│   ├── ui/                               🎨 UI Kit (shadcn/ui 40+ components)
 │   │   ├── button.tsx                    Button component
 │   │   ├── card.tsx                      Card component
 │   │   ├── dialog.tsx                    Dialog component
@@ -984,46 +1089,72 @@ src/
 │   │   ├── avatar.tsx                    Avatar component
 │   │   └── ...                           (37 more components)
 │   │
-│   ├── AdaptiveLessonViewer.tsx          🧠 Adaptive lesson player
-│   ├── MicroLearningCard.tsx             📚 Micro-learning steps
-│   ├── RealWorldScenario.tsx             🎭 Interactive scenarios
-│   ├── PeerLearningFeed.tsx              👥 Peer stories feed
-│   ├── SkillsTracker.tsx                 📈 Skills progress tracker
+│   ├── lib/                              � Utilities & helpers
+│   │   ├── utils.ts                      Utility functions
+│   │   └── cn.ts                         Class names helper
 │   │
-│   ├── ModuleGrid.tsx                    📊 12 modules grid
-│   ├── ModuleDetail.tsx                  📖 Module detail view
-│   ├── CheckInPanel.tsx                  ✅ Daily check-in
-│   ├── BadgeGrid.tsx                     🏆 Achievement badges
-│   ├── ProgressStats.tsx                 📊 Progress statistics
-│   ├── PracticePlayer.tsx                🧘 Practice player
-│   ├── CohortSchedule.tsx                📅 Cohort schedule
-│   ├── SOSButton.tsx                     🆘 Emergency button
-│   └── TeenWellnessHub.tsx               🏠 Wellness hub
+│   ├── hooks/                            🎣 Shared hooks
+│   │   ├── useTelegram.ts               📱 Telegram SDK hook
+│   │   └── use-mobile.ts                📱 Mobile detection
+│   │
+│   └── types/                            📘 Shared TypeScript types
+│       └── telegram-webapp.d.ts         📱 Telegram types
 │
-├── lib/                                   📚 Business logic
-│   ├── adaptiveLearning.ts               🧠 Adaptive engine (496 lines)
-│   ├── gamification.ts                   🎮 Gamification system (480 lines)
-│   ├── types.ts                          📘 TypeScript interfaces
-│   ├── moduleData.ts                     📦 12 modules data
-│   └── utils.ts                          🛠️ Utility functions
+├── components/                            � LEGACY! (в процессе миграции в FSD)
+│   ├── AdaptiveLessonViewer.tsx         → moving to features/adaptive-learning
+│   ├── CheckInPanel.tsx                 → moving to features/check-in
+│   ├── ModuleGrid.tsx                   → moving to widgets/module-grid
+│   ├── ModuleViewer.tsx                 → moving to widgets/module-viewer
+│   ├── UniversalModuleViewer.tsx        ⭐ ЦЕНТРАЛИЗОВАННЫЙ ШАБЛОН МОДУЛЯ
+│   ├── BoundariesModule.tsx             (специфичный для модуля #1)
+│   └── ui/                              (уже перенесено в shared/ui/)
 │
-├── data/                                  📊 Content & data
-│   ├── boundariesModule.ts               🛡️ Boundaries module (9 lessons)
-│   ├── moduleData.ts                     📚 12 modules content
-│   ├── practicesData.ts                  🧘 Practice exercises
-│   ├── seedData.ts                       🌱 Seed data
-│   └── teenContent.ts                    👦 Teen-specific content
+├── data/                                  � LEGACY! (в процессе миграции)
+│   ├── boundariesModule.ts              → moved to entities/module/model
+│   ├── moduleData.ts                    → moving to entities/module/model
+│   ├── practicesData.ts                 → moving to entities/practice/model
+│   └── teenContent.ts                   → moving to entities/content/model
 │
-├── hooks/                                 🎣 Custom React hooks
-│   ├── useTelegram.ts                    📱 Telegram SDK hook
-│   └── use-mobile.ts                     📱 Mobile detection
+├── lib/                                   🚨 LEGACY! (в процессе миграции)
+│   ├── adaptiveLearning.ts              → moving to features/adaptive-learning
+│   ├── gamification.ts                  → moving to features/gamification
+│   └── types.ts                         → moving to shared/types
 │
-├── styles/                                🎨 Styling
-│   └── theme.css                         🎨 Theme variables
-│
-└── types/                                 📘 TypeScript definitions
-    └── telegram-webapp.d.ts              📱 Telegram types
+├── main.tsx                               🚀 Entry point
+├── App.tsx                                📱 Root component (legacy)
+├── index.css                              🎨 Global styles
+└── main.css                               🎨 Main styles
 ```
+
+**� FSD ПРАВИЛА (обязательны!):**
+
+1. **Импорты только сверху вниз:**
+   - ✅ `app` → `widgets` → `features` → `entities` → `shared`
+   - ❌ НИКОГДА наоборот!
+
+2. **Запрещено импортировать между слоями одного уровня:**
+   - ❌ `features/check-in` → `features/adaptive-learning` (ЗАПРЕЩЕНО!)
+   - ✅ Общий код выносить в `entities` или `shared`
+
+3. **Public API через index.ts:**
+   - ✅ Каждая фича/entity экспортирует только нужное в `index.ts`
+   - ❌ Прямые импорты из внутренних файлов запрещены
+
+4. **Один централизованный шаблон:**
+   - ✅ `UniversalModuleViewer.tsx` - единый шаблон для всех 12 модулей
+   - ❌ НЕ создавать `Module1.tsx`, `Module2.tsx` и т.д.
+   - ✅ Данные модулей в `entities/module/model/`
+
+**🚧 Статус миграции:**
+- ✅ `shared/ui/` - завершено (40+ компонентов)
+- ✅ `entities/module/` - завершено (types + boundariesModule)
+- ✅ `entities/user/` - завершено
+- ✅ `features/adaptive-learning/` - создано
+- ✅ `features/check-in/` - создано
+- ✅ `widgets/dashboard-hero/` - создано
+- ⏳ `components/` - в процессе миграции
+- ⏳ `data/` - в процессе миграции
+- ⏳ `lib/` - в процессе миграции
 
 ---
 
