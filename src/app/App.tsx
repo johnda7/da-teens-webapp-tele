@@ -13,8 +13,11 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
+import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { BookOpen, Heart, Users, Trophy, Target } from '@phosphor-icons/react'
+import { BookOpen, Heart, Users, Trophy, Target, Brain } from '@phosphor-icons/react'
 import BoundariesModule from '@/components/BoundariesModule'
 import ModuleGrid from '@/components/ModuleGrid'
 import CheckInPanel from '@/components/CheckInPanel'
@@ -404,6 +407,87 @@ export function App() {
                 }}
                 onCheckIn={() => setActiveTab('checkin')}
               />
+
+              {/* Adaptive Learning Stats */}
+              {adaptiveProgress && adaptiveProgress.completedLessons.length > 0 && (
+                <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Brain className="w-6 h-6 text-purple-600" />
+                        <div>
+                          <CardTitle className="text-lg">Адаптивное обучение</CardTitle>
+                          <CardDescription className="text-purple-700">
+                            Модуль #1: Личные границы
+                          </CardDescription>
+                        </div>
+                      </div>
+                      <Trophy className="w-8 h-8 text-purple-600" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-3 gap-3 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-purple-600">
+                          {adaptiveProgress.completedLessons.length}
+                        </div>
+                        <div className="text-xs text-muted-foreground">уроков пройдено</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-blue-600">
+                          {adaptiveProgress.totalXP}
+                        </div>
+                        <div className="text-xs text-muted-foreground">XP заработано</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-green-600">
+                          {adaptiveProgress.level}
+                        </div>
+                        <div className="text-xs text-muted-foreground">уровень</div>
+                      </div>
+                    </div>
+                    <Progress 
+                      value={(adaptiveProgress.completedLessons.length / 9) * 100} 
+                      className="h-2"
+                    />
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="text-sm text-muted-foreground">
+                        {adaptiveProgress.completedLessons.length === 9 ? 'Модуль завершён! 🎉' : `Осталось ${9 - adaptiveProgress.completedLessons.length} уроков`}
+                      </span>
+                      <Button 
+                        size="sm" 
+                        onClick={() => setSelectedModule(1)}
+                        style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
+                        className="text-white shadow-lg hover:shadow-xl"
+                      >
+                        {adaptiveProgress.completedLessons.length === 9 ? 'Пройти заново' : 'Продолжить'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Quick Actions */}
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('checkin')}>
+                  <CardContent className="p-4 text-center">
+                    <Heart className="w-8 h-8 text-accent mx-auto mb-2" />
+                    <h3 className="font-medium">Ежедневный чек-ин</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {lastCheckIn ? 'Обновить состояние' : 'Как дела сегодня?'}
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('cohort')}>
+                  <CardContent className="p-4 text-center">
+                    <Users className="w-8 h-8 text-primary mx-auto mb-2" />
+                    <h3 className="font-medium">Моя группа</h3>
+                    <p className="text-sm text-muted-foreground">Встреча через 2 дня</p>
+                  </CardContent>
+                </Card>
+              </div>
+
               <ModuleGrid 
                 currentModule={userProfile?.currentModule || 1}
                 onModuleSelect={setSelectedModule}
