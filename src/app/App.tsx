@@ -1,24 +1,37 @@
 /**
- * Main App Component (FSD Architecture)
+ * Main App Component (FSD Architecture - App Layer)
  * 
- * FSD Layer: App
- * Главный компонент приложения с роутингом между страницами
+ * Главный компонент с полной функциональностью:
+ * - 5 табов: dashboard, checkin, cohort, badges, profile
+ * - Adaptive Learning Engine
+ * - Gamification System
+ * - Check-in tracking
+ * - Module #13 (Boundaries) integration
  */
 
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
-import { useTelegram } from '@/hooks/useTelegram'
-import { AppProvider } from './providers'
-import { DashboardPage } from '@/pages/dashboard'
-import { ModulePage } from '@/pages/module'
-import type { CheckInData } from '@/features/check-in'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
+import { BookOpen, Heart, Users, Trophy, Target } from '@phosphor-icons/react'
+import BoundariesModule from '@/components/BoundariesModule'
+import ModuleGrid from '@/components/ModuleGrid'
+import CheckInPanel from '@/components/CheckInPanel'
+import CohortSchedule from '@/components/CohortSchedule'
+import BadgeGrid from '@/components/BadgeGrid'
+import ProgressStats from '@/components/ProgressStats'
+import DashboardHero from '@/components/DashboardHero'
+import { useTelegram } from '@/hooks/useTelegram'
+import boundariesModule from '@/data/boundariesModule'
+import { adaptiveLearning } from '@/lib/adaptiveLearning'
+import type { LessonRecommendation, CheckInData as AdaptiveCheckInData } from '@/lib/adaptiveLearning'
 
 // Import styles
 import './styles/index.css'
 import './styles/main.css'
 import './styles/theme.css'
 
+// Types
 interface UserProfile {
   name: string
   age: number
@@ -38,16 +51,25 @@ interface AdaptiveProgress {
   level: number
 }
 
-type AppView = 'dashboard' | 'module'
+interface CheckInData {
+  date: string
+  mood: number
+  anxiety: number
+  sleepHours: number
+  note?: string
+}
 
-function App() {
+export function App() {
   const { user } = useTelegram()
-  const [view, setView] = useState<AppView>('dashboard')
-  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null)
-  
   const defaultName = user?.first_name || 'Алекс'
-  
-  // User Profile KV
+
+  // Tab navigation
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const [selectedModule, setSelectedModule] = useState<number | null>(null)
+  const [currentLesson, setCurrentLesson] = useState<LessonRecommendation | null>(null)
+  const [isLoadingLesson, setIsLoadingLesson] = useState(false)
+
+  // User data with KV storage
   const [userProfile, setUserProfile] = useKV<UserProfile>('user-profile', {
     name: defaultName,
     age: 16,
@@ -57,8 +79,10 @@ function App() {
     streak: 7,
     cohortId: 'teens-14-16-cohort-a'
   })
+
+  const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
+  const [lastCheckIn, setLastCheckIn] = useKV<CheckInData | null>('last-checkin', null)
   
-  // Adaptive Progress KV
   const [adaptiveProgress, setAdaptiveProgress] = useKV<AdaptiveProgress>('adaptive-progress', {
     completedLessons: [],
     quizScores: {},
@@ -67,15 +91,10 @@ function App() {
     totalXP: 0,
     level: 1
   })
-  
-  // User Badges KV
-  const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
-  
-  // Check-In Data KV
-  const [lastCheckIn, setLastCheckIn] = useKV<CheckInData | null>('last-checkin', null)
-  const [checkIns, setCheckIns] = useKV<CheckInData[]>('check-ins', [])
 
-  // Update user name from Telegram
+  const [checkIns, setCheckIns] = useState<CheckInData[]>([])
+
+  // Sync Telegram user name with profile
   useEffect(() => {
     if (user && userProfile && userProfile.name !== user.first_name) {
       setUserProfile({
@@ -85,39 +104,96 @@ function App() {
     }
   }, [user, userProfile, setUserProfile])
 
-  // Handlers
-  const handleModuleSelect = (moduleId: number) => {
-    setSelectedModuleId(moduleId)
-    setView('module')
-  }
+  // Auto-select lesson when Module #13 is opened
+  useEffect(() => {
+    if (selectedModule === 13 && !currentLesson) {
+      selectNextLesson()
+    }
+  }, [selectedModule])
 
-  const handleBackToDashboard = () => {
-    setSelectedModuleId(null)
-    setView('dashboard')
-  }
-
-  const handleCheckIn = (data: CheckInData) => {
-    setLastCheckIn(data)
-    setCheckIns([...(checkIns || []), data])
-    toast.success('Чек-ин сохранён!', {
-      description: 'Спасибо за твою честность 💙'
-    })
+  // Adaptive Learning Functions
+  const selectNextLesson = async () => {
+    setIsLoadingLesson(true)
+    try {
+      // Create default check-in if none exists
+      const defaultCheckIn: AdaptiveCheckInData = lastCheckIn ? {
+        mood: lastCheckIn.mood,
+        anxiety: lastCheckIn.anxiety,
+        sleepHours: lastCheckIn.sleepHours,
+        energy: 7,
+        note: lastCheckIn.note,
+        timestamp: new Date(lastCheckIn.date)
+      } : {
+        mood: 7,
+        anxiety: 5,
+        sleepHours: 7,
+        energy: 7,
+        note: 'Начальное состояние',
+        timestamp: new Date()
+      }
+      
+      const adaptiveCheckIns: AdaptiveCheckInData[] = checkIns.map(ci => ({
+        mood: ci.mood,
+        anxiety: ci.anxiety,
+        sleepHours: ci.sleepHours,
+        energy: 7,
+        note: ci.note,
+        timestamp: new Date(ci.date)
+      }))
+      
+      const userProgressData = {
+        userId: user?.id?.toString() || 'guest',
+        completedLessons: [],
+        quizScores: {},
+        timeSpent: {},
+        practiceCompleted: {},
+        checkIns: adaptiveCheckIns.length > 0 ? adaptiveCheckIns : [defaultCheckIn],
+        lastActiveDate: new Date(),
+        streak: userProfile?.streak || 0
+      }
+      
+      const recommendation = await adaptiveLearning.selectNextLesson(
+        boundariesModule.lessons,
+        userProgressData,
+        defaultCheckIn
+      )
+      
+      setCurrentLesson(recommendation)
+      
+      if (!lastCheckIn) {
+        toast.info('Используем стандартные настройки', {
+          description: 'Пройди check-in для более точных рекомендаций'
+        })
+      } else {
+        toast.success(`Рекомендуем: ${recommendation.lesson.title}`, {
+          description: recommendation.reason
+        })
+      }
+    } catch (error) {
+      console.error('Error selecting lesson:', error)
+      toast.error('Ошибка при выборе урока', {
+        description: 'Попробуй ещё раз'
+      })
+    } finally {
+      setIsLoadingLesson(false)
+    }
   }
 
   const handleLessonComplete = async (score: number) => {
-    if (!adaptiveProgress || !userBadges) return
+    if (!currentLesson || !adaptiveProgress || !userBadges) return
 
     try {
+      const lessonId = currentLesson.lesson.id
       const earnedXP = Math.round(score * 10)
       const newTotalXP = adaptiveProgress.totalXP + earnedXP
       const newLevel = Math.floor(Math.sqrt(newTotalXP / 100)) + 1
       
       // Update adaptive progress
-      const lessonId = `boundaries-${adaptiveProgress.completedLessons.length + 1}`
       const newProgress = {
-        ...adaptiveProgress,
         completedLessons: [...adaptiveProgress.completedLessons, lessonId],
         quizScores: { ...adaptiveProgress.quizScores, [lessonId]: score },
+        timeSpent: adaptiveProgress.timeSpent,
+        practiceCompleted: adaptiveProgress.practiceCompleted,
         totalXP: newTotalXP,
         level: newLevel
       }
@@ -127,24 +203,35 @@ function App() {
       const allLessonsCompleted = newProgress.completedLessons.length
       const newBadges: string[] = []
 
+      // First lesson badge
       if (allLessonsCompleted === 1 && !userBadges.includes('first-adaptive-lesson')) {
         newBadges.push('first-adaptive-lesson')
       }
 
+      // Perfect score badge
       if (score >= 90 && !userBadges.includes('perfect-score')) {
         newBadges.push('perfect-score')
       }
 
+      // Module completion badge (all 9 lessons)
       if (allLessonsCompleted === 9 && !userBadges.includes('boundaries-master')) {
         newBadges.push('boundaries-master')
+      }
+
+      // Consistency badge (3 lessons in a row)
+      if (allLessonsCompleted >= 3 && !userBadges.includes('consistent-learner')) {
+        newBadges.push('consistent-learner')
       }
 
       if (newBadges.length > 0) {
         setUserBadges([...userBadges, ...newBadges])
         
+        // Show badge notifications
         setTimeout(() => {
           newBadges.forEach(badgeId => {
-            toast.success(`🏆 Новый бейдж: ${badgeId}!`, {
+            const badgeInfo = getBadgeInfo(badgeId)
+            toast.success(`🏆 Новый бейдж: ${badgeInfo.name}!`, {
+              description: badgeInfo.description,
               duration: 5000
             })
           })
@@ -152,55 +239,170 @@ function App() {
       }
 
       // Main success message
-      toast.success('Отличная работа! 🎉', {
+      const messages = [
+        'Отличная работа! 🎉',
+        'Ты молодец! 🌟',
+        'Супер результат! ⭐',
+        'Браво! 👏',
+        'Потрясающе! 🚀'
+      ]
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+
+      toast.success(randomMessage, {
         description: `+${earnedXP} XP • Уровень ${newProgress.level} • ${allLessonsCompleted}/9 уроков`
       })
 
-      // Special celebration for module completion
+      // Special celebration for completing all lessons
       if (allLessonsCompleted === 9) {
         setTimeout(() => {
           toast.success('🎊 ПОЗДРАВЛЯЕМ! 🎊', {
-            description: 'Ты прошёл все уроки модуля "Личные границы"!',
+            description: 'Ты прошёл все уроки модуля "Личные границы"! Теперь ты знаешь, как защищать своё пространство и говорить "нет".',
             duration: 10000
           })
         }, 2000)
       }
+
+      // Update user profile streak and stats
+      if (userProfile) {
+        setUserProfile({
+          ...userProfile,
+          streak: userProfile.streak + 1,
+          completedModules: allLessonsCompleted === 9 ? userProfile.completedModules + 1 : userProfile.completedModules
+        })
+      }
+
+      // Reset lesson state
+      setTimeout(() => {
+        setCurrentLesson(null)
+        setSelectedModule(null)
+      }, 500)
+
     } catch (error) {
       console.error('Error completing lesson:', error)
-      toast.error('Ошибка сохранения', {
-        description: 'Попробуй ещё раз'
+      toast.error('Ошибка при сохранении прогресса', {
+        description: 'Но урок пройден! Попробуй перезагрузить страницу'
       })
     }
   }
 
-  return (
-    <AppProvider>
-      {view === 'dashboard' && userProfile && adaptiveProgress && userBadges && (
-        <DashboardPage
-          userProfile={userProfile}
-          adaptiveProgress={adaptiveProgress}
-          userBadges={userBadges}
-          lastCheckIn={lastCheckIn || null}
-          onModuleSelect={handleModuleSelect}
-          onCheckIn={handleCheckIn}
-        />
-      )}
+  // Helper function to get badge info
+  const getBadgeInfo = (badgeId: string) => {
+    const badges: Record<string, { name: string; description: string }> = {
+      'first-adaptive-lesson': {
+        name: 'Первый шаг',
+        description: 'Прошёл первый адаптивный урок'
+      },
+      'perfect-score': {
+        name: 'Перфекционист',
+        description: 'Набрал 90+ баллов в квизе'
+      },
+      'boundaries-master': {
+        name: 'Мастер границ',
+        description: 'Прошёл все уроки модуля "Личные границы"'
+      },
+      'consistent-learner': {
+        name: 'Последовательный',
+        description: 'Прошёл 3 урока подряд'
+      },
+      'first-step': {
+        name: 'Первый шаг',
+        description: 'Начал обучение'
+      },
+      'check-in-streak-7': {
+        name: 'Неделя чек-инов',
+        description: 'Делал чек-ин 7 дней подряд'
+      }
+    }
+    return badges[badgeId] || { name: badgeId, description: '' }
+  }
 
-      {view === 'module' && selectedModuleId && userProfile && adaptiveProgress && checkIns && (
-        <ModulePage
-          moduleId={selectedModuleId}
-          userProfile={{
-            name: userProfile.name,
-            streak: userProfile.streak
-          }}
-          adaptiveProgress={adaptiveProgress}
-          lastCheckIn={lastCheckIn || null}
-          checkIns={checkIns}
-          onBack={handleBackToDashboard}
-          onLessonComplete={handleLessonComplete}
-        />
-      )}
-    </AppProvider>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 to-background pb-20">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        {/* Tab Navigation - Fixed Bottom Bar */}
+        <TabsList className="fixed bottom-0 left-0 right-0 h-16 rounded-none border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-50 grid grid-cols-5">
+          <TabsTrigger value="dashboard" className="flex-col gap-1 h-full data-[state=active]:text-primary">
+            <BookOpen weight="fill" className="w-5 h-5" />
+            <span className="text-xs">Модули</span>
+          </TabsTrigger>
+          <TabsTrigger value="checkin" className="flex-col gap-1 h-full data-[state=active]:text-primary">
+            <Heart weight="fill" className="w-5 h-5" />
+            <span className="text-xs">Чек-ин</span>
+          </TabsTrigger>
+          <TabsTrigger value="cohort" className="flex-col gap-1 h-full data-[state=active]:text-primary">
+            <Users weight="fill" className="w-5 h-5" />
+            <span className="text-xs">Группа</span>
+          </TabsTrigger>
+          <TabsTrigger value="badges" className="flex-col gap-1 h-full data-[state=active]:text-primary">
+            <Trophy weight="fill" className="w-5 h-5" />
+            <span className="text-xs">Награды</span>
+          </TabsTrigger>
+          <TabsTrigger value="profile" className="flex-col gap-1 h-full data-[state=active]:text-primary">
+            <Target weight="fill" className="w-5 h-5" />
+            <span className="text-xs">Прогресс</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Tab Contents */}
+        <TabsContent value="dashboard" className="mt-0 p-4">
+          {selectedModule === 13 ? (
+            <BoundariesModule onBack={() => setSelectedModule(null)} />
+          ) : (
+            <>
+              <DashboardHero
+                userName={userProfile?.name || defaultName}
+                currentModule={userProfile?.currentModule || 1}
+                streak={userProfile?.streak || 0}
+                totalXP={adaptiveProgress?.totalXP || 0}
+                completedModules={userProfile?.completedModules || 0}
+                cohortName={userProfile?.cohortId || 'Cohort A'}
+                onContinueLearning={() => {
+                  if (userProfile?.currentModule) {
+                    setSelectedModule(userProfile.currentModule)
+                  }
+                }}
+                onCheckIn={() => setActiveTab('checkin')}
+              />
+              <ModuleGrid 
+                currentModule={userProfile?.currentModule || 1}
+                onModuleSelect={setSelectedModule}
+              />
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="checkin" className="mt-0">
+          <CheckInPanel 
+            onCheckIn={(data: CheckInData) => setLastCheckIn(data)} 
+            lastCheckIn={lastCheckIn || null} 
+          />
+        </TabsContent>
+
+        <TabsContent value="cohort" className="mt-0">
+          <CohortSchedule cohortId={userProfile?.cohortId || ''} />
+        </TabsContent>
+
+        <TabsContent value="badges" className="mt-0 p-4">
+          <BadgeGrid userBadges={userBadges || []} />
+        </TabsContent>
+
+        <TabsContent value="profile" className="mt-0">
+          <ProgressStats 
+            userProfile={userProfile || {
+              name: defaultName,
+              age: 16,
+              currentModule: 1,
+              currentWeek: 2,
+              completedModules: 0,
+              streak: 7,
+              cohortId: 'teens-14-16-cohort-a'
+            }} 
+            checkIns={lastCheckIn ? [lastCheckIn] : []} 
+            badgeCount={userBadges?.length || 0}
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
   )
 }
 
