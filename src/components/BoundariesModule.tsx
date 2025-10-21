@@ -104,22 +104,150 @@ export default function BoundariesModule({ onBack }: Props) {
     if (!lesson) return null
 
     return (
-      <AdaptiveLessonViewer
-        recommendation={{
-          lesson,
-          reason: 'User selected this lesson',
-          emotionalFit: 'good',
-          confidence: 0.8,
-          adaptations: []
-        }}
-        onComplete={(xp) => handleLessonComplete(selectedLesson, xp)}
-        onSkip={() => setSelectedLesson(null)}
-      />
+      <div className="min-h-screen relative bg-gray-50">
+        {/* Liquid Glass Background - DA Teens Style */}
+        <div className="fixed inset-0 -z-10">
+          {/* Animated Orbs - ОЧЕНЬ прозрачные синие */}
+          <motion.div
+            className="absolute w-[500px] h-[500px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(0, 122, 255, 0.08) 0%, transparent 70%)',
+              filter: 'blur(60px)',
+              top: '-10%',
+              left: '-10%'
+            }}
+            animate={{
+              x: ['-10%', '10%', '-10%'],
+              y: ['-10%', '15%', '-10%'],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          
+          <motion.div
+            className="absolute w-[600px] h-[600px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(90, 200, 250, 0.06) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              right: '0',
+              top: '25%'
+            }}
+            animate={{
+              x: ['10%', '-15%', '10%'],
+              y: ['5%', '-10%', '5%'],
+              scale: [1.1, 0.9, 1.1],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+          
+          <motion.div
+            className="absolute w-[400px] h-[400px] rounded-full"
+            style={{
+              background: 'radial-gradient(circle, rgba(0, 122, 255, 0.05) 0%, transparent 70%)',
+              filter: 'blur(70px)',
+              bottom: '0',
+              left: '33%'
+            }}
+            animate={{
+              x: ['-5%', '20%', '-5%'],
+              y: ['10%', '-5%', '10%'],
+              scale: [1, 1.3, 1],
+            }}
+            transition={{
+              duration: 30,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          />
+        </div>
+
+        <AdaptiveLessonViewer
+          recommendation={{
+            lesson,
+            reason: 'User selected this lesson',
+            emotionalFit: 'good',
+            confidence: 0.8,
+            adaptations: []
+          }}
+          onComplete={(xp) => handleLessonComplete(selectedLesson, xp)}
+          onSkip={() => setSelectedLesson(null)}
+        />
+      </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative bg-gray-50">
+      {/* Liquid Glass Background - DA Teens фирменный стиль */}
+      <div className="fixed inset-0 -z-10">
+        {/* Animated gradient orbs - синие, прозрачные */}
+        <motion.div
+          className="absolute w-[500px] h-[500px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 122, 255, 0.08) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+            top: '0',
+            left: '0'
+          }}
+          animate={{
+            x: [0, 100, 0],
+            y: [0, 50, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        <motion.div
+          className="absolute w-[600px] h-[600px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(90, 200, 250, 0.06) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+            right: '0',
+            top: '33%'
+          }}
+          animate={{
+            x: [0, -80, 0],
+            y: [0, 100, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        <motion.div
+          className="absolute w-[400px] h-[400px] rounded-full"
+          style={{
+            background: 'radial-gradient(circle, rgba(0, 122, 255, 0.05) 0%, transparent 70%)',
+            filter: 'blur(70px)',
+            bottom: '0',
+            left: '33%'
+          }}
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -50, 0],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
+
+      {/* Content - Liquid Glass поверх */}
       {/* Header */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -133,7 +261,7 @@ export default function BoundariesModule({ onBack }: Props) {
             className="gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Modules
+            Назад к модулям
           </Button>
         </div>
       </motion.div>
