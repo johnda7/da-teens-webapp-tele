@@ -27,11 +27,21 @@ export default function LessonTimeline({
   onLessonClick 
 }: LessonTimelineProps) {
   
+  // 🛠️ Режим разработчика: открывает все уроки
+  // Включить: localStorage.setItem('devMode', 'true')
+  // Выключить: localStorage.removeItem('devMode')
+  const isDevMode = import.meta.env.DEV || localStorage.getItem('devMode') === 'true'
+  
   const getLessonStatus = (lesson: Lesson, index: number) => {
     if (completedLessons.includes(lesson.id)) return 'completed'
     if (lesson.id === currentLesson) return 'current'
     
-    // Проверяем prerequisites
+    // 🔓 Режим разработчика: все уроки доступны
+    if (isDevMode) {
+      return 'available'
+    }
+    
+    // 🔒 Production режим: проверка prerequisites
     if (lesson.prerequisites && lesson.prerequisites.length > 0) {
       const allPrereqsMet = lesson.prerequisites.every(prereqId =>
         completedLessons.includes(prereqId)
@@ -39,16 +49,13 @@ export default function LessonTimeline({
       if (!allPrereqsMet) return 'locked'
     }
     
-    // Первый урок всегда доступен
-    if (index === 0) return 'available'
-    
-    // Следующий урок доступен, если предыдущий пройден
+    // Последовательное открытие уроков
     const prevLesson = lessons[index - 1]
+    if (index === 0) return 'available' // Первый урок всегда доступен
     if (prevLesson && completedLessons.includes(prevLesson.id)) {
       return 'available'
     }
-    
-    return 'locked'
+    // return 'locked'
   }
 
   const getStatusIcon = (status: string) => {
@@ -289,6 +296,15 @@ export default function LessonTimeline({
             </CardContent>
           </Card>
         </motion.div>
+      )}
+      
+      {/* 🛠️ Dev Mode Indicator */}
+      {isDevMode && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <Badge variant="outline" className="bg-yellow-100 border-yellow-400 text-yellow-800 px-3 py-2 shadow-lg">
+            🛠️ Dev Mode: Все уроки открыты
+          </Badge>
+        </div>
       )}
     </div>
   )
