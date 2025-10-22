@@ -222,7 +222,7 @@ export default function LessonTimeline({
                 key={lesson.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: filteredIndex * 0.05 }}
+                transition={{ duration: 0.2, delay: filteredIndex * 0.03 }}
                 className="relative"
               >
                 {/* Timeline dot - компактнее */}

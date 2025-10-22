@@ -37,20 +37,20 @@ export default function DashboardHero({
           <motion.div
             className="absolute -top-20 -right-20 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl"
             animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.15, 0.1] }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="absolute top-1/2 -left-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"
             animate={{ scale: [1.2, 1, 1.2], opacity: [0.15, 0.1, 0.15] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="absolute -bottom-10 right-1/4 w-56 h-56 bg-blue-300/10 rounded-full blur-3xl"
             animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           />
           <div className="relative p-3">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-2">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-2">
               <Badge className="ios-caption1 bg-blue-100 text-blue-700 border-blue-200 shadow-ios-soft mb-1.5">
                 <Sparkle size={10} weight="fill" className="mr-1" />
                 Твоя личная платформа роста

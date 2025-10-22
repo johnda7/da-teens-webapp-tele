@@ -83,93 +83,68 @@ export default function BoundariesHero({
             }}
           />
 
-          <div className="relative p-8 md:p-12">
-            <div className="flex items-start justify-between mb-8">
-              <div className="space-y-4">
+          <div className="relative p-5 md:p-7">
+            <div className="flex items-start justify-between mb-4">
+              <div className="space-y-2">
                 {/* Badge - iOS 26 style */}
-                <Badge className="ios-caption1 bg-purple-100 text-purple-700 border-purple-200 shadow-ios-soft">
+                <Badge className="text-[11px] bg-blue-100 text-blue-700 border-blue-200 shadow-ios-soft">
                   ✨ Адаптивный модуль
                 </Badge>
                 
-                {/* Title - iOS 26 Typography: ios-title1 */}
-                <h1 className="ios-title1 text-gray-900 leading-tight">
+                {/* Title - компактнее */}
+                <h1 className="text-xl font-bold text-gray-900 leading-tight">
                   🛡️ Личные границы
                 </h1>
                 
-                {/* Subtitle - iOS 26 Typography: ios-body, Perplexity простота */}
-                <p className="ios-body text-gray-600 max-w-2xl">
-                  Научись говорить "нет", защищать своё пространство и строить здоровые отношения
+                {/* Subtitle - короче */}
+                <p className="text-[13px] text-gray-600 max-w-xl leading-snug">
+                  Научись говорить "нет" и строить здоровые отношения
                 </p>
               </div>
-              
-              {/* Animated Shield Icon - spring physics как у Apple */}
-              <motion.div
-                animate={{ 
-                  y: [0, -8, 0],
-                }}
-                transition={{ 
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="hidden md:block"
+            </div>
+
+            {/* Features Grid - меньше карточек, компактнее */}
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-xl p-3 shadow-ios-soft border border-blue-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center shadow-ios-soft">
-                  <Shield size={40} weight="fill" className="text-purple-600" />
-                </div>
+                <div className="text-lg font-bold text-blue-600">{progress.totalLessons}</div>
+                <div className="text-[10px] text-gray-600">Уроков</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-xl p-3 shadow-ios-soft border border-green-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="text-lg font-bold text-green-600">5</div>
+                <div className="text-[10px] text-gray-600">Форматов</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-xl p-3 shadow-ios-soft border border-orange-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="text-lg font-bold text-orange-600">3-4</div>
+                <div className="text-[10px] text-gray-600">Недели</div>
               </motion.div>
             </div>
 
-            {/* Features Grid - iOS 26: 8px grid, Liquid Glass cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <motion.div 
-                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-purple-100/50"
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <div className="ios-title2 text-purple-600">{progress.totalLessons}</div>
-                <div className="ios-caption1 text-gray-600">Уроков</div>
-              </motion.div>
-              <motion.div 
-                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-blue-100/50"
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <div className="ios-title2 text-blue-600">5</div>
-                <div className="ios-caption1 text-gray-600">Форматов</div>
-              </motion.div>
-              <motion.div 
-                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-pink-100/50"
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <div className="ios-title2 text-pink-600">3-4</div>
-                <div className="ios-caption1 text-gray-600">Недели</div>
-              </motion.div>
-              <motion.div 
-                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-indigo-100/50"
-                whileHover={{ scale: 1.02, y: -2 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                <div className="ios-title2 text-indigo-600">24</div>
-                <div className="ios-caption1 text-gray-600">Вехи роста</div>
-              </motion.div>
-            </div>
-
-            {/* CTA Buttons - iOS 26: 44x44pt touch targets, spring animations */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* CTA Buttons - компактнее */}
+            <div className="flex flex-col sm:flex-row gap-2">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <Button 
-                  size="lg"
+                  size="default"
                   onClick={onStartLearning}
-                  className="ios-body-emphasized h-[44px] bg-purple-600 text-white hover:bg-purple-700 shadow-ios-soft gap-2 px-8 rounded-xl"
+                  className="text-sm h-10 bg-blue-500 text-white hover:bg-blue-600 shadow-ios-soft gap-2 px-6 rounded-xl"
                 >
-                  <Play size={20} weight="fill" />
-                  {progress.lessonsCompleted === 0 ? 'Начать путешествие' : 'Продолжить обучение'}
+                  <Play size={16} weight="fill" />
+                  {progress.lessonsCompleted === 0 ? 'Начать' : 'Продолжить'}
                 </Button>
               </motion.div>
               {!hasCheckIn && onCheckIn && (
@@ -179,13 +154,13 @@ export default function BoundariesHero({
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <Button 
-                    size="lg"
+                    size="default"
                     variant="outline"
                     onClick={onCheckIn}
-                    className="ios-body h-[44px] border-purple-200 text-purple-700 hover:bg-purple-50 gap-2 rounded-xl shadow-ios-soft"
+                    className="text-sm h-10 border-blue-200 text-blue-700 hover:bg-blue-50 gap-2 rounded-xl shadow-ios-soft"
                   >
-                    <Heart size={18} weight="fill" />
-                    Сделать чек-ин
+                    <Heart size={16} weight="fill" />
+                    Чек-ин
                   </Button>
                 </motion.div>
               )}

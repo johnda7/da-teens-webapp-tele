@@ -167,7 +167,7 @@ export default function AdaptiveLessonViewer({
             className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
           />
         </div>
       </motion.div>
@@ -176,7 +176,7 @@ export default function AdaptiveLessonViewer({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+        transition={{ type: "spring", stiffness: 400, damping: 20 }}
       >
         <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
           {/* Gradient overlay */}
@@ -593,20 +593,20 @@ function QuizView({
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
     >
-      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-transparent to-blue-50/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-blue-50/20 pointer-events-none" />
         
-        <CardHeader className="relative">
+        <CardHeader className="relative pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="ios-headline text-gray-900">Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
-            <Badge className="bg-purple-100 text-purple-700 border-purple-200 ios-caption1">
+            <CardTitle className="text-lg font-bold text-gray-900">Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
+            <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
               {question.type === 'single' ? 'Один ответ' : 'Несколько ответов'}
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-6 relative">
-          <p className="ios-body text-gray-800 font-medium">{question.question}</p>
+        <CardContent className="space-y-4 relative">
+          <p className="text-[15px] leading-snug text-gray-800 font-medium">{question.question}</p>
           
           <motion.div 
             className="space-y-3"
@@ -640,9 +640,9 @@ function QuizView({
                 >
                   <Button
                     variant={isSelected ? 'default' : 'outline'}
-                    className={`w-full justify-start text-left h-auto py-4 px-5 ios-body transition-all ${
+                    className={`w-full justify-start text-left h-auto py-3 px-4 text-sm leading-tight transition-all ${
                       isSelected && !showExplanation
-                        ? 'bg-purple-600 text-white border-purple-600 hover:bg-purple-700'
+                        ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
                         : ''
                     } ${
                       showExplanation && isCorrect 
@@ -682,32 +682,32 @@ function QuizView({
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
               <Alert className="bg-blue-50/80 backdrop-blur-[20px] border-blue-200">
-                <AlertDescription className="ios-body">
+                <AlertDescription className="text-sm leading-snug">
                   <strong className="text-blue-900">Объяснение:</strong> {question.explanation}
                   {question.emotionalContext && (
-                    <p className="mt-2 ios-caption1 italic text-blue-700">💙 {question.emotionalContext}</p>
+                    <p className="mt-1.5 text-xs italic text-blue-700">💙 {question.emotionalContext}</p>
                   )}
                 </AlertDescription>
               </Alert>
             </motion.div>
           )}
 
-          <div className="flex gap-3 justify-end pt-4">
+          <div className="flex gap-3 justify-end pt-3">
             {!showExplanation && (
               <Button 
                 onClick={onSubmit} 
                 disabled={!isAnswered}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm py-2 px-4"
               >
-                Проверить ответ
+                Проверить
               </Button>
             )}
             {showExplanation && (
               <Button 
                 onClick={onNext}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-sm gap-2"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-sm gap-2 py-2 px-4"
               >
-                {currentQuestionIndex < quiz.length - 1 ? 'Следующий вопрос' : 'К практике'} 
+                {currentQuestionIndex < quiz.length - 1 ? 'Дальше' : 'К практике'} 
                 <ArrowRight size={18} />
               </Button>
             )}
