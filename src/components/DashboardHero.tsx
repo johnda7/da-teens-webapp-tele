@@ -26,7 +26,7 @@ export default function DashboardHero({
   onCheckIn
 }: DashboardHeroProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -49,63 +49,59 @@ export default function DashboardHero({
             animate={{ scale: [1, 1.3, 1], opacity: [0.1, 0.2, 0.1] }}
             transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
           />
-          <div className="relative p-5 md:p-6">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-5">
-              <Badge className="ios-caption1 bg-blue-100 text-blue-700 border-blue-200 shadow-ios-soft mb-3">
-                <Sparkle size={14} weight="fill" className="mr-1" />
+          <div className="relative p-3">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="mb-2">
+              <Badge className="ios-caption1 bg-blue-100 text-blue-700 border-blue-200 shadow-ios-soft mb-1.5">
+                <Sparkle size={10} weight="fill" className="mr-1" />
                 Твоя личная платформа роста
               </Badge>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">Привет, {userName}! 👋</h1>
-              <p className="text-sm text-gray-600 max-w-2xl">
+              <h1 className="text-lg font-bold text-gray-900 mb-0.5">Привет, {userName}! 👋</h1>
+              <p className="text-[11px] text-gray-600 max-w-2xl">
                 Ты проходишь <span className="font-semibold text-blue-600">модуль #{currentModule}</span>. Каждый день делает тебя сильнее! 🌱
               </p>
             </motion.div>
-            <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
+            <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: 0.1 } } }}>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-orange-100/50 h-full">
+                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-3 shadow-ios-soft border border-orange-100/50 h-full">
                   <CardContent className="p-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <Flame className="w-6 h-6 text-orange-500" weight="fill" />
-                      <span className="text-xs text-gray-600">Streak</span>
+                    <div className="flex items-center justify-between mb-1">
+                      <Flame className="w-5 h-5 text-orange-500" weight="fill" />
                     </div>
-                    <p className="text-2xl font-bold text-gray-900 mb-0.5">{streak}</p>
-                    <p className="text-xs text-gray-600">дней подряд</p>
+                    <p className="text-xl font-bold text-gray-900 mb-0">{streak}</p>
+                    <p className="text-[10px] text-gray-600">дней подряд</p>
                   </CardContent>
                 </Card>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-blue-100/50 h-full">
+                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-3 shadow-ios-soft border border-blue-100/50 h-full">
                   <CardContent className="p-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <Lightning className="w-6 h-6 text-blue-500" weight="fill" />
-                      <span className="text-xs text-gray-600">XP</span>
+                    <div className="flex items-center justify-between mb-1">
+                      <Lightning className="w-5 h-5 text-blue-500" weight="fill" />
                     </div>
-                    <p className="text-2xl font-bold text-gray-900 mb-0.5">{totalXP.toLocaleString()}</p>
-                    <p className="text-xs text-gray-600">очков опыта</p>
+                    <p className="text-xl font-bold text-gray-900 mb-0">{totalXP}</p>
+                    <p className="text-[10px] text-gray-600">очков опыта</p>
                   </CardContent>
                 </Card>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-green-100/50 h-full">
+                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-3 shadow-ios-soft border border-green-100/50 h-full">
                   <CardContent className="p-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <Target className="w-6 h-6 text-green-500" weight="fill" />
-                      <span className="text-xs text-gray-600">Progress</span>
+                    <div className="flex items-center justify-between mb-1">
+                      <Target className="w-5 h-5 text-green-500" weight="fill" />
                     </div>
-                    <p className="text-2xl font-bold text-gray-900 mb-0.5">{completedModules}/12</p>
-                    <p className="text-xs text-gray-600">модулей</p>
+                    <p className="text-xl font-bold text-gray-900 mb-0">{completedModules}/12</p>
+                    <p className="text-[10px] text-gray-600">модулей</p>
                   </CardContent>
                 </Card>
               </motion.div>
               <motion.div variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }} whileHover={{ scale: 1.02, y: -2 }} transition={{ type: "spring", stiffness: 400, damping: 17 }}>
-                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-blue-100/50 h-full">
+                <Card className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-3 shadow-ios-soft border border-blue-100/50 h-full">
                   <CardContent className="p-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <Users className="w-6 h-6 text-blue-500" weight="fill" />
-                      <span className="text-xs text-gray-600">Cohort</span>
+                    <div className="flex items-center justify-between mb-1">
+                      <Users className="w-5 h-5 text-blue-500" weight="fill" />
                     </div>
-                    <p className="text-sm font-semibold text-gray-900 truncate mb-0.5">{cohortName}</p>
-                    <p className="text-xs text-gray-600">твоя группа</p>
+                    <p className="text-[11px] font-semibold text-gray-900 truncate mb-0">{cohortName}</p>
+                    <p className="text-[10px] text-gray-600">твоя группа</p>
                   </CardContent>
                 </Card>
               </motion.div>

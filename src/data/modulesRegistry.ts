@@ -13,16 +13,36 @@ const module1 = boundariesModule
 const comingSoonModules: ModuleData[] = [
   {
     id: 2,
+    title: 'Мотивация',
+    description: 'Внутренняя мотивация, цели, энергия',
+    icon: '🔥',
+    color: 'bg-orange-50 border-orange-200',
+    estimatedDuration: '3-4 недели',
+    comingSoon: true,
+    lessons: []
+  },
+  {
+    id: 3,
+    title: 'Эмоции',
+    description: 'Распознавание, принятие, управление эмоциями',
+    icon: '❤️',
+    color: 'bg-pink-50 border-pink-200',
+    estimatedDuration: '3-4 недели',
+    comingSoon: true,
+    lessons: []
+  },
+  {
+    id: 4,
     title: 'Дружба',
     description: 'Эмпатия, доверие, границы, здоровые отношения',
     icon: '🤝',
     color: 'bg-green-50 border-green-200',
     estimatedDuration: '3-4 недели',
     comingSoon: true,
-    lessons: [] // пока пусто
+    lessons: []
   },
   {
-    id: 3,
+    id: 5,
     title: 'Общение',
     description: 'Я-сообщения, активное слушание, убеждение',
     icon: '💬',
@@ -32,27 +52,27 @@ const comingSoonModules: ModuleData[] = [
     lessons: []
   },
   {
-    id: 4,
+    id: 6,
     title: 'Стресс-менеджмент',
     description: 'Дыхательные техники, телесные практики',
     icon: '🧘',
-    color: 'bg-orange-50 border-orange-200',
+    color: 'bg-blue-50 border-blue-200',
     estimatedDuration: '3-4 недели',
     comingSoon: true,
     lessons: []
   },
   {
-    id: 5,
+    id: 7,
     title: 'Самооценка',
     description: 'Принятие себя, работа с комплексами',
     icon: '✨',
-    color: 'bg-pink-50 border-pink-200',
+    color: 'bg-yellow-50 border-yellow-200',
     estimatedDuration: '3-4 недели',
     comingSoon: true,
     lessons: []
   },
   {
-    id: 6,
+    id: 8,
     title: 'Тайм-менеджмент',
     description: 'Приоритеты, фокус, учебные ритуалы',
     icon: '⏰',
@@ -62,7 +82,7 @@ const comingSoonModules: ModuleData[] = [
     lessons: []
   },
   {
-    id: 7,
+    id: 9,
     title: 'Финансовая грамотность',
     description: 'Базовый бюджет, цели, проекты',
     icon: '💰',
@@ -72,17 +92,17 @@ const comingSoonModules: ModuleData[] = [
     lessons: []
   },
   {
-    id: 8,
+    id: 10,
     title: 'Карьерный путь',
     description: 'Интересы, сильные стороны, профориентация',
     icon: '🎯',
-    color: 'bg-yellow-50 border-yellow-200',
+    color: 'bg-red-50 border-red-200',
     estimatedDuration: '3-4 недели',
     comingSoon: true,
     lessons: []
   },
   {
-    id: 9,
+    id: 11,
     title: 'Цифровая гигиена',
     description: 'Соцсети, скролл-детокс, кибербуллинг',
     icon: '📱',
@@ -92,7 +112,7 @@ const comingSoonModules: ModuleData[] = [
     lessons: []
   },
   {
-    id: 10,
+    id: 12,
     title: 'Здоровые привычки',
     description: 'Сон, питание, движение, экранное время',
     icon: '🌱',
@@ -102,31 +122,11 @@ const comingSoonModules: ModuleData[] = [
     lessons: []
   },
   {
-    id: 11,
+    id: 13,
     title: 'Принятие решений',
     description: 'Анализ последствий, эксперименты',
     icon: '🤔',
-    color: 'bg-red-50 border-red-200',
-    estimatedDuration: '3-4 недели',
-    comingSoon: true,
-    lessons: []
-  },
-  {
-    id: 12,
-    title: 'Устойчивость',
-    description: 'Работа с ошибками, план восстановления',
-    icon: '🛡️',
     color: 'bg-violet-50 border-violet-200',
-    estimatedDuration: '3-4 недели',
-    comingSoon: true,
-    lessons: []
-  },
-  {
-    id: 13,
-    title: 'Уверенность',
-    description: 'Самопознание, сильные стороны, работа с внутренним критиком',
-    icon: '💪',
-    color: 'bg-blue-50 border-blue-200',
     estimatedDuration: '3-4 недели',
     comingSoon: true,
     lessons: []

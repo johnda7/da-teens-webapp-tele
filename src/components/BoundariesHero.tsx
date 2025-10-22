@@ -12,6 +12,8 @@ import {
   Shield
 } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
+import GamificationPanel from './GamificationPanel'
+import type { GamificationProgress } from '@/lib/gamification'
 
 interface BoundariesHeroProps {
   onStartLearning: () => void
@@ -22,6 +24,7 @@ interface BoundariesHeroProps {
     streak: number
     skillsUnlocked: number
   }
+  gamificationProgress?: GamificationProgress // Новое!
   hasCheckIn: boolean
   onCheckIn?: () => void
 }
@@ -29,6 +32,7 @@ interface BoundariesHeroProps {
 export default function BoundariesHero({ 
   onStartLearning, 
   progress,
+  gamificationProgress,
   onCheckIn,
   hasCheckIn 
 }: BoundariesHeroProps) {
@@ -36,190 +40,272 @@ export default function BoundariesHero({
 
   return (
     <div className="space-y-6">
-      {/* Main Hero Card */}
+      {/* Gamification Panel - если есть данные */}
+      {gamificationProgress && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
+        >
+          <GamificationPanel progress={gamificationProgress} compact={false} />
+        </motion.div>
+      )}
+
+      {/* Main Hero Card - iOS 26 Liquid Glass + Perplexity минимализм */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 260,
+          damping: 20
+        }}
       >
-        <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-blue-500 to-indigo-600 border-0 text-white">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-          </div>
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-0 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
+          {/* Subtle gradient overlay - minimal по Perplexity */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-pink-50/40 pointer-events-none" />
+          
+          {/* Animated orb accent - один, не три - минимализм! */}
+          <motion.div
+            className="absolute -top-20 -right-20 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.15, 0.1]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
 
           <div className="relative p-8 md:p-12">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <Badge className="mb-3 bg-white/20 text-white border-white/30">
+            <div className="flex items-start justify-between mb-8">
+              <div className="space-y-4">
+                {/* Badge - iOS 26 style */}
+                <Badge className="ios-caption1 bg-purple-100 text-purple-700 border-purple-200 shadow-ios-soft">
                   ✨ Адаптивный модуль
                 </Badge>
-                <h1 className="text-4xl md:text-5xl font-bold mb-3">
+                
+                {/* Title - iOS 26 Typography: ios-title1 */}
+                <h1 className="ios-title1 text-gray-900 leading-tight">
                   🛡️ Личные границы
                 </h1>
-                <p className="text-xl md:text-2xl text-white/90 max-w-2xl">
+                
+                {/* Subtitle - iOS 26 Typography: ios-body, Perplexity простота */}
+                <p className="ios-body text-gray-600 max-w-2xl">
                   Научись говорить "нет", защищать своё пространство и строить здоровые отношения
                 </p>
               </div>
               
-              {/* Animated Shield Icon */}
+              {/* Animated Shield Icon - spring physics как у Apple */}
               <motion.div
                 animate={{ 
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.05, 1]
+                  y: [0, -8, 0],
                 }}
                 transition={{ 
-                  duration: 3,
+                  duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
                 className="hidden md:block"
               >
-                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <Shield size={48} weight="fill" />
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-blue-100 rounded-2xl flex items-center justify-center shadow-ios-soft">
+                  <Shield size={40} weight="fill" className="text-purple-600" />
                 </div>
               </motion.div>
             </div>
 
-            {/* Features Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">{progress.totalLessons}</div>
-                <div className="text-sm text-white/80">Уроков</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">5</div>
-                <div className="text-sm text-white/80">Форматов</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">3-4</div>
-                <div className="text-sm text-white/80">Недели</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold">24</div>
-                <div className="text-sm text-white/80">Вехи роста</div>
-              </div>
+            {/* Features Grid - iOS 26: 8px grid, Liquid Glass cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-purple-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="ios-title2 text-purple-600">{progress.totalLessons}</div>
+                <div className="ios-caption1 text-gray-600">Уроков</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-blue-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="ios-title2 text-blue-600">5</div>
+                <div className="ios-caption1 text-gray-600">Форматов</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-pink-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="ios-title2 text-pink-600">3-4</div>
+                <div className="ios-caption1 text-gray-600">Недели</div>
+              </motion.div>
+              <motion.div 
+                className="bg-white/60 backdrop-blur-[20px] rounded-2xl p-4 shadow-ios-soft border border-indigo-100/50"
+                whileHover={{ scale: 1.02, y: -2 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <div className="ios-title2 text-indigo-600">24</div>
+                <div className="ios-caption1 text-gray-600">Вехи роста</div>
+              </motion.div>
             </div>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - iOS 26: 44x44pt touch targets, spring animations */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                size="lg"
-                onClick={onStartLearning}
-                className="bg-white text-purple-600 hover:bg-white/90 gap-2 text-lg px-8"
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <Play size={24} weight="fill" />
-                {progress.lessonsCompleted === 0 ? 'Начать путешествие' : 'Продолжить обучение'}
-              </Button>
-              {!hasCheckIn && onCheckIn && (
                 <Button 
                   size="lg"
-                  variant="outline"
-                  onClick={onCheckIn}
-                  className="border-white/30 text-white hover:bg-white/10 gap-2"
+                  onClick={onStartLearning}
+                  className="ios-body-emphasized h-[44px] bg-purple-600 text-white hover:bg-purple-700 shadow-ios-soft gap-2 px-8 rounded-xl"
                 >
-                  <Heart size={20} weight="fill" />
-                  Сделать чек-ин
+                  <Play size={20} weight="fill" />
+                  {progress.lessonsCompleted === 0 ? 'Начать путешествие' : 'Продолжить обучение'}
                 </Button>
+              </motion.div>
+              {!hasCheckIn && onCheckIn && (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button 
+                    size="lg"
+                    variant="outline"
+                    onClick={onCheckIn}
+                    className="ios-body h-[44px] border-purple-200 text-purple-700 hover:bg-purple-50 gap-2 rounded-xl shadow-ios-soft"
+                  >
+                    <Heart size={18} weight="fill" />
+                    Сделать чек-ин
+                  </Button>
+                </motion.div>
               )}
             </div>
           </div>
         </Card>
       </motion.div>
 
-      {/* Progress Stats */}
+      {/* Progress Stats - iOS 26 Liquid Glass cards */}
       {progress.lessonsCompleted > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 260,
+            damping: 20,
+            delay: 0.1
+          }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Progress Card */}
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <ChartLine size={24} className="text-purple-600" weight="fill" />
-                  <span className="font-semibold">Прогресс</span>
+            <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                    <ChartLine size={20} className="text-purple-600" weight="fill" />
+                  </div>
+                  <span className="ios-body-emphasized text-gray-900">Прогресс</span>
                 </div>
-                <span className="text-2xl font-bold text-purple-600">
+                <span className="ios-title2 text-purple-600">
                   {Math.round(completionPercentage)}%
                 </span>
               </div>
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
+                  className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${completionPercentage}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}
                 />
               </div>
-              <p className="text-sm text-muted-foreground mt-2">
+              <p className="ios-caption1 text-gray-600 mt-3">
                 {progress.lessonsCompleted} из {progress.totalLessons} уроков пройдено
               </p>
             </Card>
 
             {/* XP Card */}
-            <Card className="p-6 bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-200">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Lightning size={24} className="text-orange-600" weight="fill" />
-                  <span className="font-semibold">Опыт (XP)</span>
+            <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-orange-100/50 shadow-ios-soft relative overflow-hidden">
+              {/* Subtle gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-50/50 to-orange-50/30 pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                      <Lightning size={20} className="text-orange-600" weight="fill" />
+                    </div>
+                    <span className="ios-body-emphasized text-gray-900">Опыт (XP)</span>
+                  </div>
+                  <span className="ios-title2 text-orange-600">
+                    {progress.xpEarned}
+                  </span>
                 </div>
-                <span className="text-2xl font-bold text-orange-600">
-                  {progress.xpEarned}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Trophy size={16} weight="fill" />
-                <span>Продолжай в том же духе!</span>
+                <div className="flex items-center gap-2 ios-caption1 text-gray-600">
+                  <Trophy size={14} weight="fill" />
+                  <span>Продолжай в том же духе!</span>
+                </div>
               </div>
             </Card>
 
             {/* Skills Card */}
-            <Card className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Brain size={24} className="text-green-600" weight="fill" />
-                  <span className="font-semibold">Навыки</span>
+            <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-green-100/50 shadow-ios-soft relative overflow-hidden">
+              {/* Subtle gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-emerald-50/30 pointer-events-none" />
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
+                      <Brain size={20} className="text-green-600" weight="fill" />
+                    </div>
+                    <span className="ios-body-emphasized text-gray-900">Навыки</span>
+                  </div>
+                  <span className="ios-title2 text-green-600">
+                    {progress.skillsUnlocked}/6
+                  </span>
                 </div>
-                <span className="text-2xl font-bold text-green-600">
-                  {progress.skillsUnlocked}/6
-                </span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Shield size={16} weight="fill" />
-                <span>Разблокировано навыков</span>
+                <div className="flex items-center gap-2 ios-caption1 text-gray-600">
+                  <Shield size={14} weight="fill" />
+                  <span>Разблокировано навыков</span>
+                </div>
               </div>
             </Card>
           </div>
         </motion.div>
       )}
 
-      {/* Motivational Message */}
+      {/* Motivational Message - Perplexity простота: прозрачность → доверие */}
       {progress.lessonsCompleted === 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 260,
+            damping: 20,
+            delay: 0.2
+          }}
         >
-          <Card className="p-6 bg-blue-50 border-blue-200">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
+          <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft relative overflow-hidden">
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/30 pointer-events-none" />
+            <div className="relative flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center flex-shrink-0">
                 <Heart size={24} className="text-blue-600" weight="fill" />
               </div>
-              <div>
-                <h3 className="font-semibold text-blue-900 mb-1">
+              <div className="space-y-2">
+                <h3 className="ios-body-emphasized text-gray-900">
                   Добро пожаловать в модуль "Личные границы"!
                 </h3>
-                <p className="text-sm text-blue-700">
+                <p className="ios-caption1 text-gray-600">
                   Этот модуль адаптируется под твоё эмоциональное состояние. 
                   Сделай чек-ин перед началом, чтобы получить персонализированные рекомендации.
                 </p>
@@ -229,28 +315,48 @@ export default function BoundariesHero({
         </motion.div>
       )}
 
-      {/* Streak Info */}
+      {/* Streak Info - iOS 26 + Perplexity мотивация */}
       {progress.streak > 0 && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            type: "spring",
+            stiffness: 260,
+            damping: 20,
+            delay: 0.3
+          }}
         >
-          <Card className="p-4 bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-3xl">🔥</div>
+          <Card className="p-5 bg-white/70 backdrop-blur-[40px] border-orange-100/50 shadow-ios-soft relative overflow-hidden">
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-50/50 to-red-50/30 pointer-events-none" />
+            <div className="relative flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="text-4xl"
+                >
+                  🔥
+                </motion.div>
                 <div>
-                  <div className="font-semibold">
+                  <div className="ios-body-emphasized text-gray-900">
                     Серия {progress.streak} {progress.streak === 1 ? 'день' : progress.streak < 5 ? 'дня' : 'дней'}!
                   </div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="ios-caption1 text-gray-600">
                     Отличная работа! Продолжай учиться каждый день
                   </div>
                 </div>
               </div>
               {progress.streak >= 7 && (
-                <Badge className="bg-orange-100 text-orange-700 border-orange-300">
+                <Badge className="bg-orange-100 text-orange-700 border-orange-200 ios-caption1">
                   Огонь! 🎉
                 </Badge>
               )}

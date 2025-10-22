@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { motion } from 'framer-motion'
 import { 
   Brain, 
   Heart, 
@@ -149,92 +150,148 @@ export default function AdaptiveLessonViewer({
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-      {/* Прогресс */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-600">Прогресс урока</span>
-          <span className="font-medium">{progress}%</span>
+    <div className="max-w-4xl mx-auto p-3 space-y-4">
+      {/* Progress bar - Компактный синий */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        className="space-y-1.5"
+      >
+        <div className="flex items-center justify-between text-xs text-gray-600">
+          <span>Прогресс урока</span>
+          <span className="font-semibold text-blue-600">{progress}%</span>
         </div>
-        <Progress value={progress} className="h-2" />
-      </div>
+        <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden">
+          <motion.div 
+            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        </div>
+      </motion.div>
 
-      {/* Заголовок урока */}
-      <Card className="border-2">
-        <CardHeader>
-          <div className="flex items-start justify-between">
-            <div className="space-y-2">
-              <CardTitle className="text-2xl">{lesson.title}</CardTitle>
-              <CardDescription className="text-base">{lesson.subtitle}</CardDescription>
-            </div>
-            <Badge variant="outline" className={fitColors[emotionalFit]}>
-              {fitLabels[emotionalFit]}
-            </Badge>
-          </div>
+      {/* Заголовок урока - Компактный */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.1 }}
+      >
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-cyan-50/20 pointer-events-none" />
           
-          {/* Причина выбора */}
-          <Alert className="mt-4 bg-purple-50 border-purple-200">
-            <Heart className="h-4 w-4 text-purple-600" />
-            <AlertDescription className="text-purple-900">
-              <strong>Почему этот урок:</strong> {reason}
-            </AlertDescription>
-          </Alert>
+          <CardHeader className="relative p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-1 flex-1">
+                <CardTitle className="text-lg font-bold text-gray-900">{lesson.title}</CardTitle>
+                <CardDescription className="text-sm text-gray-600">{lesson.subtitle}</CardDescription>
+              </div>
+              <Badge variant="outline" className={`ios-caption2 ${fitColors[emotionalFit]} border-0 shadow-ios-soft`}>
+                {fitLabels[emotionalFit]}
+              </Badge>
+            </div>
+            
+            {/* Причина выбора - Компактно */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Alert className="mt-3 bg-white/50 backdrop-blur-[10px] border-blue-200/50 py-2">
+                <Heart className="h-4 w-4 text-blue-600" />
+                <AlertDescription className="text-blue-900 text-sm">
+                  <strong className="font-semibold">Почему этот урок:</strong> {reason}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
 
-          {/* Адаптации */}
-          {adaptations.length > 0 && (
-            <Alert className="mt-2 bg-blue-50 border-blue-200">
-              <Lightbulb className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-blue-900">
-                <strong>Адаптировано для тебя:</strong>
-                <ul className="mt-2 space-y-1">
-                  {adaptations.map((adapt, idx) => (
-                    <li key={idx} className="text-sm">• {adapt}</li>
-                  ))}
-                </ul>
-              </AlertDescription>
-            </Alert>
-          )}
+            {/* Адаптации */}
+            {adaptations.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <Alert className="mt-2 bg-white/50 backdrop-blur-[10px] border-blue-200/50 py-2">
+                  <Lightbulb className="h-4 w-4 text-blue-600" />
+                  <AlertDescription className="text-blue-900 text-sm">
+                    <strong className="font-semibold">Адаптировано:</strong>
+                    <ul className="mt-2 space-y-1">
+                      {adaptations.map((adapt, idx) => (
+                        <li key={idx} className="ios-caption1">• {adapt}</li>
+                      ))}
+                    </ul>
+                  </AlertDescription>
+                </Alert>
+              </motion.div>
+            )}
 
-          {/* Цели обучения */}
-          <div className="mt-4">
-            <h4 className="font-semibold text-sm text-gray-700 mb-2">Ты научишься:</h4>
-            <ul className="space-y-1">
-              {lesson.learningObjectives.map((obj, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                  <CheckCircle size={16} className="text-green-500 mt-0.5 flex-shrink-0" />
-                  {obj}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </CardHeader>
-      </Card>
+            {/* Цели обучения */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-4"
+            >
+              <h4 className="ios-body-emphasized text-gray-700 mb-2">Ты научишься:</h4>
+              <ul className="space-y-2">
+                {lesson.learningObjectives.map((obj, idx) => (
+                  <motion.li 
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 + idx * 0.05 }}
+                    className="flex items-start gap-2 ios-caption1 text-gray-600"
+                  >
+                    <CheckCircle size={14} className="text-green-500 mt-0.5 flex-shrink-0" />
+                    {obj}
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          </CardHeader>
+        </Card>
+      </motion.div>
 
       {/* Основной контент */}
       {viewMode === 'lesson' && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Выбери формат обучения</CardTitle>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <Clock size={16} />
-                <span>
-                  ~{lesson.formats[currentFormat]?.estimatedTime || 5} мин
-                </span>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
+        >
+          <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 pointer-events-none" />
+            
+            <CardHeader className="relative">
+              <div className="flex items-center justify-between">
+                <CardTitle className="ios-headline text-gray-900">Выбери формат обучения</CardTitle>
+                <div className="flex items-center gap-2 ios-caption1 text-gray-600">
+                  <Clock size={14} />
+                  <span>
+                    ~{lesson.formats[currentFormat]?.estimatedTime || 5} мин
+                  </span>
+                </div>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Переключатель форматов */}
-            <Tabs value={currentFormat} onValueChange={(val) => setCurrentFormat(val as any)}>
-              <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${availableFormats.length}, 1fr)` }}>
-                {availableFormats.map(format => (
-                  <TabsTrigger key={format} value={format} className="flex items-center gap-2">
-                    {formatIcons[format]}
-                    <span className="hidden sm:inline">{formatLabels[format]}</span>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
+            </CardHeader>
+            <CardContent className="relative">
+              {/* Переключатель форматов - iOS 26 style */}
+              <Tabs value={currentFormat} onValueChange={(val) => setCurrentFormat(val as any)}>
+                <TabsList className="grid w-full bg-white/60 backdrop-blur-[20px] p-1" style={{ gridTemplateColumns: `repeat(${availableFormats.length}, 1fr)` }}>
+                  {availableFormats.map(format => (
+                    <TabsTrigger 
+                      key={format} 
+                      value={format} 
+                      className="flex items-center gap-2 text-xs data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-lg"
+                    >
+                      {formatIcons[format]}
+                      <span className="hidden sm:inline">{formatLabels[format]}</span>
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
 
               {/* Контент форматов */}
               {availableFormats.map(format => (
@@ -294,16 +351,17 @@ export default function AdaptiveLessonViewer({
               </div>
             </div>
 
-            <div className="flex gap-3 justify-end">
-              <Button variant="outline" onClick={onSkip}>
-                Пропустить урок
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={onSkip} className="text-xs px-3">
+                Пропустить
               </Button>
-              <Button onClick={handleLessonComplete} className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                Перейти к тесту <ArrowRight size={20} />
+              <Button onClick={handleLessonComplete} className="gap-1.5 text-xs px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                К тесту <ArrowRight size={16} />
               </Button>
             </div>
           </CardContent>
         </Card>
+        </motion.div>
       )}
 
       {/* Квиз */}
@@ -530,82 +588,133 @@ function QuizView({
   const isAnswered = userAnswer !== undefined
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle>Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
-          <Badge>{question.type === 'single' ? 'Один ответ' : 'Несколько ответов'}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-lg font-medium">{question.question}</p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+    >
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-transparent to-blue-50/20 pointer-events-none" />
         
-        <div className="space-y-2">
-          {question.options.map((option: any) => {
-            const isSelected = Array.isArray(userAnswer) 
-              ? userAnswer.includes(option.id)
-              : userAnswer === option.id
-            
-            const isCorrect = Array.isArray(question.correctAnswer)
-              ? question.correctAnswer.includes(option.id)
-              : question.correctAnswer === option.id
+        <CardHeader className="relative">
+          <div className="flex items-center justify-between">
+            <CardTitle className="ios-headline text-gray-900">Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
+            <Badge className="bg-purple-100 text-purple-700 border-purple-200 ios-caption1">
+              {question.type === 'single' ? 'Один ответ' : 'Несколько ответов'}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6 relative">
+          <p className="ios-body text-gray-800 font-medium">{question.question}</p>
+          
+          <motion.div 
+            className="space-y-3"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: {
+                  staggerChildren: 0.08
+                }
+              }
+            }}
+          >
+            {question.options.map((option: any, idx: number) => {
+              const isSelected = Array.isArray(userAnswer) 
+                ? userAnswer.includes(option.id)
+                : userAnswer === option.id
+              
+              const isCorrect = Array.isArray(question.correctAnswer)
+                ? question.correctAnswer.includes(option.id)
+                : question.correctAnswer === option.id
 
-            return (
-              <Button
-                key={option.id}
-                variant={isSelected ? 'default' : 'outline'}
-                className={`w-full justify-start text-left h-auto py-3 ${
-                  showExplanation && isCorrect ? 'border-green-500 bg-green-50' : ''
-                } ${
-                  showExplanation && isSelected && !isCorrect ? 'border-red-500 bg-red-50' : ''
-                }`}
-                onClick={() => {
-                  if (!showExplanation) {
-                    if (question.type === 'multiple') {
-                      const current = (userAnswer as string[]) || []
-                      const updated = current.includes(option.id)
-                        ? current.filter((id: string) => id !== option.id)
-                        : [...current, option.id]
-                      onAnswer(question.id, updated)
-                    } else {
-                      onAnswer(question.id, option.id)
-                    }
-                  }
-                }}
-                disabled={showExplanation}
-              >
-                {option.text}
-              </Button>
-            )
-          })}
-        </div>
+              return (
+                <motion.div
+                  key={option.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 10 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  whileTap={{ scale: showExplanation ? 1 : 0.98 }}
+                >
+                  <Button
+                    variant={isSelected ? 'default' : 'outline'}
+                    className={`w-full justify-start text-left h-auto py-4 px-5 ios-body transition-all ${
+                      isSelected && !showExplanation
+                        ? 'bg-purple-600 text-white border-purple-600 hover:bg-purple-700'
+                        : ''
+                    } ${
+                      showExplanation && isCorrect 
+                        ? 'border-green-500 bg-green-50/80 backdrop-blur-[20px] text-green-900' 
+                        : ''
+                    } ${
+                      showExplanation && isSelected && !isCorrect 
+                        ? 'border-red-500 bg-red-50/80 backdrop-blur-[20px] text-red-900' 
+                        : ''
+                    }`}
+                    onClick={() => {
+                      if (!showExplanation) {
+                        if (question.type === 'multiple') {
+                          const current = (userAnswer as string[]) || []
+                          const updated = current.includes(option.id)
+                            ? current.filter((id: string) => id !== option.id)
+                            : [...current, option.id]
+                          onAnswer(question.id, updated)
+                        } else {
+                          onAnswer(question.id, option.id)
+                        }
+                      }
+                    }}
+                    disabled={showExplanation}
+                  >
+                    {option.text}
+                  </Button>
+                </motion.div>
+              )
+            })}
+          </motion.div>
 
-        {showExplanation && (
-          <Alert className="bg-blue-50 border-blue-200">
-            <AlertDescription>
-              <strong>Объяснение:</strong> {question.explanation}
-              {question.emotionalContext && (
-                <p className="mt-2 text-sm italic">💙 {question.emotionalContext}</p>
-              )}
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="flex gap-3 justify-end">
-          {!showExplanation && (
-            <Button onClick={onSubmit} disabled={!isAnswered}>
-              Проверить ответ
-            </Button>
-          )}
           {showExplanation && (
-            <Button onClick={onNext}>
-              {currentQuestionIndex < quiz.length - 1 ? 'Следующий вопрос' : 'К практике'} 
-              <ArrowRight size={20} className="ml-2" />
-            </Button>
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            >
+              <Alert className="bg-blue-50/80 backdrop-blur-[20px] border-blue-200">
+                <AlertDescription className="ios-body">
+                  <strong className="text-blue-900">Объяснение:</strong> {question.explanation}
+                  {question.emotionalContext && (
+                    <p className="mt-2 ios-caption1 italic text-blue-700">💙 {question.emotionalContext}</p>
+                  )}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
           )}
-        </div>
-      </CardContent>
-    </Card>
+
+          <div className="flex gap-3 justify-end pt-4">
+            {!showExplanation && (
+              <Button 
+                onClick={onSubmit} 
+                disabled={!isAnswered}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm"
+              >
+                Проверить ответ
+              </Button>
+            )}
+            {showExplanation && (
+              <Button 
+                onClick={onNext}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-sm gap-2"
+              >
+                {currentQuestionIndex < quiz.length - 1 ? 'Следующий вопрос' : 'К практике'} 
+                <ArrowRight size={18} />
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 
@@ -617,70 +726,107 @@ function PracticeView({ exercise, onComplete }: any) {
   const [completed, setCompleted] = useState(false)
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{exercise.title}</CardTitle>
-        <CardDescription>{exercise.description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Clock size={16} />
-          <span>~{exercise.duration} минут</span>
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+    >
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 via-transparent to-blue-50/20 pointer-events-none" />
+        
+        <CardHeader className="relative">
+          <CardTitle className="ios-headline text-gray-900">{exercise.title}</CardTitle>
+          <CardDescription className="ios-body text-gray-600">{exercise.description}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6 relative">
+          <div className="flex items-center gap-2 ios-caption1 text-gray-600">
+            <Clock size={14} />
+            <span>~{exercise.duration} минут</span>
+          </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-          <h4 className="font-semibold">Инструкция:</h4>
-          <ol className="space-y-2">
-            {exercise.steps.map((step: string, idx: number) => (
-              <li key={idx} className="text-sm text-gray-700">
-                {step.startsWith('**') ? (
-                  <strong>{step.replace(/\*\*/g, '')}</strong>
-                ) : step.startsWith('  ') ? (
-                  <span className="ml-4">{step.trim()}</span>
-                ) : (
-                  <span>{idx + 1}. {step}</span>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
+          <motion.div 
+            className="bg-white/60 backdrop-blur-[20px] p-5 rounded-2xl space-y-4 border border-gray-100"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h4 className="ios-body font-semibold text-gray-900">Инструкция:</h4>
+            <ol className="space-y-3">
+              {exercise.steps.map((step: string, idx: number) => (
+                <motion.li 
+                  key={idx} 
+                  className="ios-caption1 text-gray-700 flex gap-3"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + idx * 0.05 }}
+                >
+                  {step.startsWith('**') ? (
+                    <strong className="flex-1 ios-body">{step.replace(/\*\*/g, '')}</strong>
+                  ) : step.startsWith('  ') ? (
+                    <span className="ml-8 flex-1">{step.trim()}</span>
+                  ) : (
+                    <>
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white flex items-center justify-center text-xs font-medium">
+                        {idx + 1}
+                      </span>
+                      <span className="flex-1">{step}</span>
+                    </>
+                  )}
+                </motion.li>
+              ))}
+            </ol>
+          </motion.div>
 
-        {exercise.tips && (
-          <Alert>
-            <Lightbulb className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Советы:</strong>
-              <ul className="mt-2 space-y-1">
-                {exercise.tips.map((tip: string, idx: number) => (
-                  <li key={idx} className="text-sm">• {tip}</li>
-                ))}
-              </ul>
-            </AlertDescription>
-          </Alert>
-        )}
+          {exercise.tips && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <Alert className="bg-yellow-50/80 backdrop-blur-[20px] border-yellow-200">
+                <Lightbulb className="h-5 w-5 text-yellow-600" />
+                <AlertDescription className="ios-body">
+                  <strong className="text-yellow-900">Советы:</strong>
+                  <ul className="mt-3 space-y-2">
+                    {exercise.tips.map((tip: string, idx: number) => (
+                      <li key={idx} className="ios-caption1 text-yellow-800 flex gap-2">
+                        <span className="text-yellow-500">•</span>
+                        <span>{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
 
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="practice-completed"
-            checked={completed}
-            onChange={(e) => setCompleted(e.target.checked)}
-            className="w-4 h-4"
-          />
-          <label htmlFor="practice-completed" className="text-sm cursor-pointer">
-            Я выполнил(а) эту практику
-          </label>
-        </div>
+          <motion.div 
+            className="flex items-center gap-3 bg-white/60 backdrop-blur-[20px] p-4 rounded-xl border border-gray-100"
+            whileTap={{ scale: 0.98 }}
+          >
+            <input
+              type="checkbox"
+              id="practice-completed"
+              checked={completed}
+              onChange={(e) => setCompleted(e.target.checked)}
+              className="w-5 h-5 rounded accent-purple-600 cursor-pointer"
+            />
+            <label htmlFor="practice-completed" className="ios-body cursor-pointer flex-1 text-gray-700">
+              Я выполнил(а) эту практику
+            </label>
+          </motion.div>
 
-        <Button 
-          onClick={onComplete} 
-          disabled={!completed}
-          className="w-full gap-2"
-        >
-          Завершить урок <CheckCircle size={20} />
-        </Button>
-      </CardContent>
-    </Card>
+          <Button 
+            onClick={onComplete} 
+            disabled={!completed}
+            className="w-full gap-2 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm"
+          >
+            Завершить урок <CheckCircle size={20} />
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }
 
@@ -690,44 +836,106 @@ function PracticeView({ exercise, onComplete }: any) {
 
 function CompletionView({ lesson, score, onContinue }: any) {
   return (
-    <Card className="border-2 border-green-200">
-      <CardContent className="pt-8 pb-8 text-center space-y-6">
-        <div className="mx-auto w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-          <CheckCircle size={48} className="text-green-600" />
-        </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+    >
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-green-200/50 shadow-ios-soft">
+        {/* Celebration gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/40 via-purple-50/30 to-blue-50/40 pointer-events-none" />
         
-        <div>
-          <h2 className="text-2xl font-bold mb-2">Урок завершен! 🎉</h2>
-          <p className="text-gray-600">Ты отлично справился с "{lesson.title}"</p>
-        </div>
+        <CardContent className="pt-10 pb-10 text-center space-y-8 relative">
+          <motion.div 
+            className="mx-auto w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg"
+            animate={{ 
+              scale: [1, 1.1, 1],
+              rotate: [0, 5, -5, 0]
+            }}
+            transition={{ 
+              duration: 2,
+              repeat: Infinity,
+              repeatDelay: 1
+            }}
+          >
+            <CheckCircle size={56} className="text-white" weight="fill" />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <h2 className="ios-title2 font-bold mb-3 text-gray-900">Урок завершен! 🎉</h2>
+            <p className="ios-body text-gray-600">Ты отлично справился с "{lesson.title}"</p>
+          </motion.div>
 
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <div className="text-4xl font-bold text-blue-600 mb-2">{score}%</div>
-          <div className="text-sm text-gray-600">Результат теста</div>
-        </div>
+          <motion.div 
+            className="bg-blue-50/80 backdrop-blur-[20px] p-8 rounded-2xl border border-blue-100"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <motion.div 
+              className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+            >
+              {score}%
+            </motion.div>
+            <div className="ios-caption1 text-gray-600 font-medium">Результат теста</div>
+          </motion.div>
 
-        <Alert className="text-left">
-          <Heart className="h-4 w-4 text-purple-600" />
-          <AlertDescription>
-            {score >= 90 ? 'Невероятно! Ты отлично усвоил(а) материал! 🌟' :
-             score >= 70 ? 'Отличная работа! Ты хорошо понял(а) урок! 💪' :
-             score >= 50 ? 'Неплохо! Но стоит повторить некоторые моменты 📚' :
-             'Ничего страшного! Попробуй пройти урок ещё раз 💙'}
-          </AlertDescription>
-        </Alert>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <Alert className="text-left bg-purple-50/80 backdrop-blur-[20px] border-purple-200">
+              <Heart className="h-5 w-5 text-purple-600" weight="fill" />
+              <AlertDescription className="ios-body text-purple-900">
+                {score >= 90 ? 'Невероятно! Ты отлично усвоил(а) материал! 🌟' :
+                 score >= 70 ? 'Отличная работа! Ты хорошо понял(а) урок! 💪' :
+                 score >= 50 ? 'Неплохо! Но стоит повторить некоторые моменты 📚' :
+                 'Ничего страшного! Попробуй пройти урок ещё раз 💙'}
+              </AlertDescription>
+            </Alert>
+          </motion.div>
 
-        {lesson.homework && (
-          <div className="text-left bg-yellow-50 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">📝 Домашнее задание</h4>
-            <p className="text-sm text-gray-700 mb-2">{lesson.homework.description}</p>
-            <Button variant="outline" size="sm">Подробнее</Button>
-          </div>
-        )}
+          {lesson.homework && (
+            <motion.div 
+              className="text-left bg-yellow-50/80 backdrop-blur-[20px] p-5 rounded-2xl border border-yellow-200"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <h4 className="ios-body font-semibold mb-3 text-yellow-900">📝 Домашнее задание</h4>
+              <p className="ios-caption1 text-yellow-800 mb-4">{lesson.homework.description}</p>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="border-yellow-300 text-yellow-700 hover:bg-yellow-100"
+              >
+                Подробнее
+              </Button>
+            </motion.div>
+          )}
 
-        <Button onClick={onContinue} size="lg" className="w-full gap-2">
-          Продолжить обучение <ArrowRight size={20} />
-        </Button>
-      </CardContent>
-    </Card>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <Button 
+              onClick={onContinue} 
+              size="lg" 
+              className="w-full gap-2 h-14 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-base"
+            >
+              Продолжить обучение <ArrowRight size={20} />
+            </Button>
+          </motion.div>
+        </CardContent>
+      </Card>
+    </motion.div>
   )
 }

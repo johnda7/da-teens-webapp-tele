@@ -59,10 +59,10 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
     onSubmit(data)
     setSubmitted(true)
     
-    toast.success('Check-in saved! 💜', {
+    toast.success('Чек-ин сохранён! �', {
       duration: 3000,
       style: {
-        background: '#7c3aed',
+        background: '#007AFF',
         color: '#fff',
       },
     })
@@ -139,7 +139,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
                       onClick={() => setMood(index + 1)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className={`text-4xl transition-all ${
+                      className={`text-4xl transition-all flex items-center justify-center leading-none ${
                         mood === index + 1 
                           ? 'scale-125 drop-shadow-lg' 
                           : 'opacity-40 grayscale'
@@ -192,7 +192,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
                       onClick={() => setAnxiety(index + 1)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className={`text-4xl transition-all ${
+                      className={`text-4xl transition-all flex items-center justify-center leading-none ${
                         anxiety === index + 1 
                           ? 'scale-125 drop-shadow-lg' 
                           : 'opacity-40 grayscale'
@@ -244,7 +244,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
                       onClick={() => setEnergy(index + 1)}
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className={`text-4xl transition-all ${
+                      className={`text-4xl transition-all flex items-center justify-center leading-none ${
                         energy === index + 1 
                           ? 'scale-125 drop-shadow-lg' 
                           : 'opacity-40 grayscale'
@@ -289,9 +289,9 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
               {/* Submit Button */}
               <Button
                 onClick={handleSubmit}
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-6 text-lg"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-6 text-lg"
               >
-                Save Check-In
+                Сохранить чек-ин
               </Button>
             </motion.div>
           ) : (
@@ -312,11 +312,11 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
               >
                 ✨
               </motion.div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Check-In Saved!
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent">
+                Чек-ин сохранён!
               </h3>
               <p className="text-muted-foreground">
-                Thanks for sharing how you're feeling today
+                Спасибо, что поделился своими ощущениями
               </p>
             </motion.div>
           )}

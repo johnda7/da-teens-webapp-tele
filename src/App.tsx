@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsContent } from '@/components/ui/tabs'
 import { Toaster } from '@/components/ui/sonner'
 import { Toaster as HotToaster } from 'react-hot-toast'
 import { toast } from 'sonner'
@@ -13,11 +14,13 @@ import BoundariesModule from '@/components/BoundariesModule'
 import ModuleGrid from '@/components/ModuleGrid'
 import ModuleDetail from '@/components/ModuleDetail'
 import CheckInPanel from '@/components/CheckInPanel'
+import GamificationDemo from '@/pages/GamificationDemo'
 import CohortSchedule from '@/components/CohortSchedule'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
 import AdaptiveLessonViewer from '@/components/AdaptiveLessonViewer'
 import DashboardHero from '@/components/DashboardHero'
+import BottomNav from '@/components/BottomNav'
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
@@ -309,41 +312,107 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-card/50">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Gradient Background with Orbs */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
+        {/* Animated Orb 1 - Purple */}
+        <motion.div
+          className="absolute w-[500px] h-[500px] rounded-full opacity-30"
+          style={{
+            background: 'radial-gradient(circle, rgba(147, 51, 234, 0.4) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+          animate={{
+            x: ['-10%', '10%', '-10%'],
+            y: ['-10%', '15%', '-10%'],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        
+        {/* Animated Orb 2 - Blue */}
+        <motion.div
+          className="absolute right-0 top-1/4 w-[600px] h-[600px] rounded-full opacity-25"
+          style={{
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, transparent 70%)',
+            filter: 'blur(80px)',
+          }}
+          animate={{
+            x: ['10%', '-15%', '10%'],
+            y: ['5%', '-10%', '5%'],
+            scale: [1.1, 0.9, 1.1],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+        
+        {/* Animated Orb 3 - Pink */}
+        <motion.div
+          className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-20"
+          style={{
+            background: 'radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, transparent 70%)',
+            filter: 'blur(70px)',
+          }}
+          animate={{
+            x: ['-5%', '20%', '-5%'],
+            y: ['10%', '-5%', '10%'],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      </div>
+
+      {/* Header - Clean Telegram WebApp Style */}
+      <header className="sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur-[40px]">
         <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-3">
-            {/* iOS 26 Blue Brand Logo */}
-            <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                 style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}>
-              <Heart className="w-5 h-5 text-white" weight="fill" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold text-foreground">AI Подросток</h1>
-              <p className="text-sm text-muted-foreground">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
-            </div>
-          </div>
+          {/* Left: Home Button (Heart in Liquid Glass) */}
+          <motion.button
+            onClick={() => {
+              setActiveTab('dashboard')
+              setSelectedModule(null)
+            }}
+            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.05 }}
+            className="w-12 h-12 rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+          >
+            <Heart className="w-6 h-6 text-purple-600" weight="fill" />
+          </motion.button>
           
-          <div className="flex items-center gap-2">
-            {adaptiveProgress && adaptiveProgress.totalXP > 0 && (
-              <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
-                     style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
-                <Trophy className="w-3 h-3" />
-                Ур. {adaptiveProgress.level} • {adaptiveProgress.totalXP} XP
-              </Badge>
+          {/* Right: Profile Photo Button Only */}
+          <motion.button
+            onClick={() => setActiveTab('profile')}
+            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.05 }}
+            className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+          >
+            {user?.photo_url ? (
+              <img 
+                src={user.photo_url} 
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center text-white font-semibold text-base">
+                {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
+              </div>
             )}
-            <Badge variant="secondary" className="gap-1 backdrop-blur-xl rounded-full px-3 py-1.5 shadow-sm"
-                   style={{ background: 'rgba(0, 122, 255, 0.1)', color: '#007AFF', border: '1px solid rgba(0, 122, 255, 0.2)' }}>
-              <Target className="w-3 h-3" />
-              {userProfile?.streak || 0} дней
-            </Badge>
-          </div>
+          </motion.button>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="p-4 md:p-6 space-y-6">
+      <main className="p-3 md:p-4 space-y-4">
         {/* Dashboard Hero - iOS 26 */}
         <DashboardHero
           userName={userProfile?.name || defaultName}
@@ -442,30 +511,7 @@ function App() {
 
         {/* Tab Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="dashboard" className="gap-1">
-              <BookOpen className="w-4 h-4" />
-              Модули
-            </TabsTrigger>
-            <TabsTrigger value="checkin" className="gap-1">
-              <Heart className="w-4 h-4" />
-              Чек-ин
-            </TabsTrigger>
-            <TabsTrigger value="cohort" className="gap-1">
-              <Users className="w-4 h-4" />
-              Группа
-            </TabsTrigger>
-            <TabsTrigger value="badges" className="gap-1">
-              <Trophy className="w-4 h-4" />
-              Награды
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="gap-1">
-              <Target className="w-4 h-4" />
-              Прогресс
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="dashboard" className="mt-6">
+          <TabsContent value="dashboard" className="mt-6 pb-32">
             {selectedModule === 13 ? (
               <BoundariesModule 
                 onBack={() => setSelectedModule(null)}
@@ -680,22 +726,22 @@ function App() {
             )}
           </TabsContent>
 
-          <TabsContent value="checkin" className="mt-6">
+          <TabsContent value="checkin" className="mt-6 pb-32">
             <CheckInPanel 
               onCheckIn={(data) => setLastCheckIn(data)} 
               lastCheckIn={lastCheckIn || null} 
             />
           </TabsContent>
 
-          <TabsContent value="cohort" className="mt-6">
+          <TabsContent value="cohort" className="mt-6 pb-32">
             <CohortSchedule cohortId={userProfile?.cohortId || 'default'} />
           </TabsContent>
 
-          <TabsContent value="badges" className="mt-6">
-            <BadgeGrid userBadges={userBadges || []} />
+          <TabsContent value="gamification" className="mt-6 pb-32">
+            <GamificationDemo />
           </TabsContent>
 
-          <TabsContent value="profile" className="mt-6">
+          <TabsContent value="profile" className="mt-6 pb-32">
             <ProgressStats 
               userProfile={userProfile || {
                 name: 'Алекс',
@@ -711,6 +757,12 @@ function App() {
             />
           </TabsContent>
         </Tabs>
+
+        {/* Bottom Navigation - Telegram Style */}
+        <BottomNav 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab}
+        />
       </main>
       <Toaster />
       <HotToaster position="top-center" />

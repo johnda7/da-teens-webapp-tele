@@ -4,27 +4,30 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { CheckCircle, Circle, Lock, Play, Sparkle } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
+import { getAllModules } from '@/data/modulesRegistry'
 
 interface ModuleGridProps {
   currentModule: number
   onModuleSelect: (moduleId: number) => void
 }
 
-const modules = [
-  { id: 1, title: '🧠 Личные границы (Адаптивный)', description: 'Новая система обучения с учетом твоих эмоций • 9 уроков • Множественные форматы', color: 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-300', icon: '�️', isAdaptive: true, badge: 'NEW!' },
-  { id: 2, title: 'Дружба', description: 'Эмпатия, доверие, границы, здоровые отношения', color: 'bg-green-50 border-green-200', icon: '🤝' },
-  { id: 3, title: 'Общение', description: 'Я-сообщения, активное слушание, убеждение', color: 'bg-purple-50 border-purple-200', icon: '💬' },
-  { id: 4, title: 'Стресс-менеджмент', description: 'Дыхательные техники, телесные практики', color: 'bg-orange-50 border-orange-200', icon: '🧘' },
-  { id: 5, title: 'Самооценка', description: 'Принятие себя, работа с комплексами', color: 'bg-pink-50 border-pink-200', icon: '✨' },
-  { id: 6, title: 'Тайм-менеджмент', description: 'Приоритеты, фокус, учебные ритуалы', color: 'bg-indigo-50 border-indigo-200', icon: '⏰' },
-  { id: 7, title: 'Финансовая грамотность', description: 'Базовый бюджет, цели, проекты', color: 'bg-emerald-50 border-emerald-200', icon: '💰' },
-  { id: 8, title: 'Карьерный путь', description: 'Интересы, сильные стороны, профориентация', color: 'bg-yellow-50 border-yellow-200', icon: '🎯' },
-  { id: 9, title: 'Цифровая гигиена', description: 'Соцсети, скролл-детокс, кибербуллинг', color: 'bg-cyan-50 border-cyan-200', icon: '📱' },
-  { id: 10, title: 'Здоровые привычки', description: 'Сон, питание, движение, экранное время', color: 'bg-teal-50 border-teal-200', icon: '🌱' },
-  { id: 11, title: 'Принятие решений', description: 'Анализ последствий, эксперименты', color: 'bg-red-50 border-red-200', icon: '🤔' },
-  { id: 12, title: 'Устойчивость', description: 'Работа с ошибками, план восстановления', color: 'bg-violet-50 border-violet-200', icon: '🛡️' },
-  { id: 13, title: 'Уверенность', description: 'Самопознание, сильные стороны, работа с внутренним критиком', color: 'bg-blue-50 border-blue-200', icon: '�' },
-]
+// Получаем модули из централизованного реестра
+const allModules = getAllModules()
+
+// Формируем упрощенные данные для UI
+const modules = allModules.map(mod => ({
+  id: mod.id,
+  title: mod.id === 1 ? `${mod.icon} ${mod.title} (Адаптивный)` : mod.title,
+  description: mod.id === 1 
+    ? 'Новая система обучения с учетом твоих эмоций • 9 уроков • Множественные форматы'
+    : mod.description,
+  color: mod.id === 1 
+    ? 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-300' 
+    : mod.color,
+  icon: mod.icon,
+  isAdaptive: mod.id === 1,
+  badge: mod.id === 1 ? 'NEW!' : undefined
+}))
 
 export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGridProps) {
   const getModuleStatus = (moduleId: number) => {

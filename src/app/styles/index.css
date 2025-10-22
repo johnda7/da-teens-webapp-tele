@@ -4,7 +4,7 @@
 @layer base {
   * {
     @apply border-border;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
   }
 }
 

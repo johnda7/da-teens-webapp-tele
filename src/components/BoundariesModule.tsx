@@ -172,7 +172,7 @@ export default function BoundariesModule({ onBack }: Props) {
         <AdaptiveLessonViewer
           recommendation={{
             lesson,
-            reason: 'User selected this lesson',
+            reason: 'Ты выбрал этот урок',
             emotionalFit: 'good',
             confidence: 0.8,
             adaptations: []

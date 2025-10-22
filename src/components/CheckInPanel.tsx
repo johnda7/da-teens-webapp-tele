@@ -227,7 +227,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className={`
-                      relative p-4 rounded-xl transition-all
+                      relative p-4 rounded-xl transition-all flex items-center justify-center
                       ${mood === index + 1 
                         ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
                         : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
@@ -237,7 +237,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                       backdropFilter: 'blur(10px)',
                     }}
                   >
-                    <div className="text-3xl">{emoji}</div>
+                    <div className="text-3xl leading-none">{emoji}</div>
                   </motion.button>
                 ))}
               </div>
@@ -249,7 +249,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className={`
-                      relative p-4 rounded-xl transition-all
+                      relative p-4 rounded-xl transition-all flex items-center justify-center
                       ${mood === index + 6 
                         ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
                         : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
@@ -259,7 +259,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
                       backdropFilter: 'blur(10px)',
                     }}
                   >
-                    <div className="text-3xl">{emoji}</div>
+                    <div className="text-3xl leading-none">{emoji}</div>
                   </motion.button>
                 ))}
               </div>
@@ -271,13 +271,13 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className="text-center p-6 rounded-2xl"
+              className="text-center p-6 rounded-2xl flex flex-col items-center justify-center"
               style={{
                 background: 'linear-gradient(135deg, rgba(0, 122, 255, 0.15) 0%, rgba(90, 200, 250, 0.15) 100%)',
                 border: '1px solid rgba(0, 122, 255, 0.3)'
               }}
             >
-              <div className="text-6xl mb-3">{moodEmojis[mood - 1]}</div>
+              <div className="text-6xl mb-3 leading-none">{moodEmojis[mood - 1]}</div>
               <div className="text-[17px] leading-[22px] font-semibold text-[#007AFF]">
                 {moodLabels[mood - 1]}
               </div>
