@@ -262,9 +262,9 @@ export default function AdaptiveLessonViewer({
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
         >
-          <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+          <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-purple-50/20 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-cyan-50/20 pointer-events-none" />
             
             <CardHeader className="relative">
               <div className="flex items-center justify-between">
@@ -327,7 +327,7 @@ export default function AdaptiveLessonViewer({
                   onClick={() => setViewMode('scenarios')}
                   className="flex flex-col h-auto py-3 gap-1"
                 >
-                  <Path size={20} className="text-purple-600" weight="fill" />
+                  <Path size={20} className="text-[#007AFF]" weight="fill" />
                   <span className="text-xs">Сценарии</span>
                 </Button>
                 <Button
@@ -502,15 +502,15 @@ function VideoLessonContent({ content }: { content: any }) {
 function AudioLessonContent({ content }: { content: any }) {
   return (
     <div className="space-y-4">
-      <Card className="p-8 bg-gradient-to-br from-purple-50 to-blue-50">
+      <Card className="p-8 bg-gradient-to-br from-blue-50 to-cyan-50">
         <div className="text-center">
-          <Headphones size={48} className="mx-auto mb-4 text-purple-600" />
+          <Headphones size={48} className="mx-auto mb-4 text-[#007AFF]" />
           <h3 className="font-semibold mb-2">Аудио-урок</h3>
           <p className="text-sm text-gray-600 mb-4">Расслабься и просто слушай</p>
           <div className="bg-white p-4 rounded-lg">
             <div className="text-xs text-gray-400 mb-2">{content.url}</div>
             <div className="h-2 bg-gray-200 rounded-full mb-2">
-              <div className="h-2 bg-purple-500 rounded-full w-1/3"></div>
+              <div className="h-2 bg-[#007AFF] rounded-full w-1/3"></div>
             </div>
             <div className="flex items-center justify-center gap-4">
               <Button variant="outline" size="sm">Назад 10с</Button>
@@ -731,7 +731,7 @@ function PracticeView({ exercise, onComplete }: any) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
     >
-      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 via-transparent to-blue-50/20 pointer-events-none" />
         
@@ -767,7 +767,7 @@ function PracticeView({ exercise, onComplete }: any) {
                     <span className="ml-8 flex-1">{step.trim()}</span>
                   ) : (
                     <>
-                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 text-white flex items-center justify-center text-xs font-medium">
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-br from-[#007AFF] to-[#5AC8FA] text-white flex items-center justify-center text-xs font-medium">
                         {idx + 1}
                       </span>
                       <span className="flex-1">{step}</span>
@@ -810,7 +810,7 @@ function PracticeView({ exercise, onComplete }: any) {
               id="practice-completed"
               checked={completed}
               onChange={(e) => setCompleted(e.target.checked)}
-              className="w-5 h-5 rounded accent-purple-600 cursor-pointer"
+              className="w-5 h-5 rounded accent-[#007AFF] cursor-pointer"
             />
             <label htmlFor="practice-completed" className="ios-body cursor-pointer flex-1 text-gray-700">
               Я выполнил(а) эту практику
@@ -843,7 +843,7 @@ function CompletionView({ lesson, score, onContinue }: any) {
     >
       <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-green-200/50 shadow-ios-soft">
         {/* Celebration gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50/40 via-purple-50/30 to-blue-50/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-green-50/40 via-blue-50/30 to-cyan-50/40 pointer-events-none" />
         
         <CardContent className="pt-10 pb-10 text-center space-y-8 relative">
           <motion.div 
@@ -877,7 +877,7 @@ function CompletionView({ lesson, score, onContinue }: any) {
             transition={{ delay: 0.3 }}
           >
             <motion.div 
-              className="text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3"
+              className="text-6xl font-bold bg-gradient-to-r from-[#007AFF] to-[#5AC8FA] bg-clip-text text-transparent mb-3"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
             >
@@ -891,9 +891,9 @@ function CompletionView({ lesson, score, onContinue }: any) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Alert className="text-left bg-purple-50/80 backdrop-blur-[20px] border-purple-200">
-              <Heart className="h-5 w-5 text-purple-600" weight="fill" />
-              <AlertDescription className="ios-body text-purple-900">
+            <Alert className="text-left bg-blue-50/80 backdrop-blur-[20px] border-blue-200">
+              <Heart className="h-5 w-5 text-[#007AFF]" weight="fill" />
+              <AlertDescription className="ios-body text-blue-900">
                 {score >= 90 ? 'Невероятно! Ты отлично усвоил(а) материал! 🌟' :
                  score >= 70 ? 'Отличная работа! Ты хорошо понял(а) урок! 💪' :
                  score >= 50 ? 'Неплохо! Но стоит повторить некоторые моменты 📚' :

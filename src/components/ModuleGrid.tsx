@@ -22,7 +22,7 @@ const modules = allModules.map(mod => ({
     ? 'Новая система обучения с учетом твоих эмоций • 9 уроков • Множественные форматы'
     : mod.description,
   color: mod.id === 1 
-    ? 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-300' 
+    ? 'bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-300' 
     : mod.color,
   icon: mod.icon,
   isAdaptive: mod.id === 1,
@@ -215,7 +215,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
                   
                   {/* Adaptive Module Gradient Overlay */}
                   {isAdaptive && (
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-cyan-500/20" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-500/20 to-blue-500/30" />
                   )}
                   
                   {/* Content */}

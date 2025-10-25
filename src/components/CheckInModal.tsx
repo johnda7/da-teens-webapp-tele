@@ -89,7 +89,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-bold bg-gradient-to-r from-[#007AFF] to-[#5AC8FA] bg-clip-text text-transparent">
               How are you feeling?
             </span>
             <Button
@@ -168,7 +168,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <label className="flex items-center gap-2 text-lg font-semibold">
-                    <Brain className="h-5 w-5 text-purple-500" />
+                    <Brain className="h-5 w-5 text-[#007AFF]" />
                     Anxiety Level
                   </label>
                   {anxietyTrend && (
@@ -278,7 +278,7 @@ export default function CheckInModal({ isOpen, onClose, onSubmit, previousCheckI
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="How are you feeling? What's on your mind?"
-                  className="w-full min-h-[80px] p-3 rounded-lg border bg-background resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full min-h-[80px] p-3 rounded-lg border bg-background resize-none focus:outline-none focus:ring-2 focus:ring-[#007AFF]"
                   maxLength={200}
                 />
                 <p className="text-xs text-muted-foreground text-right">

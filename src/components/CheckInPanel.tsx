@@ -86,7 +86,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
       {/* Background Gradient для Liquid Glass эффекта */}
       <div className="fixed inset-0 -z-10">
         {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
         
         {/* Animated gradient orbs */}
         <motion.div
@@ -102,7 +102,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           }}
         />
         <motion.div
-          className="absolute top-1/3 right-0 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"
+          className="absolute top-1/3 right-0 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"
           animate={{
             x: [0, -100, 0],
             y: [0, 100, 0],
@@ -198,7 +198,7 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
             }}
           />
           {/* Gradient overlay для видимости */}
-          <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-purple-500/5 to-blue-500/5" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-cyan-500/5 to-blue-500/10" />
           
           <div className="absolute inset-0 rounded-2xl border border-white/30 dark:border-white/10" />
           

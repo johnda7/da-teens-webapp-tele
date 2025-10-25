@@ -65,13 +65,13 @@ export default function BoundariesHero({
           damping: 20
         }}
       >
-        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-0 shadow-[0_8px_32px_rgba(139,92,246,0.15)]">
+        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-0 shadow-[0_8px_32px_rgba(0,122,255,0.15)]">
           {/* Subtle gradient overlay - minimal по Perplexity */}
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-blue-50/30 to-pink-50/40 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-cyan-50/30 to-blue-50/40 pointer-events-none" />
           
           {/* Animated orb accent - один, не три - минимализм! */}
           <motion.div
-            className="absolute -top-20 -right-20 w-64 h-64 bg-purple-400/10 rounded-full blur-3xl"
+            className="absolute -top-20 -right-20 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.1, 0.15, 0.1]
@@ -183,21 +183,21 @@ export default function BoundariesHero({
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Progress Card */}
-            <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-purple-100/50 shadow-ios-soft">
+            <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <ChartLine size={20} className="text-purple-600" weight="fill" />
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <ChartLine size={20} className="text-[#007AFF]" weight="fill" />
                   </div>
                   <span className="ios-body-emphasized text-gray-900">Прогресс</span>
                 </div>
-                <span className="ios-title2 text-purple-600">
+                <span className="ios-title2 text-[#007AFF]">
                   {Math.round(completionPercentage)}%
                 </span>
               </div>
-              <div className="h-2 bg-purple-100 rounded-full overflow-hidden">
+              <div className="h-2 bg-blue-100 rounded-full overflow-hidden">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+                  className="h-full bg-gradient-to-r from-[#007AFF] to-[#5AC8FA] rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${completionPercentage}%` }}
                   transition={{ duration: 1, ease: "easeOut" }}
@@ -271,7 +271,7 @@ export default function BoundariesHero({
         >
           <Card className="p-6 bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft relative overflow-hidden">
             {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/30 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-cyan-50/30 pointer-events-none" />
             <div className="relative flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center flex-shrink-0">
                 <Heart size={24} className="text-blue-600" weight="fill" />
