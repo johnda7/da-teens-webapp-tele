@@ -61,10 +61,10 @@ export default function RealWorldScenario({
   return (
     <div className="space-y-4">
       {/* Scenario Header */}
-      <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
         <CardHeader>
           <div className="flex items-start gap-3 mb-2">
-            <Users className="w-6 h-6 text-indigo-600 flex-shrink-0" weight="fill" />
+            <Users className="w-6 h-6 text-[#007AFF] flex-shrink-0" weight="fill" />
             <div>
               <CardTitle className="text-lg">{scenario.title}</CardTitle>
               <CardDescription className="mt-1">{scenario.context}</CardDescription>
@@ -99,7 +99,7 @@ export default function RealWorldScenario({
       {!showFeedback ? (
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-2">
-            <Path className="w-5 h-5 text-purple-600" weight="fill" />
+            <Path className="w-5 h-5 text-[#007AFF]" weight="fill" />
             <p className="font-semibold text-foreground">Что бы ты сделал(а)?</p>
           </div>
           
@@ -107,14 +107,14 @@ export default function RealWorldScenario({
             <Button
               key={choice.id}
               variant="outline"
-              className="w-full h-auto py-4 px-4 text-left justify-start hover:border-purple-400 hover:bg-purple-50 transition-all"
+              className="w-full h-auto py-3 px-4 text-left justify-start hover:border-[#007AFF] hover:bg-blue-50 transition-all duration-300"
               onClick={() => handleChoiceSelect(choice)}
             >
               <div className="flex items-start gap-3 w-full">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-semibold flex-shrink-0">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-[#007AFF] font-semibold flex-shrink-0">
                   {index + 1}
                 </div>
-                <span className="text-sm leading-relaxed">{choice.text}</span>
+                <span className="text-sm leading-tight">{choice.text}</span>
               </div>
             </Button>
           ))}
@@ -152,17 +152,17 @@ export default function RealWorldScenario({
 
           {/* Skills used */}
           {selectedChoice.skillsUsed && selectedChoice.skillsUsed.length > 0 && (
-            <Card className="bg-purple-50 border-purple-200">
+            <Card className="bg-blue-50 border-blue-200">
               <CardContent className="pt-4">
                 <div className="flex items-start gap-3">
-                  <Lightbulb className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" weight="fill" />
+                  <Lightbulb className="w-5 h-5 text-[#007AFF] flex-shrink-0 mt-0.5" weight="fill" />
                   <div>
-                    <p className="font-semibold text-purple-900 mb-2">
+                    <p className="font-semibold text-blue-900 mb-2">
                       {selectedChoice.isHealthy ? 'Навыки, которые ты использовал(а):' : 'Навыки, которые стоило использовать:'}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {selectedChoice.skillsUsed.map((skill, idx) => (
-                        <Badge key={idx} variant="secondary" className="bg-purple-100 text-purple-700">
+                        <Badge key={idx} variant="secondary" className="bg-blue-100 text-[#007AFF]">
                           {skill}
                         </Badge>
                       ))}
@@ -176,7 +176,7 @@ export default function RealWorldScenario({
           {/* Continue button */}
           <Button
             onClick={handleContinue}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+            className="w-full bg-[#007AFF] hover:bg-[#0051D5] transition-colors duration-300"
           >
             Продолжить <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
