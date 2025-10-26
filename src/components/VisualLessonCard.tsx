@@ -137,11 +137,21 @@ export default function VisualLessonCard({
     >
       {/* Hero Image */}
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={emotionalStyles.image}
-          alt={title}
-          className="w-full h-full object-cover"
-        />
+        <div className="w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center relative overflow-hidden">
+          {/* Fallback image with emoji and text */}
+          <div className="text-center z-10">
+            <div className="text-6xl mb-2">🛡️</div>
+            <div className="text-lg font-semibold text-gray-700">{title}</div>
+            <div className="text-sm text-gray-500 mt-1">Визуальный урок</div>
+          </div>
+          {/* Background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-4 left-4 w-8 h-8 bg-blue-300 rounded-full"></div>
+            <div className="absolute top-8 right-8 w-6 h-6 bg-purple-300 rounded-full"></div>
+            <div className="absolute bottom-6 left-8 w-4 h-4 bg-pink-300 rounded-full"></div>
+            <div className="absolute bottom-4 right-4 w-10 h-10 bg-green-300 rounded-full"></div>
+          </div>
+        </div>
         
         {/* Overlay with emotional colors */}
         <div 
@@ -155,7 +165,7 @@ export default function VisualLessonCard({
         <div className="absolute top-4 left-4">
           <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r ${getTypeColors()} text-white text-sm font-medium`}>
             {getTypeIcon()}
-            <span className="capitalize">{type}</span>
+            <span>{type === 'video' ? 'Видео' : type === 'practice' ? 'Практика' : type === 'homework' ? 'Домашнее задание' : type === 'meditation' ? 'Медитация' : type === 'sleep' ? 'Сон' : type}</span>
           </div>
         </div>
 
@@ -209,7 +219,7 @@ export default function VisualLessonCard({
         <div className="absolute bottom-4 left-4">
           <div className="px-2 py-1 bg-black/20 backdrop-blur-sm rounded-full">
             <span className="text-white text-xs font-medium">
-              {culturalContext === 'russian' ? '🇷🇺' : '🌍'} {culturalContext}
+              {culturalContext === 'russian' ? '🇷🇺' : '🌍'} {culturalContext === 'russian' ? 'русский' : 'международный'}
             </span>
           </div>
         </div>
@@ -261,11 +271,6 @@ export default function VisualLessonCard({
               <div className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                 {audioElements.duration} мин
               </div>
-              {audioElements.russianAccent && (
-                <div className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">
-                  🇷🇺 Русский акцент
-                </div>
-              )}
             </div>
           </div>
         )}
@@ -280,7 +285,7 @@ export default function VisualLessonCard({
             </div>
             <div className="flex items-center gap-1">
               {getTypeIcon()}
-              <span className="capitalize">{type}</span>
+              <span>{type === 'video' ? 'Видео' : type === 'practice' ? 'Практика' : type === 'homework' ? 'Домашнее задание' : type === 'meditation' ? 'Медитация' : type === 'sleep' ? 'Сон' : type}</span>
             </div>
           </div>
 
