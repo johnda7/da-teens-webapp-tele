@@ -14,8 +14,8 @@ import {
   Waves,
   Star,
   Clock,
-  VolumeHigh,
-  VolumeX
+  SpeakerHigh,
+  SpeakerX
 } from '@phosphor-icons/react'
 import { useState } from 'react'
 
@@ -307,14 +307,14 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
             </Button>
 
             <div className="flex items-center gap-2 flex-1">
-              <VolumeX className="w-4 h-4" />
+              <SpeakerX className="w-4 h-4" />
               <div className="flex-1 bg-white/20 rounded-full h-2">
                 <div 
                   className="bg-white rounded-full h-2 transition-all duration-300"
                   style={{ width: `${volume}%` }}
                 />
               </div>
-              <VolumeHigh className="w-4 h-4" />
+              <SpeakerHigh className="w-4 h-4" />
             </div>
 
             <div className="text-sm text-white/80">

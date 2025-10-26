@@ -119,7 +119,7 @@ export default function VisualLessonCard({
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
       style={{
-        background: `linear-gradient(135deg, ${emotionalStyles.colors[0]}20, ${emotionalStyles.colors[1]}20)`
+        background: `linear-gradient(135deg, ${emotionalStyles.colors.primary}20, ${emotionalStyles.colors.secondary}20)`
       }}
     >
       {/* Hero Image */}
@@ -134,7 +134,7 @@ export default function VisualLessonCard({
         <div 
           className="absolute inset-0 bg-gradient-to-br from-transparent to-black/30"
           style={{
-            background: `linear-gradient(135deg, transparent, ${emotionalStyles.colors[0]}40)`
+            background: `linear-gradient(135deg, transparent, ${emotionalStyles.colors.primary}40)`
           }}
         />
         
@@ -303,7 +303,7 @@ export default function VisualLessonCard({
           ease: "easeInOut"
         }}
         style={{
-          background: `radial-gradient(circle at center, ${emotionalStyles.colors[0]}20, transparent 70%)`
+          background: `radial-gradient(circle at center, ${emotionalStyles.colors.primary}20, transparent 70%)`
         }}
       />
     </motion.div>

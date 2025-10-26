@@ -154,7 +154,7 @@ export default function InteractiveExercise({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         style={{
-          background: `linear-gradient(135deg, ${emotionalStyles.colors[0]}20, ${emotionalStyles.colors[1]}20)`
+          background: `linear-gradient(135deg, ${emotionalStyles.colors.primary}20, ${emotionalStyles.colors.secondary}20)`
         }}
       >
         <motion.div
@@ -204,7 +204,7 @@ export default function InteractiveExercise({
       exit="exit"
       variants={animationVariants}
       style={{
-        background: `linear-gradient(135deg, ${emotionalStyles.colors[0]}20, ${emotionalStyles.colors[1]}20)`
+        background: `linear-gradient(135deg, ${emotionalStyles.colors.primary}20, ${emotionalStyles.colors.secondary}20)`
       }}
     >
       {/* Header */}

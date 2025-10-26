@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ImageIcon, Play, Headphones, Brain, MapPin } from '@phosphor-icons/react'
+import { Image, Play, Headphones, Brain, MapPin } from '@phosphor-icons/react'
 
 interface LessonImage {
   id: string
@@ -18,7 +18,7 @@ interface LessonImagesProps {
 }
 
 const imageTypes = {
-  hero: { icon: ImageIcon, label: 'Главное изображение', color: 'bg-blue-500' },
+  hero: { icon: Image, label: 'Главное изображение', color: 'bg-blue-500' },
   concept: { icon: Brain, label: 'Концепция', color: 'bg-purple-500' },
   example: { icon: Play, label: 'Пример', color: 'bg-green-500' },
   exercise: { icon: Headphones, label: 'Упражнение', color: 'bg-orange-500' }
@@ -28,7 +28,7 @@ export default function LessonImages({ lessonId, images, onImageClick }: LessonI
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
-        <ImageIcon className="w-5 h-5 text-blue-600" />
+        <Image className="w-5 h-5 text-blue-600" />
         <h3 className="text-lg font-semibold">Визуальные материалы</h3>
         <Badge variant="secondary" className="text-xs">
           {images.length} изображений
@@ -97,7 +97,7 @@ export default function LessonImages({ lessonId, images, onImageClick }: LessonI
       >
         <div className="flex items-start gap-3">
           <div className="bg-blue-100 rounded-full p-2">
-            <ImageIcon className="w-5 h-5 text-blue-600" />
+            <Image className="w-5 h-5 text-blue-600" />
           </div>
           <div>
             <h4 className="font-semibold text-blue-900 mb-1">
