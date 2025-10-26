@@ -12,6 +12,8 @@ import AdaptiveRecommendation from './AdaptiveRecommendation'
 import VisualLessonCard from './VisualLessonCard'
 import InteractiveExercise from './InteractiveExercise'
 import MultimodalContent from './MultimodalContent'
+import LessonImages from './LessonImages'
+import SleepMeditationHub from './SleepMeditationHub'
 import { useEmotionalState } from './EmotionalDesignSystem'
 import { boundariesModule } from '@/data/boundariesModule'
 import type { CheckInData } from './CheckInModal'
@@ -38,6 +40,8 @@ export default function BoundariesModule({ onBack }: Props) {
   const [showVisualLessons, setShowVisualLessons] = useState(false)
   const [showInteractiveExercise, setShowInteractiveExercise] = useState(false)
   const [showMultimodalContent, setShowMultimodalContent] = useState(false)
+  const [showLessonImages, setShowLessonImages] = useState(false)
+  const [showSleepMeditation, setShowSleepMeditation] = useState(false)
   
   // Эмоциональное состояние
   const { emotionalState, updateEmotionalState } = useEmotionalState()
@@ -481,6 +485,18 @@ export default function BoundariesModule({ onBack }: Props) {
           >
             🎵 Мультимодальный контент
           </Button>
+          <Button
+            onClick={() => setShowLessonImages(!showLessonImages)}
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90"
+          >
+            🖼️ Картинки к урокам
+          </Button>
+          <Button
+            onClick={() => setShowSleepMeditation(!showSleepMeditation)}
+            className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90"
+          >
+            💤 Сон и медитация
+          </Button>
         </div>
 
         {/* Демо компонентов */}
@@ -634,6 +650,58 @@ export default function BoundariesModule({ onBack }: Props) {
           onLessonClick={handleLessonClick}
         />
       </div>
+
+        {/* Демо LessonImages */}
+        {showLessonImages && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">🖼️ Картинки к урокам (Google Learn Your Way стиль)</h3>
+            <LessonImages
+              lessonId="boundaries-lesson-1"
+              images={[
+                {
+                  id: 'hero-boundaries',
+                  src: '/images/boundaries/hero-boundaries.jpg',
+                  alt: 'Главное изображение о личных границах',
+                  type: 'hero',
+                  caption: 'Визуальное представление концепции личных границ'
+                },
+                {
+                  id: 'concept-fence',
+                  src: '/images/boundaries/concept-fence.jpg',
+                  alt: 'Забор как метафора границ',
+                  type: 'concept',
+                  caption: 'Метафора невидимого забора вокруг личности'
+                },
+                {
+                  id: 'example-saying-no',
+                  src: '/images/boundaries/example-saying-no.jpg',
+                  alt: 'Пример как сказать нет',
+                  type: 'example',
+                  caption: 'Практический пример установки границ'
+                },
+                {
+                  id: 'exercise-boundary-map',
+                  src: '/images/boundaries/exercise-boundary-map.jpg',
+                  alt: 'Упражнение карта границ',
+                  type: 'exercise',
+                  caption: 'Интерактивное упражнение для определения границ'
+                }
+              ]}
+              onImageClick={(image) => console.log('Image clicked:', image)}
+            />
+          </div>
+        )}
+
+        {/* Демо SleepMeditationHub */}
+        {showSleepMeditation && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">💤 Сон и медитация (Calm + Headspace)</h3>
+            <SleepMeditationHub
+              currentMood={emotionalState.mood}
+              onContentSelect={(content) => console.log('Sleep content selected:', content)}
+            />
+          </div>
+        )}
 
       {/* CheckIn Modal */}
       <CheckInModal
