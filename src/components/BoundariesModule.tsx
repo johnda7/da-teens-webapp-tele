@@ -9,6 +9,10 @@ import AdaptiveLessonViewer from './AdaptiveLessonViewer'
 import WeekTabs from './WeekTabs'
 import ContentCards from './ContentCards'
 import AdaptiveRecommendation from './AdaptiveRecommendation'
+import VisualLessonCard from './VisualLessonCard'
+import InteractiveExercise from './InteractiveExercise'
+import MultimodalContent from './MultimodalContent'
+import { useEmotionalState } from './EmotionalDesignSystem'
 import { boundariesModule } from '@/data/boundariesModule'
 import type { CheckInData } from './CheckInModal'
 
@@ -31,6 +35,12 @@ export default function BoundariesModule({ onBack }: Props) {
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
   const [currentWeek, setCurrentWeek] = useState(1)
   const [showAdaptiveRecommendations, setShowAdaptiveRecommendations] = useState(false)
+  const [showVisualLessons, setShowVisualLessons] = useState(false)
+  const [showInteractiveExercise, setShowInteractiveExercise] = useState(false)
+  const [showMultimodalContent, setShowMultimodalContent] = useState(false)
+  
+  // Эмоциональное состояние
+  const { emotionalState, updateEmotionalState } = useEmotionalState()
   const [progress, setProgress] = useState<ProgressData>(() => {
     // Load from localStorage or use defaults
     const saved = localStorage.getItem('boundaries-progress')
@@ -96,6 +106,31 @@ export default function BoundariesModule({ onBack }: Props) {
       checkIns: [...prev.checkIns, data]
     }))
     setShowCheckIn(false)
+    
+    // Обновляем эмоциональное состояние на основе CheckIn
+    if (data.mood === 'anxious' || data.anxiety > 7) {
+      updateEmotionalState('anxious')
+    } else if (data.energy > 7) {
+      updateEmotionalState('energetic')
+    } else if (data.mood === 'focused') {
+      updateEmotionalState('focused')
+    } else {
+      updateEmotionalState('calm')
+    }
+  }
+
+  // Функции для новых компонентов
+  const handleVisualLessonStart = (lessonId: string) => {
+    setSelectedLesson(lessonId)
+    setShowVisualLessons(true)
+  }
+
+  const handleInteractiveExerciseStart = (exerciseId: string) => {
+    setShowInteractiveExercise(true)
+  }
+
+  const handleMultimodalContentStart = (contentId: string) => {
+    setShowMultimodalContent(true)
   }
 
   const progressPercentage = Math.round(
@@ -417,6 +452,169 @@ export default function BoundariesModule({ onBack }: Props) {
             }
           }}
         />
+      </div>
+
+      {/* Новые компоненты - демо версия */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">🎨 Новые визуальные уроки</h2>
+          <p className="text-gray-600 mb-6">Демо версия компонентов с эмоциональной адаптацией</p>
+        </div>
+
+        {/* Кнопки для демо */}
+        <div className="flex flex-wrap gap-4 mb-8">
+          <Button
+            onClick={() => setShowVisualLessons(!showVisualLessons)}
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90"
+          >
+            🎨 Визуальные уроки
+          </Button>
+          <Button
+            onClick={() => setShowInteractiveExercise(!showInteractiveExercise)}
+            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90"
+          >
+            🎮 Интерактивные упражнения
+          </Button>
+          <Button
+            onClick={() => setShowMultimodalContent(!showMultimodalContent)}
+            className="bg-gradient-to-r from-purple-500 to-violet-500 hover:opacity-90"
+          >
+            🎵 Мультимодальный контент
+          </Button>
+        </div>
+
+        {/* Демо компонентов */}
+        {showVisualLessons && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">VisualLessonCard Demo</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <VisualLessonCard
+                id="demo-1"
+                title="Что такое личные границы?"
+                subtitle="Первый шаг к пониманию себя"
+                description="Узнай, что такое личные границы и почему они важны для подростков"
+                type="video"
+                duration="5-7 мин"
+                progress={75}
+                isLocked={false}
+                isCompleted={false}
+                emotionalState={emotionalState}
+                visualElements={{
+                  heroImage: '/images/boundaries/hero-boundaries.jpg',
+                  emotionalVariants: {
+                    anxious: { colors: ['#FF6B6B', '#FFE66D'], image: '/images/emotions/anxious-hero.jpg', animation: 'gentle' },
+                    energetic: { colors: ['#4ECDC4', '#45B7D1'], image: '/images/emotions/energetic-hero.jpg', animation: 'dynamic' },
+                    focused: { colors: ['#96CEB4', '#FFEAA7'], image: '/images/emotions/focused-hero.jpg', animation: 'smooth' }
+                  },
+                  culturalContext: {
+                    russian: 'Российские примеры границ',
+                    international: 'Международные стандарты'
+                  }
+                }}
+                interactiveElements={{
+                  clickableZones: [
+                    { id: 'zone-1', title: 'Физические границы', description: 'Личное пространство', position: { x: 30, y: 40 } },
+                    { id: 'zone-2', title: 'Эмоциональные границы', description: 'Защита чувств', position: { x: 70, y: 60 } }
+                  ],
+                  scenarios: [
+                    { id: 'scenario-1', title: 'Друзья и границы', image: '/images/scenarios/friends.jpg', description: 'Как сказать нет другу' }
+                  ]
+                }}
+                audioElements={{
+                  narration: 'Добро пожаловать в урок о личных границах',
+                  emotionalTone: emotionalState === 'anxious' ? 'calm' : emotionalState === 'energetic' ? 'energetic' : 'focused',
+                  russianAccent: true,
+                  duration: 5
+                }}
+                culturalContext="russian"
+                onStart={handleVisualLessonStart}
+                onPreview={handleVisualLessonStart}
+              />
+            </div>
+          </div>
+        )}
+
+        {showInteractiveExercise && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">InteractiveExercise Demo</h3>
+            <InteractiveExercise
+              id="demo-exercise"
+              title="Ролевая игра: Как сказать 'нет'"
+              description="Практикуйся говорить 'нет' в разных ситуациях"
+              type="roleplay"
+              steps={[]}
+              scenarios={[
+                {
+                  id: 'scenario-1',
+                  title: 'Подруга просит списать',
+                  description: 'Твоя подруга просит списать домашнее задание',
+                  image: '/images/scenarios/homework.jpg',
+                  situation: 'Подруга: "Пожалуйста, дай списать математику, я не успела!"',
+                  options: [
+                    { id: 'opt-1', text: 'Конечно, держи!', isCorrect: false, feedback: 'Это нарушает твои границы', emotionalImpact: 'negative' },
+                    { id: 'opt-2', text: 'Извини, но я не могу', isCorrect: true, feedback: 'Отлично! Ты защищаешь свои границы', emotionalImpact: 'positive' },
+                    { id: 'opt-3', text: 'Может быть в следующий раз', isCorrect: false, feedback: 'Неопределенность может создать проблемы', emotionalImpact: 'neutral' }
+                  ],
+                  culturalContext: {
+                    russian: 'В России дружба очень важна, но границы тоже важны',
+                    international: 'Friendship is important, but boundaries matter too'
+                  }
+                }
+              ]}
+              emotionalState={emotionalState}
+              culture="russian"
+              onComplete={(id, score) => console.log('Exercise completed:', id, score)}
+              onStepComplete={(stepId, isCorrect) => console.log('Step completed:', stepId, isCorrect)}
+            />
+          </div>
+        )}
+
+        {showMultimodalContent && (
+          <div className="mb-8">
+            <h3 className="text-xl font-semibold mb-4">MultimodalContent Demo</h3>
+            <MultimodalContent
+              id="demo-multimodal"
+              title="Аудио урок с визуалами"
+              description="Комбинированный контент с аудио и интерактивными элементами"
+              audioContent={{
+                id: 'audio-1',
+                title: 'Введение в личные границы',
+                description: 'Слушай и изучай одновременно',
+                audioUrl: '/audio/boundaries-intro.mp3',
+                duration: 300,
+                emotionalTone: emotionalState === 'anxious' ? 'calm' : 'focused',
+                russianAccent: true,
+                transcript: 'Добро пожаловать в урок о личных границах. Личные границы - это...',
+                timestamps: [
+                  { time: 0, text: 'Введение' },
+                  { time: 60, text: 'Что такое границы' },
+                  { time: 120, text: 'Примеры' }
+                ]
+              }}
+              visualContent={{
+                id: 'visual-1',
+                title: 'Схема личных границ',
+                description: 'Интерактивная схема для изучения',
+                imageUrl: '/images/boundaries/scheme.jpg',
+                type: 'diagram',
+                emotionalVariant: emotionalState,
+                culturalContext: 'russian',
+                interactiveElements: [
+                  { id: 'elem-1', type: 'click', position: { x: 25, y: 30 }, content: 'Физические границы' },
+                  { id: 'elem-2', type: 'click', position: { x: 75, y: 70 }, content: 'Эмоциональные границы' }
+                ]
+              }}
+              mindMap={[
+                { id: 'node-1', title: 'Границы', description: 'Основное понятие', position: { x: 50, y: 50 }, connections: ['node-2'], color: '#4ECDC4', size: 'large' },
+                { id: 'node-2', title: 'Типы', description: 'Виды границ', position: { x: 30, y: 70 }, connections: ['node-1'], color: '#96CEB4', size: 'medium' }
+              ]}
+              emotionalState={emotionalState}
+              culture="russian"
+              onComplete={(id, progress) => console.log('Content completed:', id, progress)}
+              onProgress={(progress) => console.log('Progress:', progress)}
+            />
+          </div>
+        )}
       </div>
 
       {/* Lesson Timeline (Alternative View) */}
