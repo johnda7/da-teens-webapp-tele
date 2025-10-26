@@ -21,7 +21,8 @@ import {
   Lightbulb,
   Users,
   Target,
-  Path
+  Path,
+  Moon
 } from '@phosphor-icons/react'
 import type { Lesson, LessonFormat } from '@/data/boundariesModule'
 import type { LessonRecommendation } from '@/lib/adaptiveLearning'
@@ -29,6 +30,7 @@ import MicroLearningCard from './MicroLearningCard'
 import RealWorldScenario, { exampleScenarios } from './RealWorldScenario'
 import PeerLearningFeed, { examplePeerStories } from './PeerLearningFeed'
 import SkillsTracker, { boundariesSkills, type Skill } from './SkillsTracker'
+import SleepIntegration from './SleepIntegration'
 
 interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
@@ -48,6 +50,7 @@ export default function AdaptiveLessonViewer({
   const [progress, setProgress] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [showSleepIntegration, setShowSleepIntegration] = useState(false)
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string | string[]>>({})
   const [showExplanation, setShowExplanation] = useState(false)
   const [viewMode, setViewMode] = useState<'lesson' | 'quiz' | 'practice' | 'scenarios' | 'peer-learning' | 'skills' | 'completed'>('lesson')
@@ -309,6 +312,18 @@ export default function AdaptiveLessonViewer({
                     </TabsTrigger>
                   ))}
                 </TabsList>
+
+              {/* Кнопка сна и медитации */}
+              <div className="mt-4 flex justify-center">
+                <Button
+                  onClick={() => setShowSleepIntegration(true)}
+                  className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90 text-white border-0"
+                  size="sm"
+                >
+                  <Moon className="w-4 h-4 mr-2" />
+                  Сон и медитация
+                </Button>
+              </div>
 
               {/* Контент форматов */}
               {availableFormats.map(format => (
@@ -953,6 +968,18 @@ function CompletionView({ lesson, score, onContinue }: any) {
           </motion.div>
         </CardContent>
       </Card>
+
+      {/* Sleep Integration Modal */}
+      {showSleepIntegration && (
+        <SleepIntegration
+          currentMood={emotionalFit === 'good' ? 'calm' : emotionalFit === 'excellent' ? 'focused' : 'anxious'}
+          onComplete={(contentId, duration) => {
+            console.log('Sleep content completed:', contentId, duration)
+            setShowSleepIntegration(false)
+          }}
+          onClose={() => setShowSleepIntegration(false)}
+        />
+      )}
     </motion.div>
   )
 }

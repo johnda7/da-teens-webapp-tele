@@ -69,11 +69,11 @@ export default function InteractiveExercise({
   // Получаем эмоциональные стили
   const getEmotionalStyles = () => {
     const styles = {
-      anxious: { colors: ['#FF6B6B', '#FFE66D'], animation: 'gentle' },
-      energetic: { colors: ['#4ECDC4', '#45B7D1'], animation: 'dynamic' },
-      focused: { colors: ['#96CEB4', '#FFEAA7'], animation: 'smooth' },
-      calm: { colors: ['#A8E6CF', '#FFD93D'], animation: 'soft' },
-      excited: { colors: ['#FF8A80', '#FFB74D'], animation: 'bouncy' }
+      anxious: { colors: { primary: '#FF6B6B', secondary: '#FFE66D' }, animation: 'gentle' },
+      energetic: { colors: { primary: '#4ECDC4', secondary: '#45B7D1' }, animation: 'dynamic' },
+      focused: { colors: { primary: '#96CEB4', secondary: '#FFEAA7' }, animation: 'smooth' },
+      calm: { colors: { primary: '#A8E6CF', secondary: '#FFD93D' }, animation: 'soft' },
+      excited: { colors: { primary: '#FF8A80', secondary: '#FFB74D' }, animation: 'bouncy' }
     }
     return styles[emotionalState]
   }
@@ -247,11 +247,21 @@ export default function InteractiveExercise({
           >
             {/* Scenario Image */}
             <div className="mb-6">
-              <img
-                src={currentScenarioData.image}
-                alt={currentScenarioData.title}
-                className="w-full h-48 object-cover rounded-xl"
-              />
+              <div className="w-full h-48 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl flex items-center justify-center relative overflow-hidden">
+                {/* Fallback image with emoji and text */}
+                <div className="text-center z-10">
+                  <div className="text-6xl mb-2">👩‍🎓</div>
+                  <div className="text-lg font-semibold text-gray-700">{currentScenarioData.title}</div>
+                  <div className="text-sm text-gray-500 mt-1">Интерактивный сценарий</div>
+                </div>
+                {/* Background pattern */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-4 left-4 w-8 h-8 bg-blue-300 rounded-full"></div>
+                  <div className="absolute top-8 right-8 w-6 h-6 bg-purple-300 rounded-full"></div>
+                  <div className="absolute bottom-6 left-8 w-4 h-4 bg-pink-300 rounded-full"></div>
+                  <div className="absolute bottom-4 right-4 w-10 h-10 bg-green-300 rounded-full"></div>
+                </div>
+              </div>
             </div>
 
             {/* Scenario Description */}
