@@ -6,6 +6,9 @@ import BoundariesHero from './BoundariesHero'
 import LessonTimeline from './LessonTimeline'
 import CheckInModal from './CheckInModal'
 import AdaptiveLessonViewer from './AdaptiveLessonViewer'
+import WeekTabs from './WeekTabs'
+import ContentCards from './ContentCards'
+import AdaptiveRecommendation from './AdaptiveRecommendation'
 import { boundariesModule } from '@/data/boundariesModule'
 import type { CheckInData } from './CheckInModal'
 
@@ -26,6 +29,8 @@ type ProgressData = {
 export default function BoundariesModule({ onBack }: Props) {
   const [showCheckIn, setShowCheckIn] = useState(false)
   const [selectedLesson, setSelectedLesson] = useState<string | null>(null)
+  const [currentWeek, setCurrentWeek] = useState(1)
+  const [showAdaptiveRecommendations, setShowAdaptiveRecommendations] = useState(false)
   const [progress, setProgress] = useState<ProgressData>(() => {
     // Load from localStorage or use defaults
     const saved = localStorage.getItem('boundaries-progress')
@@ -90,6 +95,7 @@ export default function BoundariesModule({ onBack }: Props) {
       ...prev,
       checkIns: [...prev.checkIns, data]
     }))
+    setShowCheckIn(false)
   }
 
   const progressPercentage = Math.round(
@@ -97,6 +103,78 @@ export default function BoundariesModule({ onBack }: Props) {
   )
 
   const previousCheckIn = progress.checkIns[progress.checkIns.length - 1]
+
+  // Get current emotional state for adaptive recommendations
+  const getCurrentEmotionalState = () => {
+    if (previousCheckIn) {
+      return {
+        mood: previousCheckIn.mood,
+        anxiety: previousCheckIn.anxiety,
+        energy: previousCheckIn.energy,
+        stress: Math.round((previousCheckIn.anxiety + (6 - previousCheckIn.energy)) / 2)
+      }
+    }
+    return {
+      mood: 3,
+      anxiety: 3,
+      energy: 3,
+      stress: 3
+    }
+  }
+
+  // Calculate week progress
+  const getWeekProgress = () => {
+    const lessonsPerWeek = 3
+    const week1Lessons = boundariesModule.lessons.slice(0, 3)
+    const week2Lessons = boundariesModule.lessons.slice(3, 6)
+    const week3Lessons = boundariesModule.lessons.slice(6, 9)
+
+    const week1Completed = week1Lessons.filter(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    ).length
+    const week2Completed = week2Lessons.filter(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    ).length
+    const week3Completed = week3Lessons.filter(lesson => 
+      progress.completedLessons.includes(lesson.id)
+    ).length
+
+    return {
+      week1: Math.round((week1Completed / lessonsPerWeek) * 100),
+      week2: Math.round((week2Completed / lessonsPerWeek) * 100),
+      week3: Math.round((week3Completed / lessonsPerWeek) * 100)
+    }
+  }
+
+  const weekProgress = getWeekProgress()
+
+  // Get lessons for current week
+  const getCurrentWeekLessons = () => {
+    const startIndex = (currentWeek - 1) * 3
+    return boundariesModule.lessons.slice(startIndex, startIndex + 3)
+  }
+
+  const currentWeekLessons = getCurrentWeekLessons()
+
+  // Generate content cards for current week
+  const getContentCards = () => {
+    return currentWeekLessons.map(lesson => {
+      const isCompleted = progress.completedLessons.includes(lesson.id)
+      const isLocked = lesson.prerequisites && lesson.prerequisites.some(prereq => 
+        !progress.completedLessons.includes(prereq)
+      )
+
+      return {
+        type: 'video' as const,
+        title: lesson.title,
+        description: lesson.subtitle,
+        duration: 15,
+        completed: isCompleted,
+        locked: isLocked,
+        progress: isCompleted ? 100 : 0
+      }
+    })
+  }
 
   // Show lesson viewer if a lesson is selected
   if (selectedLesson) {
@@ -280,8 +358,77 @@ export default function BoundariesModule({ onBack }: Props) {
         onCheckIn={() => setShowCheckIn(true)}
       />
 
-      {/* Lesson Timeline */}
+      {/* Week Tabs Navigation */}
+      <div className="container mx-auto px-4 py-8">
+        <WeekTabs
+          currentWeek={currentWeek}
+          onWeekChange={setCurrentWeek}
+          progress={weekProgress}
+        />
+      </div>
+
+      {/* Adaptive Recommendations */}
+      {progress.checkIns.length > 0 && (
+        <div className="container mx-auto px-4 py-8">
+          <div className="text-center mb-6">
+            <button
+              onClick={() => setShowAdaptiveRecommendations(!showAdaptiveRecommendations)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:scale-105 transition-transform duration-200"
+            >
+              <span>🧠</span>
+              <span>AI Рекомендации</span>
+              <span className={`transform transition-transform duration-200 ${
+                showAdaptiveRecommendations ? 'rotate-180' : ''
+              }`}>
+                ↓
+              </span>
+            </button>
+          </div>
+          
+          {showAdaptiveRecommendations && (
+            <AdaptiveRecommendation
+              emotionalState={getCurrentEmotionalState()}
+              completedLessons={progress.completedLessons}
+              onRecommendationSelect={(rec) => {
+                if (rec.type === 'lesson') {
+                  // Find and start the recommended lesson
+                  const lesson = boundariesModule.lessons.find(l => l.title.includes(rec.title.split(':')[1]?.trim()))
+                  if (lesson) {
+                    handleLessonClick(lesson.id)
+                  }
+                } else if (rec.type === 'checkin') {
+                  setShowCheckIn(true)
+                }
+                setShowAdaptiveRecommendations(false)
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Content Cards for Current Week */}
+      <div className="container mx-auto px-4 py-8">
+        <ContentCards
+          cards={getContentCards()}
+          onCardStart={(index) => {
+            const lesson = currentWeekLessons[index]
+            if (lesson) {
+              handleLessonClick(lesson.id)
+            }
+          }}
+        />
+      </div>
+
+      {/* Lesson Timeline (Alternative View) */}
       <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            Все уроки модуля
+          </h3>
+          <p className="text-sm text-gray-600">
+            Посмотри прогресс по всем 9 урокам
+          </p>
+        </div>
         <LessonTimeline
           lessons={boundariesModule.lessons}
           completedLessons={progress.completedLessons}
