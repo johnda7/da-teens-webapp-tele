@@ -66,7 +66,7 @@ interface CheckInData {
 }
 
 export function App() {
-  const { user, isTelegramWebApp } = useTelegram()
+  const { user, isTelegramWebApp, isMobile, isSmallMobile, viewportHeight } = useTelegram()
   const defaultName = user?.first_name || 'Алекс'
 
   // Tab navigation
@@ -323,7 +323,7 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} style={{ minHeight: `${viewportHeight}px` }}>
       {/* Animated Gradient Background with Orbs */}
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-white to-blue-100">
         {/* Animated Orb 1 - Blue */}
@@ -385,8 +385,8 @@ export function App() {
       </div>
 
       {/* Header - Clean Telegram WebApp Style */}
-      <header className="sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur-[40px]">
-        <div className="flex items-center justify-between p-3">
+      <header className={`sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur-[40px] ${isMobile ? 'safe-area-top' : ''}`}>
+        <div className={`flex items-center justify-between ${isMobile ? 'mobile-spacing' : 'p-3'}`}>
           {/* Left: Home Button (Heart in Liquid Glass) + Title */}
           <div className="flex items-center gap-2">
             <motion.button
@@ -396,13 +396,13 @@ export function App() {
               }}
               whileTap={{ scale: 0.92 }}
               whileHover={{ scale: 1.05 }}
-              className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+              className={`${isMobile ? 'touch-target mobile-button' : 'w-10 h-10'} rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow`}
             >
-              <Heart weight="fill" className="w-5 h-5 text-blue-600" />
+              <Heart weight="fill" className={`${isMobile ? 'mobile-icon' : 'w-5 h-5'} text-blue-600`} />
             </motion.button>
             <div>
-              <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
-              <p className="text-[10px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
+              <h1 className={`${isMobile ? 'text-sm' : 'text-base'} font-semibold text-gray-900`}>AI Подросток</h1>
+              <p className={`${isMobile ? 'text-[9px]' : 'text-[10px]'} text-gray-500`}>Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
             </div>
           </div>
           
@@ -411,7 +411,7 @@ export function App() {
             onClick={() => setActiveTab('profile')}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+            className={`relative ${isMobile ? 'touch-target' : 'w-10 h-10'} rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow`}
           >
             {user?.photo_url ? (
               <img 
@@ -429,29 +429,29 @@ export function App() {
       </header>
 
       {/* Main Content */}
-      <main className="pb-20 p-2 md:p-3 space-y-3">
+      <main className={`mobile-scroll pb-20 ${isMobile ? 'mobile-spacing' : 'p-2 md:p-3'} space-y-3`}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         {/* Tab Navigation - Fixed Bottom Bar */}
-        <TabsList className="fixed bottom-0 left-0 right-0 h-16 rounded-none border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-50 grid grid-cols-5">
-          <TabsTrigger value="dashboard" className="flex-col gap-1 h-full data-[state=active]:text-primary">
-            <BookOpen weight="fill" className="w-5 h-5" />
-            <span className="text-xs">Модули</span>
+        <TabsList className={`mobile-nav ${isMobile ? 'mobile-tabs' : ''} fixed bottom-0 left-0 right-0 h-16 rounded-none border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-50 grid grid-cols-5`}>
+          <TabsTrigger value="dashboard" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
+            <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Модули</span>
           </TabsTrigger>
-          <TabsTrigger value="checkin" className="flex-col gap-1 h-full data-[state=active]:text-primary">
-            <Heart weight="fill" className="w-5 h-5" />
-            <span className="text-xs">Чек-ин</span>
+          <TabsTrigger value="checkin" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
+            <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Чек-ин</span>
           </TabsTrigger>
-          <TabsTrigger value="cohort" className="flex-col gap-1 h-full data-[state=active]:text-primary">
-            <Users weight="fill" className="w-5 h-5" />
-            <span className="text-xs">Группа</span>
+          <TabsTrigger value="cohort" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
+            <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Группа</span>
           </TabsTrigger>
-          <TabsTrigger value="badges" className="flex-col gap-1 h-full data-[state=active]:text-primary">
-            <Trophy weight="fill" className="w-5 h-5" />
-            <span className="text-xs">Награды</span>
+          <TabsTrigger value="badges" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
+            <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Награды</span>
           </TabsTrigger>
-          <TabsTrigger value="profile" className="flex-col gap-1 h-full data-[state=active]:text-primary">
-            <Target weight="fill" className="w-5 h-5" />
-            <span className="text-xs">Прогресс</span>
+          <TabsTrigger value="profile" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
+            <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Прогресс</span>
           </TabsTrigger>
         </TabsList>
 
@@ -529,7 +529,7 @@ export function App() {
                         size="sm" 
                         onClick={() => setSelectedModule(1)}
                         style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
-                        className="text-white shadow-lg hover:shadow-xl"
+                        className={`text-white shadow-lg hover:shadow-xl ${isMobile ? 'mobile-button touch-target' : ''}`}
                       >
                         {adaptiveProgress.completedLessons.length === 9 ? 'Пройти заново' : 'Продолжить'}
                       </Button>
@@ -539,22 +539,22 @@ export function App() {
               )}
 
               {/* Quick Actions */}
-              <div className="grid grid-cols-2 gap-4">
-                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('checkin')}>
-                  <CardContent className="p-4 text-center">
-                    <Heart className="w-8 h-8 text-accent mx-auto mb-2" />
-                    <h3 className="font-medium">Ежедневный чек-ин</h3>
-                    <p className="text-sm text-muted-foreground">
+              <div className={`${isMobile ? 'mobile-grid' : 'grid grid-cols-2'} gap-4`}>
+                <Card className={`mobile-card cursor-pointer hover:shadow-md transition-shadow ${isMobile ? 'touch-target' : ''}`} onClick={() => setActiveTab('checkin')}>
+                  <CardContent className={`${isMobile ? 'mobile-spacing' : 'p-4'} text-center`}>
+                    <Heart className={`mobile-icon ${isMobile ? 'w-6 h-6' : 'w-8 h-8'} text-accent mx-auto mb-2`} />
+                    <h3 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>Ежедневный чек-ин</h3>
+                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
                       {lastCheckIn ? 'Обновить состояние' : 'Как дела сегодня?'}
                     </p>
                   </CardContent>
                 </Card>
                 
-                <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setActiveTab('cohort')}>
-                  <CardContent className="p-4 text-center">
-                    <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <h3 className="font-medium">Моя группа</h3>
-                    <p className="text-sm text-muted-foreground">Встреча через 2 дня</p>
+                <Card className={`mobile-card cursor-pointer hover:shadow-md transition-shadow ${isMobile ? 'touch-target' : ''}`} onClick={() => setActiveTab('cohort')}>
+                  <CardContent className={`${isMobile ? 'mobile-spacing' : 'p-4'} text-center`}>
+                    <Users className={`mobile-icon ${isMobile ? 'w-6 h-6' : 'w-8 h-8'} text-primary mx-auto mb-2`} />
+                    <h3 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>Моя группа</h3>
+                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Встреча через 2 дня</p>
                   </CardContent>
                 </Card>
               </div>
