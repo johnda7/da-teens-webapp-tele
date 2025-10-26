@@ -303,6 +303,7 @@ export function ModulePage({
                 recommendation={currentLesson}
                 onComplete={handleLessonComplete}
                 onSkip={selectNextLesson}
+                onBack={onBack}
               />
             ) : (
               <Card>

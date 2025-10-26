@@ -296,6 +296,7 @@ export default function BoundariesModule({ onBack }: Props) {
           }}
           onComplete={(xp) => handleLessonComplete(selectedLesson, xp)}
           onSkip={() => setSelectedLesson(null)}
+          onBack={() => setSelectedLesson(null)}
         />
       </div>
     )

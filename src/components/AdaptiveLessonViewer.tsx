@@ -17,6 +17,7 @@ import {
   Sparkle,
   CheckCircle,
   ArrowRight,
+  ArrowLeft,
   Lightbulb,
   Users,
   Target,
@@ -33,12 +34,14 @@ interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
   onComplete: (score: number) => void
   onSkip: () => void
+  onBack?: () => void
 }
 
 export default function AdaptiveLessonViewer({
   recommendation,
   onComplete,
-  onSkip
+  onSkip,
+  onBack
 }: AdaptiveLessonViewerProps) {
   const { lesson, reason, emotionalFit, adaptations } = recommendation
   const [currentFormat, setCurrentFormat] = useState<keyof Lesson['formats']>('text')
@@ -185,8 +188,22 @@ export default function AdaptiveLessonViewer({
           <CardHeader className="relative p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-1 flex-1">
-                <CardTitle className="text-lg font-bold text-gray-900">{lesson.title}</CardTitle>
-                <CardDescription className="text-sm text-gray-600">{lesson.subtitle}</CardDescription>
+                <div className="flex items-center gap-3 mb-2">
+                  {onBack && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={onBack}
+                      className="h-8 w-8 p-0 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 hover:bg-white/70 transition-all duration-200"
+                    >
+                      <ArrowLeft size={16} className="text-gray-600" />
+                    </Button>
+                  )}
+                  <div>
+                    <CardTitle className="text-lg font-bold text-gray-900">{lesson.title}</CardTitle>
+                    <CardDescription className="text-sm text-gray-600">{lesson.subtitle}</CardDescription>
+                  </div>
+                </div>
               </div>
               <Badge variant="outline" className={`ios-caption2 ${fitColors[emotionalFit]} border-0 shadow-ios-soft`}>
                 {fitLabels[emotionalFit]}

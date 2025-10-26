@@ -141,6 +141,7 @@ export default function ModuleViewer({ moduleId, onBack }: Props) {
         }}
         onComplete={(xp) => handleLessonComplete(selectedLesson, xp)}
         onSkip={() => setSelectedLesson(null)}
+        onBack={() => setSelectedLesson(null)}
       />
     )
   }
