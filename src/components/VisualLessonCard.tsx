@@ -6,9 +6,9 @@ import { Play, Lock, CheckCircle, Clock, Users, Heart } from '@phosphor-icons/re
 interface VisualElements {
   heroImage: string
   emotionalVariants: {
-    anxious: { colors: string[], image: string, animation: string }
-    energetic: { colors: string[], image: string, animation: string }
-    focused: { colors: string[], image: string, animation: string }
+    anxious: { colors: { primary: string, secondary: string }, image: string, animation: string }
+    energetic: { colors: { primary: string, secondary: string }, image: string, animation: string }
+    focused: { colors: { primary: string, secondary: string }, image: string, animation: string }
   }
   culturalContext: {
     russian: string

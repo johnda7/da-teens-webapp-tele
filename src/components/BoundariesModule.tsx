@@ -518,9 +518,9 @@ export default function BoundariesModule({ onBack }: Props) {
                 visualElements={{
                   heroImage: '/images/boundaries/hero-boundaries.jpg',
                   emotionalVariants: {
-                    anxious: { colors: ['#FF6B6B', '#FFE66D'], image: '/images/emotions/anxious-hero.jpg', animation: 'gentle' },
-                    energetic: { colors: ['#4ECDC4', '#45B7D1'], image: '/images/emotions/energetic-hero.jpg', animation: 'dynamic' },
-                    focused: { colors: ['#96CEB4', '#FFEAA7'], image: '/images/emotions/focused-hero.jpg', animation: 'smooth' }
+                    anxious: { colors: { primary: '#FF6B6B', secondary: '#FFE66D' }, image: '/images/emotions/anxious-hero.jpg', animation: 'gentle' },
+                    energetic: { colors: { primary: '#4ECDC4', secondary: '#45B7D1' }, image: '/images/emotions/energetic-hero.jpg', animation: 'dynamic' },
+                    focused: { colors: { primary: '#96CEB4', secondary: '#FFEAA7' }, image: '/images/emotions/focused-hero.jpg', animation: 'smooth' }
                   },
                   culturalContext: {
                     russian: 'Российские примеры границ',
