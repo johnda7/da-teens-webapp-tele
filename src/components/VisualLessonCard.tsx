@@ -79,6 +79,19 @@ export default function VisualLessonCard({
   // Получаем эмоциональные стили
   const getEmotionalStyles = () => {
     const variant = visualElements.emotionalVariants[emotionalState]
+    if (!variant) {
+      // Fallback to calm state if variant not found
+      const fallbackVariant = visualElements.emotionalVariants.calm || {
+        colors: { primary: '#A8E6CF', secondary: '#FFD93D' },
+        image: '/images/emotions/calm-hero.jpg',
+        animation: 'smooth'
+      }
+      return {
+        colors: fallbackVariant.colors,
+        image: fallbackVariant.image,
+        animation: fallbackVariant.animation
+      }
+    }
     return {
       colors: variant.colors,
       image: variant.image,
