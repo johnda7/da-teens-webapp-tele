@@ -26,6 +26,7 @@ import CohortSchedule from '@/components/CohortSchedule'
 import BadgeGrid from '@/components/BadgeGrid'
 import ProgressStats from '@/components/ProgressStats'
 import DashboardHero from '@/components/DashboardHero'
+import DailyRecommendationCard from '@/components/DailyRecommendationCard'
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
@@ -557,6 +558,12 @@ export function App() {
                   </CardContent>
                 </Card>
               </div>
+
+              <DailyRecommendationCard 
+                currentLesson={currentLesson} 
+                onLessonComplete={handleLessonComplete} 
+                isLoading={isLoadingLesson} 
+              />
 
               <ModuleGrid 
                 currentModule={userProfile?.currentModule || 1}
