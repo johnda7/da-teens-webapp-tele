@@ -411,7 +411,7 @@ export function App() {
             onClick={() => setActiveTab('profile')}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+            className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
           >
             {user?.photo_url ? (
               <img 
@@ -420,7 +420,7 @@ export function App() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-xs">
                 {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
               </div>
             )}
