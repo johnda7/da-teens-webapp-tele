@@ -19,14 +19,17 @@ import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft } from '@phosphor-icons/react'
-import UniversalModuleViewer from '@/components/UniversalModuleViewer'
-import ModuleGrid from '@/components/ModuleGrid'
-import CheckInPanel from '@/components/CheckInPanel'
-import CohortSchedule from '@/components/CohortSchedule'
-import BadgeGrid from '@/components/BadgeGrid'
-import ProgressStats from '@/components/ProgressStats'
-import DashboardHero from '@/components/DashboardHero'
-import DailyRecommendationCard from '@/components/DailyRecommendationCard'
+// Lazy imports for better performance - Perplexity Speed Principle
+import { lazy, Suspense } from 'react'
+
+const UniversalModuleViewer = lazy(() => import('@/components/UniversalModuleViewer'))
+const ModuleGrid = lazy(() => import('@/components/ModuleGrid'))
+const CheckInPanel = lazy(() => import('@/components/CheckInPanel'))
+const CohortSchedule = lazy(() => import('@/components/CohortSchedule'))
+const BadgeGrid = lazy(() => import('@/components/BadgeGrid'))
+const ProgressStats = lazy(() => import('@/components/ProgressStats'))
+const DashboardHero = lazy(() => import('@/components/DashboardHero'))
+const DailyRecommendationCard = lazy(() => import('@/components/DailyRecommendationCard'))
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
@@ -324,64 +327,14 @@ export function App() {
 
   return (
     <div className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} style={{ minHeight: `${viewportHeight}px` }}>
-      {/* Animated Gradient Background with Orbs */}
+      {/* Optimized Static Background - Perplexity Speed Principle */}
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-white to-blue-100">
-        {/* Animated Orb 1 - Blue */}
-        <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full opacity-20"
-          style={{
-            background: 'radial-gradient(circle, rgba(0, 122, 255, 0.3) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-          animate={{
-            x: ['-10%', '10%', '-10%'],
-            y: ['-10%', '15%', '-10%'],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        
-        {/* Animated Orb 2 - Light Blue */}
-        <motion.div
-          className="absolute right-0 top-1/4 w-[600px] h-[600px] rounded-full opacity-15"
-          style={{
-            background: 'radial-gradient(circle, rgba(90, 200, 250, 0.3) 0%, transparent 70%)',
-            filter: 'blur(80px)',
-          }}
-          animate={{
-            x: ['10%', '-15%', '10%'],
-            y: ['5%', '-10%', '5%'],
-            scale: [1.1, 0.9, 1.1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        
-        {/* Animated Orb 3 - Sky Blue */}
-        <motion.div
-          className="absolute bottom-0 left-1/3 w-[400px] h-[400px] rounded-full opacity-10"
-          style={{
-            background: 'radial-gradient(circle, rgba(52, 170, 220, 0.3) 0%, transparent 70%)',
-            filter: 'blur(70px)',
-          }}
-          animate={{
-            x: ['-5%', '20%', '-5%'],
-            y: ['10%', '-5%', '10%'],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+        {/* Static subtle pattern instead of heavy animations */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 right-0 w-24 h-24 bg-cyan-200 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 left-1/3 w-20 h-20 bg-sky-200 rounded-full blur-xl"></div>
+        </div>
       </div>
 
       {/* Header - Clean Telegram WebApp Style */}
