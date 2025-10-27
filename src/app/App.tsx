@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { BookOpen, Heart, Users, Trophy, Target, Brain } from '@phosphor-icons/react'
+import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft } from '@phosphor-icons/react'
 import UniversalModuleViewer from '@/components/UniversalModuleViewer'
 import ModuleGrid from '@/components/ModuleGrid'
 import CheckInPanel from '@/components/CheckInPanel'
@@ -386,6 +386,32 @@ export function App() {
 
       {/* Header - Clean Telegram WebApp Style */}
       <header className={`sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur-[40px] ${isMobile ? 'safe-area-top' : ''}`}>
+        {/* Back Button */}
+        <div className="flex items-center justify-between px-3 py-2">
+          <motion.button
+            onClick={() => {
+              // Если открыт модуль - закрыть его
+              if (selectedModule) {
+                setSelectedModule(null)
+              } else {
+                // Иначе перейти на главную
+                setActiveTab('dashboard')
+              }
+            }}
+            whileTap={{ scale: 0.92 }}
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            <span className="text-sm font-medium">Назад</span>
+          </motion.button>
+          <div className="text-center">
+            <h1 className="text-lg font-semibold text-gray-900">Подростковый бот</h1>
+            <p className="text-xs text-gray-500">мини-приложение</p>
+          </div>
+          <div className="w-16"></div> {/* Spacer for centering */}
+        </div>
+        
         <div className={`flex items-center justify-between ${isMobile ? 'mobile-spacing' : 'p-3'}`}>
           {/* Left: Home Button (Heart in Liquid Glass) + Title */}
           <div className="flex items-center gap-2">
@@ -411,7 +437,7 @@ export function App() {
             onClick={() => setActiveTab('profile')}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+            className="relative w-6 h-6 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
           >
             {user?.photo_url ? (
               <img 
