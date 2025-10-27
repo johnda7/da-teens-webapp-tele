@@ -390,20 +390,23 @@ export function App() {
         <div className="flex items-center justify-between px-3 py-2">
           <motion.button
             onClick={() => {
+              console.log('Кнопка Назад нажата!')
               // Если открыт модуль - закрыть его
               if (selectedModule) {
+                console.log('Закрываем модуль')
                 setSelectedModule(null)
               } else {
                 // Иначе перейти на главную
+                console.log('Переходим на главную')
                 setActiveTab('dashboard')
               }
             }}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+            className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors px-2 py-1 rounded-lg bg-white/50"
           >
-            <ArrowLeft size={20} />
-            <span className="text-sm font-medium">Назад</span>
+            <ArrowLeft size={16} />
+            <span className="text-xs font-medium">Назад</span>
           </motion.button>
           <div className="text-center">
             <h1 className="text-lg font-semibold text-gray-900">Подростковый бот</h1>
@@ -437,7 +440,7 @@ export function App() {
             onClick={() => setActiveTab('profile')}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className="relative w-6 h-6 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+            className="relative w-5 h-5 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
           >
             {user?.photo_url ? (
               <img 
