@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, VolumeHigh, VolumeX, SkipBack, SkipForward, Settings, Heart, Brain, Target } from '@phosphor-icons/react'
+import { Play, Pause, SpeakerHigh, SpeakerSlash, SkipBack, SkipForward, Gear, Heart, Brain, Target } from '@phosphor-icons/react'
 
 // Типы для мультимодального контента
 interface AudioContent {
@@ -360,7 +360,7 @@ export default function MultimodalContent({
                     onClick={() => setIsMuted(!isMuted)}
                     className="p-2 text-gray-600 hover:text-gray-800"
                   >
-                    {isMuted ? <VolumeX className="w-5 h-5" /> : <VolumeHigh className="w-5 h-5" />}
+                    {isMuted ? <SpeakerSlash className="w-5 h-5" /> : <SpeakerHigh className="w-5 h-5" />}
                   </button>
                   
                   <input

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Play, Pause, RotateCcw, CheckCircle, XCircle, Lightbulb } from '@phosphor-icons/react'
+import { Play, Pause, ArrowCounterClockwise, CheckCircle, XCircle, Lightbulb } from '@phosphor-icons/react'
 
 // Типы для интерактивных упражнений
 interface InteractiveStep {
@@ -186,7 +186,7 @@ export default function InteractiveExercise({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <RotateCcw className="w-5 h-5 inline mr-2" />
+            <ArrowCounterClockwise className="w-5 h-5 inline mr-2" />
             Повторить
           </motion.button>
         </div>
@@ -339,7 +339,7 @@ export default function InteractiveExercise({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <RotateCcw className="w-5 h-5 inline mr-2" />
+                <ArrowCounterClockwise className="w-5 h-5 inline mr-2" />
                 Начать заново
               </motion.button>
 
