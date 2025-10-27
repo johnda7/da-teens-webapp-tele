@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft } from '@phosphor-icons/react'
+import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft, Shield } from '@phosphor-icons/react'
 // Lazy imports for better performance - Perplexity Speed Principle
 import { lazy, Suspense } from 'react'
 
@@ -71,6 +71,12 @@ interface CheckInData {
 export function App() {
   const { user, isTelegramWebApp, isMobile, isSmallMobile, viewportHeight } = useTelegram()
   const defaultName = user?.first_name || 'Алекс'
+  
+  // Dev mode - только для разработчиков
+  const isDevMode = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname.includes('127.0.0.1') ||
+     localStorage.getItem('devMode') === 'true')
 
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -365,7 +371,25 @@ export function App() {
             <h1 className="text-lg font-semibold text-gray-900">Подростковый бот</h1>
             <p className="text-xs text-gray-500">мини-приложение</p>
           </div>
-          <div className="w-16"></div> {/* Spacer for centering */}
+          <div className="flex items-center gap-2">
+            {isDevMode && (
+              <Badge variant="outline" className="text-xs bg-green-100 text-green-700 border-green-300">
+                DEV
+              </Badge>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                const newDevMode = !isDevMode
+                localStorage.setItem('devMode', newDevMode.toString())
+                window.location.reload()
+              }}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <Brain className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
         
         <div className={`flex items-center justify-between ${isMobile ? 'mobile-spacing' : 'p-3'}`}>
@@ -547,10 +571,53 @@ export function App() {
                 isLoading={isLoadingLesson} 
               />
 
-              <ModuleGrid 
-                currentModule={userProfile?.currentModule || 1}
-                onModuleSelect={setSelectedModule}
-              />
+              {/* Показываем только модуль "Личные границы" для учеников */}
+              {isDevMode ? (
+                <ModuleGrid 
+                  currentModule={userProfile?.currentModule || 1}
+                  onModuleSelect={setSelectedModule}
+                />
+              ) : (
+                <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+                  <CardHeader className="text-center pb-4">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
+                      <Shield className="w-8 h-8 text-white" />
+                    </div>
+                    <CardTitle className="text-xl font-bold text-gray-900">Личные границы</CardTitle>
+                    <CardDescription className="text-gray-600">
+                      Научись устанавливать здоровые границы в отношениях
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center space-y-4">
+                    <div className="grid grid-cols-3 gap-2 text-sm text-gray-600">
+                      <div className="bg-white/50 rounded-lg p-2">
+                        <div className="font-semibold text-blue-600">9</div>
+                        <div>уроков</div>
+                      </div>
+                      <div className="bg-white/50 rounded-lg p-2">
+                        <div className="font-semibold text-purple-600">3</div>
+                        <div>недели</div>
+                      </div>
+                      <div className="bg-white/50 rounded-lg p-2">
+                        <div className="font-semibold text-green-600">12+</div>
+                        <div>лет</div>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      onClick={() => setSelectedModule(1)}
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      <Shield className="w-5 h-5 mr-2" />
+                      Начать обучение
+                    </Button>
+                    
+                    <p className="text-xs text-gray-500">
+                      Единственный доступный модуль в текущей версии
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
             </>
           )}
         </TabsContent>
