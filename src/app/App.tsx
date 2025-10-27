@@ -72,11 +72,9 @@ export function App() {
   const { user, isTelegramWebApp, isMobile, isSmallMobile, viewportHeight } = useTelegram()
   const defaultName = user?.first_name || 'Алекс'
   
-  // Dev mode - только для разработчиков
+  // Dev mode - только для разработчиков (по умолчанию OFF на production)
   const isDevMode = typeof window !== 'undefined' && 
-    (window.location.hostname === 'localhost' || 
-     window.location.hostname.includes('127.0.0.1') ||
-     localStorage.getItem('devMode') === 'true')
+    localStorage.getItem('devMode') === 'true'
 
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
