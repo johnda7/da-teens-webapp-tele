@@ -396,9 +396,9 @@ export function App() {
               }}
               whileTap={{ scale: 0.92 }}
               whileHover={{ scale: 1.05 }}
-              className={`${isMobile ? 'touch-target mobile-button' : 'w-10 h-10'} rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow`}
+              className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow"
             >
-              <Heart weight="fill" className={`${isMobile ? 'mobile-icon' : 'w-5 h-5'} text-blue-600`} />
+              <Heart weight="fill" className="w-5 h-5 text-blue-600" />
             </motion.button>
             <div>
               <h1 className={`${isMobile ? 'text-sm' : 'text-base'} font-semibold text-gray-900`}>AI Подросток</h1>
@@ -411,7 +411,7 @@ export function App() {
             onClick={() => setActiveTab('profile')}
             whileTap={{ scale: 0.92 }}
             whileHover={{ scale: 1.05 }}
-            className={`relative ${isMobile ? 'touch-target' : 'w-10 h-10'} rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow`}
+            className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
           >
             {user?.photo_url ? (
               <img 
