@@ -301,21 +301,44 @@ git push -f origin main
 cat > .git/hooks/pre-push << 'EOF'
 #!/bin/bash
 
-# Проверка на force push
-if [[ "$*" == *"--force"* ]] || [[ "$*" == *"-f"* ]]; then
+# Git pre-push hook для защиты от потери коммитов
+remote="$1"
+url="$2"
+
+# Проверяем наличие --force или -f в команде
+current_command=$(ps -o command= -p $PPID)
+
+if echo "$current_command" | grep -qE -- '(-f|--force)'; then
     echo "❌ ОШИБКА: Force push запрещен!"
     echo "⚠️  Это может удалить коммиты!"
     echo "✅ Используй: git pull && git push"
+    echo ""
+    echo "💡 Если действительно нужен force push:"
+    echo "   git push --no-verify -f origin main"
     exit 1
 fi
 
-# Проверка, что есть удаленные изменения
-REMOTE_COMMITS=$(git rev-list HEAD..origin/main --count 2>/dev/null)
-if [ "$REMOTE_COMMITS" -gt 0 ]; then
-    echo "⚠️  ВНИМАНИЕ: На GitHub есть $REMOTE_COMMITS новых коммитов!"
-    echo "📥 Сначала сделай: git pull origin main"
-    exit 1
-fi
+# Обновляем информацию о remote
+git fetch "$remote" 2>/dev/null
+
+# Проверяем, есть ли удаленные коммиты
+while read local_ref local_sha remote_ref remote_sha
+do
+    if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+        continue
+    fi
+    
+    if [ "$remote_sha" != "0000000000000000000000000000000000000000" ]; then
+        commits_behind=$(git rev-list --count "$local_sha..$remote_sha" 2>/dev/null)
+        
+        if [ -n "$commits_behind" ] && [ "$commits_behind" -gt 0 ]; then
+            echo "⚠️  ВНИМАНИЕ: На GitHub есть $commits_behind новых коммитов!"
+            echo "📥 Сначала сделай: git pull origin main"
+            echo "🔍 Проверь коммиты: git log origin/main --oneline -5"
+            exit 1
+        fi
+    fi
+done
 
 echo "✅ Push безопасен"
 exit 0
@@ -325,6 +348,22 @@ EOF
 chmod +x .git/hooks/pre-push
 
 # Теперь Git автоматически проверит push!
+```
+
+**✅ HOOK УЖЕ УСТАНОВЛЕН В ПРОЕКТЕ!**
+- Автоматически блокирует `git push -f`
+- Проверяет наличие новых коммитов на GitHub
+- Показывает полезные подсказки
+
+**🧪 ПРОТЕСТИРОВАНО:**
+```bash
+# Тест 1: обычный push - ✅ работает
+git push origin main
+# Вывод: ✅ Push безопасен
+
+# Тест 2: force push - ❌ блокируется
+git push -f origin main
+# Вывод: ❌ ОШИБКА: Force push запрещен!
 ```
 
 ---
