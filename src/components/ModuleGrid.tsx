@@ -66,6 +66,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
   return (
     <div className="space-y-8 px-4 md:px-6">
       {/* Current Module Highlight - iOS 26 Liquid Glass Hero */}
+      {currentModuleData && (
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -135,6 +136,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
           </div>
         </div>
       </motion.div>
+      )}
 
       {/* All Modules Grid */}
       <div>
