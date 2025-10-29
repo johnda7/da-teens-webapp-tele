@@ -341,59 +341,61 @@ export function App() {
         </div>
       </div>
 
-      {/* Header - Telegram Wallet Style (Compact) */}
-      <header className="sticky top-0 z-40 bg-white border-b border-gray-100">
-        <div className="flex items-center justify-between px-4 py-2">
-          {/* Left: Title only (минимализм как в Wallet) */}
-          <div>
-            <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
-            <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
+      {/* Header - Telegram Wallet Style (Compact) - скрываем когда открыт урок */}
+      {!selectedModule && (
+        <header className="sticky top-0 z-40 bg-white border-b border-gray-100">
+          <div className="flex items-center justify-between px-4 py-2">
+            {/* Left: Title only (минимализм как в Wallet) */}
+            <div>
+              <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
+              <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
+            </div>
+            
+            {/* Right: Profile (компактно) */}
+            <button
+              onClick={() => setActiveTab('profile')}
+              className="relative w-8 h-8 rounded-full overflow-hidden"
+            >
+              {user?.photo_url ? (
+                <img 
+                  src={user.photo_url} 
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
+                  {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
+                </div>
+              )}
+            </button>
           </div>
-          
-          {/* Right: Profile (компактно) */}
-          <button
-            onClick={() => setActiveTab('profile')}
-            className="relative w-8 h-8 rounded-full overflow-hidden"
-          >
-            {user?.photo_url ? (
-              <img 
-                src={user.photo_url} 
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
-                {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
-              </div>
-            )}
-          </button>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main Content */}
-      <main className={`mobile-scroll pb-20 ${isMobile ? 'mobile-spacing' : 'p-2 md:p-3'} space-y-3`}>
+      <main className={`mobile-scroll pb-16 ${isMobile ? 'mobile-spacing' : 'p-2 md:p-3'} space-y-2`}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Tab Navigation - Fixed Bottom Bar */}
-        <TabsList className={`mobile-nav ${isMobile ? 'mobile-tabs' : ''} fixed bottom-0 left-0 right-0 h-16 rounded-none border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-50 grid grid-cols-5`}>
-          <TabsTrigger value="dashboard" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
-            <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Модули</span>
+        {/* Tab Navigation - Telegram Wallet Style (компактный) */}
+        <TabsList className={`mobile-nav ${isMobile ? 'mobile-tabs' : ''} fixed bottom-0 left-0 right-0 h-14 rounded-none border-t bg-white z-50 grid grid-cols-5`}>
+          <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
           </TabsTrigger>
-          <TabsTrigger value="checkin" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
-            <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Чек-ин</span>
+          <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Чек-ин</span>
           </TabsTrigger>
-          <TabsTrigger value="cohort" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
-            <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Группа</span>
+          <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Группа</span>
           </TabsTrigger>
-          <TabsTrigger value="badges" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
-            <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Награды</span>
+          <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Награды</span>
           </TabsTrigger>
-          <TabsTrigger value="profile" className={`touch-target flex-col gap-1 h-full data-[state=active]:text-primary ${isMobile ? 'tab-button' : ''}`}>
-            <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-            <span className={`${isSmallMobile ? 'text-[10px]' : 'text-xs'}`}>Прогресс</span>
+          <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Прогресс</span>
           </TabsTrigger>
         </TabsList>
 

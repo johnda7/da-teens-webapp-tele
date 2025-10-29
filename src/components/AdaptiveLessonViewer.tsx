@@ -156,7 +156,7 @@ export default function AdaptiveLessonViewer({
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-3 space-y-4">
+    <div className="max-w-4xl mx-auto p-2 space-y-2">
       {/* Progress bar - Компактный синий */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -178,95 +178,94 @@ export default function AdaptiveLessonViewer({
         </div>
       </motion.div>
 
-      {/* Заголовок урока - Компактный */}
+      {/* Заголовок урока - Telegram Wallet Style (супер компактный) */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 20 }}
       >
-        <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-cyan-50/20 pointer-events-none" />
-          
-          <CardHeader className="relative p-4">
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-1 flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  {onBack && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={onBack}
-                      className="h-8 w-8 p-0 rounded-full bg-white/50 backdrop-blur-sm border border-white/20 hover:bg-white/70 transition-all duration-200"
-                    >
-                      <ArrowLeft size={16} className="text-gray-600" />
-                    </Button>
-                  )}
-                  <div>
-                    <CardTitle className="text-lg font-bold text-gray-900">{lesson.title}</CardTitle>
-                    <CardDescription className="text-sm text-gray-600">{lesson.subtitle}</CardDescription>
-                  </div>
+        <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-sm">
+          <CardHeader className="relative p-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 flex-1">
+                {onBack && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onBack}
+                    className="h-7 w-7 p-0 rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <ArrowLeft size={14} className="text-gray-600" />
+                  </Button>
+                )}
+                <div className="flex-1 min-w-0">
+                  <CardTitle className="text-base font-semibold text-gray-900 truncate">{lesson.title}</CardTitle>
+                  <CardDescription className="text-xs text-gray-500 truncate">{lesson.subtitle}</CardDescription>
                 </div>
               </div>
-              <Badge variant="outline" className={`ios-caption2 ${fitColors[emotionalFit]} border-0 shadow-ios-soft`}>
+              <Badge variant="outline" className={`text-[10px] px-2 py-0.5 ${fitColors[emotionalFit]} border-0`}>
                 {fitLabels[emotionalFit]}
               </Badge>
             </div>
             
-            {/* Причина выбора - Компактно */}
+            {/* Причина выбора - Супер компактно */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <Alert className="mt-3 bg-white/50 backdrop-blur-[10px] border-blue-200/50 py-2">
-                <Heart className="h-4 w-4 text-blue-600" />
-                <AlertDescription className="text-blue-900 text-sm">
-                  <strong className="font-semibold">Почему этот урок:</strong> {reason}
-                </AlertDescription>
-              </Alert>
+              <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="flex items-center gap-1.5">
+                  <Heart className="h-3 w-3 text-blue-600" />
+                  <span className="text-xs text-blue-800">
+                    <strong>Почему этот урок:</strong> {reason}
+                  </span>
+                </div>
+              </div>
             </motion.div>
 
-            {/* Адаптации */}
+            {/* Адаптации - Супер компактно */}
             {adaptations.length > 0 && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <Alert className="mt-2 bg-white/50 backdrop-blur-[10px] border-blue-200/50 py-2">
-                  <Lightbulb className="h-4 w-4 text-blue-600" />
-                  <AlertDescription className="text-blue-900 text-sm">
-                    <strong className="font-semibold">Адаптировано:</strong>
-                    <ul className="mt-2 space-y-1">
-                      {adaptations.map((adapt, idx) => (
-                        <li key={idx} className="ios-caption1">• {adapt}</li>
-                      ))}
-                    </ul>
-                  </AlertDescription>
-                </Alert>
+                <div className="mt-1.5 p-2 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <div className="flex items-start gap-1.5">
+                    <Lightbulb className="h-3 w-3 text-yellow-600 mt-0.5" />
+                    <div className="text-xs text-yellow-800">
+                      <strong>Адаптировано:</strong>
+                      <ul className="mt-1 space-y-0.5">
+                        {adaptations.map((adapt, idx) => (
+                          <li key={idx} className="text-[10px]">• {adapt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             )}
 
-            {/* Цели обучения */}
+            {/* Цели обучения - Супер компактно */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="mt-4"
+              className="mt-2"
             >
-              <h4 className="ios-body-emphasized text-gray-700 mb-2">Ты научишься:</h4>
-              <ul className="space-y-2">
+              <h4 className="text-xs font-semibold text-gray-700 mb-1.5">Ты научишься:</h4>
+              <ul className="space-y-1">
                 {lesson.learningObjectives.map((obj, idx) => (
                   <motion.li 
                     key={idx}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.5 + idx * 0.05 }}
-                    className="flex items-start gap-2 ios-caption1 text-gray-600"
+                    className="flex items-start gap-1.5 text-xs text-gray-600"
                   >
-                    <CheckCircle size={14} className="text-green-500 mt-0.5 flex-shrink-0" />
-                    {obj}
+                    <CheckCircle size={10} className="text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="leading-tight">{obj}</span>
                   </motion.li>
                 ))}
               </ul>
@@ -275,32 +274,29 @@ export default function AdaptiveLessonViewer({
         </Card>
       </motion.div>
 
-      {/* Основной контент */}
+      {/* Основной контент - Telegram Wallet Style */}
       {viewMode === 'lesson' && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.5 }}
         >
-          <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-cyan-50/20 pointer-events-none" />
-            
-            <CardHeader className="relative">
+          <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-sm">
+            <CardHeader className="relative p-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="ios-headline text-gray-900">Выбери формат обучения</CardTitle>
-                <div className="flex items-center gap-2 ios-caption1 text-gray-600">
-                  <Clock size={14} />
+                <CardTitle className="text-sm font-semibold text-gray-900">Выбери формат обучения</CardTitle>
+                <div className="flex items-center gap-1 text-xs text-gray-600">
+                  <Clock size={12} />
                   <span>
                     ~{lesson.formats[currentFormat]?.estimatedTime || 5} мин
                   </span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="relative">
-              {/* Переключатель форматов - iOS 26 style */}
+            <CardContent className="relative p-3">
+              {/* Переключатель форматов - Telegram Wallet Style */}
               <Tabs value={currentFormat} onValueChange={(val) => setCurrentFormat(val as any)}>
-                <TabsList className="grid w-full bg-white/60 backdrop-blur-[20px] p-1" style={{ gridTemplateColumns: `repeat(${availableFormats.length}, 1fr)` }}>
+                <TabsList className="grid w-full bg-gray-100 p-1 rounded-lg" style={{ gridTemplateColumns: `repeat(${availableFormats.length}, 1fr)` }}>
                   {availableFormats.map(format => (
                     <TabsTrigger 
                       key={format} 
@@ -352,43 +348,43 @@ export default function AdaptiveLessonViewer({
               <p className="text-sm font-semibold text-muted-foreground mb-3">
                 Дополнительно:
               </p>
-              <div className="grid grid-cols-3 gap-2 mb-4">
+              <div className="grid grid-cols-3 gap-1.5 mb-3">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setViewMode('scenarios')}
-                  className="flex flex-col h-auto py-3 gap-1"
+                  className="flex flex-col h-auto py-2 gap-1 text-xs"
                 >
-                  <Path size={20} className="text-[#007AFF]" weight="fill" />
-                  <span className="text-xs">Сценарии</span>
+                  <Path size={16} className="text-[#007AFF]" weight="fill" />
+                  <span className="text-[10px]">Сценарии</span>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setViewMode('peer-learning')}
-                  className="flex flex-col h-auto py-3 gap-1"
+                  className="flex flex-col h-auto py-2 gap-1 text-xs"
                 >
-                  <Users size={20} className="text-blue-600" weight="fill" />
-                  <span className="text-xs">Истории</span>
+                  <Users size={16} className="text-blue-600" weight="fill" />
+                  <span className="text-[10px]">Истории</span>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setViewMode('skills')}
-                  className="flex flex-col h-auto py-3 gap-1"
+                  className="flex flex-col h-auto py-2 gap-1 text-xs"
                 >
-                  <Target size={20} className="text-green-600" weight="fill" />
-                  <span className="text-xs">Навыки</span>
+                  <Target size={16} className="text-green-600" weight="fill" />
+                  <span className="text-[10px]">Навыки</span>
                 </Button>
               </div>
             </div>
 
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={onSkip} className="text-xs px-3">
+              <Button variant="outline" onClick={onSkip} className="text-xs px-3 py-1.5 h-8">
                 Пропустить
               </Button>
-              <Button onClick={handleLessonComplete} className="gap-1.5 text-xs px-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
-                К тесту <ArrowRight size={16} />
+              <Button onClick={handleLessonComplete} className="gap-1 text-xs px-3 py-1.5 h-8 bg-blue-500 hover:bg-blue-600">
+                К тесту <ArrowRight size={12} />
               </Button>
             </div>
           </CardContent>
