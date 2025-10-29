@@ -55,6 +55,8 @@ export default function AdaptiveLessonViewer({
   const [showExplanation, setShowExplanation] = useState(false)
   const [viewMode, setViewMode] = useState<'lesson' | 'quiz' | 'practice' | 'scenarios' | 'peer-learning' | 'skills' | 'completed'>('lesson')
   const [userSkills, setUserSkills] = useState<Skill[]>(boundariesSkills)
+  const [currentXP, setCurrentXP] = useState(0)
+  const [showXPGain, setShowXPGain] = useState(false)
 
   // Доступные форматы для этого урока
   const availableFormats = Object.keys(lesson.formats).filter(
@@ -155,27 +157,122 @@ export default function AdaptiveLessonViewer({
     onComplete(quizScore)
   }
 
+  // XP Gain Animation
+  const showXPGainAnimation = (xp: number) => {
+    setCurrentXP(prev => prev + xp)
+    setShowXPGain(true)
+    setTimeout(() => setShowXPGain(false), 2000)
+  }
+
+  // Update XP when progress changes
+  useEffect(() => {
+    if (progress > 0 && progress % 25 === 0) {
+      showXPGainAnimation(10)
+    }
+  }, [progress])
+
   return (
-    <div className="max-w-4xl mx-auto p-2 space-y-2">
-      {/* Progress bar - Компактный синий */}
+    <div className="max-w-4xl mx-auto p-2 space-y-2 relative">
+      {/* XP Gain Animation */}
+      {showXPGain && (
+        <motion.div
+          initial={{ opacity: 0, y: 0, scale: 0.8 }}
+          animate={{ opacity: 1, y: -20, scale: 1 }}
+          exit={{ opacity: 0, y: -40, scale: 0.8 }}
+          className="absolute top-4 right-4 z-50 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg"
+        >
+          +10 XP!
+        </motion.div>
+      )}
+      {/* Enhanced Progress Indicators - Telegram Style */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
-        className="space-y-1.5"
+        className="space-y-3"
       >
-        <div className="flex items-center justify-between text-xs text-gray-600">
-          <span>Прогресс урока</span>
-          <span className="font-semibold text-blue-600">{progress}%</span>
+        {/* Main Progress Bar */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-gray-600">
+            <span>Прогресс урока</span>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-blue-600">{progress}%</span>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+          <div className="h-2 bg-blue-100 rounded-full overflow-hidden shadow-inner">
+            <motion.div 
+              className="h-full bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-500 rounded-full relative"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              {/* Shimmer effect */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                animate={{ x: ['-100%', '100%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              />
+            </motion.div>
+          </div>
         </div>
-        <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden">
-          <motion.div 
-            className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-          />
+
+        {/* Lesson Steps Indicator */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">Этапы:</span>
+          <div className="flex gap-1">
+            {['lesson', 'quiz', 'practice', 'completed'].map((step, index) => {
+              const stepProgress = ['lesson', 'quiz', 'practice', 'completed'].indexOf(viewMode)
+              const isActive = index === stepProgress
+              const isCompleted = index < stepProgress
+              
+              return (
+                <motion.div
+                  key={step}
+                  className={`w-2 h-2 rounded-full ${
+                    isCompleted ? 'bg-green-500' : 
+                    isActive ? 'bg-blue-500' : 'bg-gray-300'
+                  }`}
+                  animate={{ 
+                    scale: isActive ? [1, 1.2, 1] : 1,
+                    opacity: isActive ? [1, 0.7, 1] : 1
+                  }}
+                  transition={{ 
+                    duration: 1, 
+                    repeat: isActive ? Infinity : 0,
+                    ease: "easeInOut"
+                  }}
+                />
+              )
+            })}
+          </div>
         </div>
+
+        {/* Time Estimation */}
+        <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center gap-1">
+            <Clock size={12} />
+            <span>Осталось: ~{Math.max(0, 15 - Math.round(progress * 0.15))} мин</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Lightning size={12} className="text-orange-500" />
+            <span>+{Math.round(progress * 0.5)} XP</span>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Breadcrumbs Navigation */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="flex items-center gap-1 text-xs text-gray-500 mb-2"
+      >
+        <span>Модули</span>
+        <ArrowRight size={10} />
+        <span>Личные границы</span>
+        <ArrowRight size={10} />
+        <span className="text-blue-600 font-medium">Урок {lesson.id.split('-')[1] || '1'}</span>
       </motion.div>
 
       {/* Заголовок урока - Telegram Wallet Style (супер компактный) */}
@@ -380,12 +477,38 @@ export default function AdaptiveLessonViewer({
             </div>
 
             <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={onSkip} className="text-xs px-3 py-1.5 h-8">
-                Пропустить
-              </Button>
-              <Button onClick={handleLessonComplete} className="gap-1 text-xs px-3 py-1.5 h-8 bg-blue-500 hover:bg-blue-600">
-                К тесту <ArrowRight size={12} />
-              </Button>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button 
+                  variant="outline" 
+                  onClick={onSkip} 
+                  className="text-xs px-3 py-1.5 h-8 hover:bg-gray-50 transition-colors"
+                >
+                  Пропустить
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="relative"
+              >
+                <Button 
+                  onClick={handleLessonComplete} 
+                  className="gap-1 text-xs px-3 py-1.5 h-8 bg-blue-500 hover:bg-blue-600 relative overflow-hidden"
+                >
+                  <span className="relative z-10">К тесту</span>
+                  <ArrowRight size={12} className="relative z-10" />
+                  {/* Ripple effect */}
+                  <motion.div
+                    className="absolute inset-0 bg-white/20 rounded-md"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileTap={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </Button>
+              </motion.div>
             </div>
           </CardContent>
         </Card>
