@@ -11,25 +11,12 @@ export const useTelegram = () => {
       tg.ready();
       tg.expand();
       
-      // Enable closing confirmation
-      tg.enableClosingConfirmation();
+      // Устанавливаем цвет хедера в белый, чтобы он сливался с фоном
+      tg.setHeaderColor('#ffffff');
       
-      // Set header color to match theme
-      if (tg.themeParams?.bg_color) {
-        tg.setHeaderColor(tg.themeParams.bg_color);
-      }
-      
-      // Configure main button for better mobile UX
-      tg.MainButton.setText('Продолжить');
-      tg.MainButton.color = '#007AFF';
-      tg.MainButton.textColor = '#FFFFFF';
-      
-      // Configure back button
-      tg.BackButton.show();
-      tg.BackButton.onClick(() => {
-        // Handle back button press
-        window.history.back();
-      });
+      // Скрываем встроенные кнопки Telegram
+      tg.BackButton.hide();
+      tg.MainButton.hide();
       
       setIsReady(true);
     }
