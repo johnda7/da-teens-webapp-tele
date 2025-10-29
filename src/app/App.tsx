@@ -70,6 +70,42 @@ interface CheckInData {
 
 export function App() {
   const { user, isTelegramWebApp, isMobile, isSmallMobile, viewportHeight } = useTelegram()
+  
+  // Pull-to-refresh functionality
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [pullDistance, setPullDistance] = useState(0)
+  
+  // Pull-to-refresh handlers
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true)
+    // Simulate refresh
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setIsRefreshing(false)
+    toast.success('Обновлено!')
+  }, [])
+  
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (window.scrollY === 0) {
+      setPullDistance(e.touches[0].clientY)
+    }
+  }, [])
+  
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (window.scrollY === 0 && pullDistance > 0) {
+      const currentY = e.touches[0].clientY
+      const diff = Math.max(0, currentY - pullDistance)
+      if (diff > 0) {
+        e.preventDefault()
+        if (diff > 100) {
+          handleRefresh()
+        }
+      }
+    }
+  }, [pullDistance, handleRefresh])
+  
+  const handleTouchEnd = useCallback(() => {
+    setPullDistance(0)
+  }, [])
   const defaultName = user?.first_name || 'Алекс'
   
   // Dev mode - только для разработчиков (по умолчанию OFF на production)
@@ -330,7 +366,13 @@ export function App() {
   }, [])
 
   return (
-    <div className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} style={{ minHeight: `${viewportHeight}px` }}>
+    <div 
+      className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} 
+      style={{ minHeight: `${viewportHeight}px` }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Optimized Static Background - Perplexity Speed Principle */}
       <div className="fixed inset-0 -z-10 bg-gradient-to-br from-blue-50 via-white to-blue-100">
         {/* Static subtle pattern instead of heavy animations */}
@@ -340,6 +382,17 @@ export function App() {
           <div className="absolute bottom-0 left-1/3 w-20 h-20 bg-sky-200 rounded-full blur-xl"></div>
         </div>
       </div>
+
+      {/* Pull-to-refresh indicator */}
+      {isRefreshing && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-0 left-0 right-0 z-50 bg-blue-500 text-white text-center py-2 text-sm"
+        >
+          Обновление...
+        </motion.div>
+      )}
 
       {/* Header - Telegram Wallet Style (Compact) - скрываем когда открыт урок */}
       {!selectedModule && (

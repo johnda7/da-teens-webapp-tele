@@ -1,5 +1,5 @@
 // Вертикальная дорожная карта уроков модуля "Границы"
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -21,7 +21,7 @@ interface LessonTimelineProps {
   onLessonClick: (lessonId: string) => void
 }
 
-export default function LessonTimeline({ 
+const LessonTimeline = memo(function LessonTimeline({ 
   lessons, 
   completedLessons, 
   currentLesson,
@@ -155,20 +155,35 @@ export default function LessonTimeline({
                 {/* Lesson card - Компактный синий стиль */}
                 <div className="ml-16">
                   <motion.div
-                    whileHover={isClickable ? { scale: 1.02, y: -4 } : {}}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    whileHover={isClickable ? { scale: 1.01, y: -2 } : {}}
+                    whileTap={isClickable ? { scale: 0.99 } : {}}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 300, 
+                      damping: 20,
+                      mass: 0.8
+                    }}
+                    style={{ willChange: 'transform' }}
                   >
                     <Card 
                       className={`transition-all duration-200 ${
                         status === 'completed' 
-                          ? 'bg-white/70 backdrop-blur-[40px] border-green-100/50 shadow-ios-soft'
+                          ? 'bg-white border-green-200 shadow-sm'
                           : status === 'current'
-                          ? 'bg-white/70 backdrop-blur-[40px] border-blue-200 shadow-[0_8px_32px_rgba(0,122,255,0.25)] ring-2 ring-blue-100'
+                          ? 'bg-white border-blue-300 shadow-md ring-1 ring-blue-200'
                           : status === 'available'
-                          ? 'bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft'
-                          : 'bg-white/40 backdrop-blur-[20px] border-gray-200 shadow-ios-soft opacity-70'
+                          ? 'bg-white border-gray-200 shadow-sm hover:shadow-md'
+                          : 'bg-gray-50 border-gray-200 shadow-sm opacity-60'
                       } ${isClickable ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-                      onClick={() => isClickable && onLessonClick(lesson.id)}
+                      onClick={() => {
+                        if (isClickable) {
+                          // Haptic feedback как в Telegram
+                          if (window.Telegram?.WebApp?.HapticFeedback) {
+                            window.Telegram.WebApp.HapticFeedback.impactOccurred('light')
+                          }
+                          onLessonClick(lesson.id)
+                        }
+                      }}
                     >
                     <CardContent className="p-4">
                       {/* Subtle gradient - синий */}
@@ -284,4 +299,6 @@ export default function LessonTimeline({
       )}
     </div>
   )
-}
+})
+
+export default LessonTimeline
