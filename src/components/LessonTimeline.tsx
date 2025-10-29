@@ -129,7 +129,7 @@ const LessonTimeline = memo(function LessonTimeline({
         {/* Vertical connecting line - синяя */}
         <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-blue-100 to-gray-200" />
 
-        <div className="space-y-3">
+        <div className="space-y-1">
           {filteredLessons.map((lesson, filteredIndex) => {
             // Найти реальный индекс урока в полном списке
             const realIndex = lessons.findIndex(l => l.id === lesson.id)
@@ -145,15 +145,15 @@ const LessonTimeline = memo(function LessonTimeline({
                 transition={{ duration: 0.2, delay: filteredIndex * 0.03 }}
                 className="relative"
               >
-                {/* Timeline dot - компактнее */}
-                <div className="absolute left-0 top-4 z-10">
-                  <div className="w-12 h-12 flex items-center justify-center">
+                {/* Timeline dot - супер компактный */}
+                <div className="absolute left-0 top-3 z-10">
+                  <div className="w-8 h-8 flex items-center justify-center">
                     {getStatusIcon(status)}
                   </div>
                 </div>
 
-                {/* Lesson card - Компактный синий стиль */}
-                <div className="ml-16">
+                {/* Lesson card - Telegram Wallet Style (супер компактный) */}
+                <div className="ml-10">
                   <motion.div
                     whileHover={isClickable ? { scale: 1.01, y: -2 } : {}}
                     whileTap={isClickable ? { scale: 0.99 } : {}}
@@ -185,47 +185,51 @@ const LessonTimeline = memo(function LessonTimeline({
                         }
                       }}
                     >
-                    <CardContent className="p-4">
+                    <CardContent className="p-2.5">
                       {/* Subtle gradient - синий */}
                       {status !== 'locked' && (
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-transparent to-cyan-50/20 pointer-events-none rounded-lg" />
                       )}
                       
                       <div className="relative">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-[11px] text-gray-500 font-medium">
-                            Урок {realIndex + 1}
-                          </span>
-                          {status === 'current' && (
-                            <Badge className="bg-blue-600 text-white text-[10px] border-0 px-2 py-0.5">
-                              Текущий
-                            </Badge>
-                          )}
-                          {status === 'completed' && (
-                            <Badge className="bg-green-600 text-white text-[10px] border-0 px-2 py-0.5">
-                              ✓ Пройден
-                            </Badge>
-                          )}
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] text-gray-500 font-medium">
+                              Урок {realIndex + 1}
+                            </span>
+                            {status === 'current' && (
+                              <Badge className="bg-blue-600 text-white text-[9px] border-0 px-1.5 py-0.5">
+                                Текущий
+                              </Badge>
+                            )}
+                            {status === 'completed' && (
+                              <Badge className="bg-green-600 text-white text-[9px] border-0 px-1.5 py-0.5">
+                                ✓
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1 text-[10px] text-gray-500">
+                            <Clock size={10} />
+                            <span>{estimatedTime}м</span>
+                          </div>
                         </div>
-                        <h3 className="text-base font-bold text-gray-900 mb-1">
+                        <h3 className="text-sm font-bold text-gray-900 mb-0.5 line-clamp-1">
                           {lesson.title}
                         </h3>
-                        <p className="text-xs text-gray-600 mb-3">
+                        <p className="text-[10px] text-gray-600 mb-2 line-clamp-1">
                           {lesson.subtitle}
                         </p>
 
-                        {/* Meta - компактно */}
-                        <div className="flex flex-wrap items-center gap-2">
-                          <div className="flex items-center gap-1 text-xs text-gray-600">
-                            <Clock size={12} />
-                            <span>~{estimatedTime} мин</span>
-                          </div>
-                          {getDifficultyBadge(lesson.difficulty)}
+                        {/* Meta - супер компактно */}
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1">
-                            <Lightning size={12} className="text-orange-500" weight="fill" />
-                            <span className="text-xs text-orange-600 font-medium">
-                              50-100 XP
-                            </span>
+                            {getDifficultyBadge(lesson.difficulty)}
+                            <div className="flex items-center gap-0.5">
+                              <Lightning size={10} className="text-orange-500" weight="fill" />
+                              <span className="text-[9px] text-orange-600 font-medium">
+                                50-100 XP
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>

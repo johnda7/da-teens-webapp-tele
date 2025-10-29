@@ -466,56 +466,56 @@ export default function BoundariesModule({ onBack }: Props) {
           <p className="text-sm text-gray-600 mb-4">Демо версия компонентов</p>
         </div>
 
-        {/* Кнопки для демо - Супер компактные */}
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-6">
+        {/* Кнопки для демо - Telegram Wallet Style (супер компактные) */}
+        <div className="grid grid-cols-4 md:grid-cols-6 gap-1.5 mb-4">
           <motion.button
             onClick={() => setShowVisualLessons(!showVisualLessons)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm hover:shadow-md transition-all"
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-lg">🎨</div>
-            <span className="text-xs font-medium">Визуальные уроки</span>
+            <div className="text-sm">🎨</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Визуальные</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowInteractiveExercise(!showInteractiveExercise)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm hover:shadow-md transition-all"
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-lg">🎮</div>
-            <span className="text-xs font-medium">Интерактивные упражнения</span>
+            <div className="text-sm">🎮</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Упражнения</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowMultimodalContent(!showMultimodalContent)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-sm hover:shadow-md transition-all"
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-lg">🎵</div>
-            <span className="text-xs font-medium">Мультик</span>
+            <div className="text-sm">🎵</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Мультик</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowLessonImages(!showLessonImages)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-sm hover:shadow-md transition-all"
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-lg">🖼️</div>
-            <span className="text-xs font-medium">Картинки к урокам</span>
+            <div className="text-sm">🖼️</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Картинки</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowSleepMeditation(!showSleepMeditation)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-sm hover:shadow-md transition-all"
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-lg">💤</div>
-            <span className="text-xs font-medium">Сон и медитация</span>
+            <div className="text-sm">💤</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Сон</span>
           </motion.button>
         </div>
 
