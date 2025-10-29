@@ -200,8 +200,8 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
                       }
                     `}
                     style={{
-                      backdropFilter: 'blur(40px) saturate(180%)',
-                      WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+                      backdropFilter: 'blur(20px) saturate(150%)',
+                      WebkitBackdropFilter: 'blur(20px) saturate(150%)',
                     }}
                   />
                   

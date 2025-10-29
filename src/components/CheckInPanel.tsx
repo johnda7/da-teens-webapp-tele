@@ -83,49 +83,15 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
 
   return (
     <div className="min-h-screen relative">
-      {/* Background Gradient для Liquid Glass эффекта */}
-      <div className="fixed inset-0 -z-10">
-        {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
-        
-        {/* Animated gradient orbs */}
-        <motion.div
-          className="absolute top-0 left-0 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-1/3 right-0 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, -100, 0],
-            y: [0, 100, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"
-          animate={{
-            x: [0, 50, 0],
-            y: [0, -50, 0],
-          }}
-          transition={{
-            duration: 30,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      </div> {/* End of background gradient wrapper */}
+      {/* Optimized Background - Telegram Wallet Style */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-gray-50 to-gray-100">
+        {/* Optimized subtle pattern - меньше blur для производительности */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>
+          <div className="absolute top-1/2 right-0 w-24 h-24 bg-cyan-200 rounded-full blur-lg"></div>
+          <div className="absolute bottom-0 left-1/3 w-20 h-20 bg-sky-200 rounded-full blur-md"></div>
+        </div>
+      </div>
 
       <motion.div 
         className="relative space-y-8 px-4 md:px-6 pb-8"
@@ -193,8 +159,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div 
             className="absolute inset-0 bg-white/70 dark:bg-black/30"
             style={{
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             }}
           />
           {/* Gradient overlay для видимости */}
@@ -298,8 +264,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div 
             className="absolute inset-0 bg-white/80 dark:bg-black/20"
             style={{
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             }}
           />
           <div className="absolute inset-0 rounded-2xl border border-white/20" />
@@ -377,8 +343,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div 
             className="absolute inset-0 bg-white/80 dark:bg-black/20"
             style={{
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             }}
           />
           <div className="absolute inset-0 rounded-2xl border border-white/20" />
@@ -444,8 +410,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div 
             className="absolute inset-0 bg-white/80 dark:bg-black/20"
             style={{
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             }}
           />
           <div className="absolute inset-0 rounded-2xl border border-white/20" />
@@ -503,8 +469,8 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div 
             className="absolute inset-0 bg-white/80 dark:bg-black/20"
             style={{
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              backdropFilter: 'blur(20px) saturate(150%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(150%)',
             }}
           />
           <div className="absolute inset-0 rounded-2xl border border-white/20" />

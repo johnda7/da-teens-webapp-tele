@@ -9,7 +9,7 @@
  * - Module #13 (Boundaries) integration
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, memo, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -124,8 +124,8 @@ export function App() {
   //   }
   // }, [selectedModule])
 
-  // Adaptive Learning Functions
-  const selectNextLesson = async () => {
+  // Adaptive Learning Functions - оптимизировано с useCallback
+  const selectNextLesson = useCallback(async () => {
     setIsLoadingLesson(true)
     try {
       // Create default check-in if none exists
@@ -190,9 +190,9 @@ export function App() {
     } finally {
       setIsLoadingLesson(false)
     }
-  }
+  }, [lastCheckIn, checkIns, user?.id, userProfile?.streak, adaptiveLearning, boundariesModule.lessons])
 
-  const handleLessonComplete = async (score: number) => {
+  const handleLessonComplete = useCallback(async (score: number) => {
     if (!currentLesson || !adaptiveProgress || !userBadges) return
 
     try {
@@ -296,10 +296,10 @@ export function App() {
         description: 'Но урок пройден! Попробуй перезагрузить страницу'
       })
     }
-  }
+  }, [currentLesson, adaptiveProgress, userBadges, setAdaptiveProgress, setUserBadges, setUserProfile, userProfile])
 
-  // Helper function to get badge info
-  const getBadgeInfo = (badgeId: string) => {
+  // Helper function to get badge info - оптимизировано с useMemo
+  const getBadgeInfo = useCallback((badgeId: string) => {
     const badges: Record<string, { name: string; description: string }> = {
       'first-adaptive-lesson': {
         name: 'Первый шаг',
@@ -327,7 +327,7 @@ export function App() {
       }
     }
     return badges[badgeId] || { name: badgeId, description: '' }
-  }
+  }, [])
 
   return (
     <div className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} style={{ minHeight: `${viewportHeight}px` }}>
