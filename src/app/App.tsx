@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft, Shield } from '@phosphor-icons/react'
+import { BookOpen, Heart, Users, Trophy, Target, Brain, ArrowLeft, Shield, Flame, Lightning, CheckCircle, Play } from '@phosphor-icons/react'
 // Lazy imports for better performance - Perplexity Speed Principle
 import { lazy, Suspense } from 'react'
 
@@ -341,35 +341,19 @@ export function App() {
         </div>
       </div>
 
-      {/* Header - Clean Telegram WebApp Style */}
-      <header className={`sticky top-0 z-40 border-b border-white/20 bg-white/70 backdrop-blur-[40px] ${isMobile ? 'safe-area-top' : ''}`}>
-        
-        <div className={`flex items-center justify-between ${isMobile ? 'mobile-spacing' : 'p-3'}`}>
-          {/* Left: Home Button (Heart in Liquid Glass) + Title */}
-          <div className="flex items-center gap-2">
-            <motion.button
-              onClick={() => {
-                setActiveTab('dashboard')
-                setSelectedModule(null)
-              }}
-              whileTap={{ scale: 0.92 }}
-              whileHover={{ scale: 1.05 }}
-              className="w-10 h-10 rounded-2xl flex items-center justify-center bg-white/60 backdrop-blur-[20px] border border-white/40 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <Heart weight="fill" className="w-5 h-5 text-blue-600" />
-            </motion.button>
-            <div>
-              <h1 className={`${isMobile ? 'text-sm' : 'text-base'} font-semibold text-gray-900`}>AI Подросток</h1>
-              <p className={`${isMobile ? 'text-[9px]' : 'text-[10px]'} text-gray-500`}>Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
-            </div>
+      {/* Header - Telegram Wallet Style (Compact) */}
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 py-2">
+          {/* Left: Title only (минимализм как в Wallet) */}
+          <div>
+            <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
+            <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
           </div>
           
-          {/* Right: Profile Photo Button Only */}
-          <motion.button
+          {/* Right: Profile (компактно) */}
+          <button
             onClick={() => setActiveTab('profile')}
-            whileTap={{ scale: 0.92 }}
-            whileHover={{ scale: 1.05 }}
-            className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-white/40 shadow-lg hover:shadow-xl transition-shadow"
+            className="relative w-8 h-8 rounded-full overflow-hidden"
           >
             {user?.photo_url ? (
               <img 
@@ -378,11 +362,11 @@ export function App() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
                 {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
               </div>
             )}
-          </motion.button>
+          </button>
         </div>
       </header>
 
@@ -422,106 +406,87 @@ export function App() {
             />
           ) : (
             <>
-              <DashboardHero
-                userName={userProfile?.name || defaultName}
-                currentModule={userProfile?.currentModule || 1}
-                streak={userProfile?.streak || 0}
-                totalXP={adaptiveProgress?.totalXP || 0}
-                completedModules={userProfile?.completedModules || 0}
-                cohortName={userProfile?.cohortId || 'Cohort A'}
-                onContinueLearning={() => {
-                  if (userProfile?.currentModule) {
-                    setSelectedModule(userProfile.currentModule)
-                  }
-                }}
-                onCheckIn={() => setActiveTab('checkin')}
-              />
-
-              {/* Adaptive Learning Stats */}
-              {adaptiveProgress && adaptiveProgress.completedLessons.length > 0 && (
-                <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Brain className="w-6 h-6 text-purple-600" />
-                        <div>
-                          <CardTitle className="text-lg">Адаптивное обучение</CardTitle>
-                          <CardDescription className="text-purple-700">
-                            Модуль #1: Личные границы
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <Trophy className="w-8 h-8 text-purple-600" />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="grid grid-cols-3 gap-3 text-center">
-                      <div>
-                        <div className="text-2xl font-bold text-purple-600">
-                          {adaptiveProgress.completedLessons.length}
-                        </div>
-                        <div className="text-xs text-muted-foreground">уроков пройдено</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-blue-600">
-                          {adaptiveProgress.totalXP}
-                        </div>
-                        <div className="text-xs text-muted-foreground">XP заработано</div>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-green-600">
-                          {adaptiveProgress.level}
-                        </div>
-                        <div className="text-xs text-muted-foreground">уровень</div>
-                      </div>
-                    </div>
-                    <Progress 
-                      value={(adaptiveProgress.completedLessons.length / 9) * 100} 
-                      className="h-2"
-                    />
-                    <div className="flex justify-between items-center pt-2">
-                      <span className="text-sm text-muted-foreground">
-                        {adaptiveProgress.completedLessons.length === 9 ? 'Модуль завершён! 🎉' : `Осталось ${9 - adaptiveProgress.completedLessons.length} уроков`}
-                      </span>
-                      <Button 
-                        size="sm" 
-                        onClick={() => setSelectedModule(1)}
-                        style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
-                        className={`text-white shadow-lg hover:shadow-xl ${isMobile ? 'mobile-button touch-target' : ''}`}
-                      >
-                        {adaptiveProgress.completedLessons.length === 9 ? 'Пройти заново' : 'Продолжить'}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Quick Actions */}
-              <div className={`${isMobile ? 'mobile-grid' : 'grid grid-cols-2'} gap-4`}>
-                <Card className={`mobile-card cursor-pointer hover:shadow-md transition-shadow ${isMobile ? 'touch-target' : ''}`} onClick={() => setActiveTab('checkin')}>
-                  <CardContent className={`${isMobile ? 'mobile-spacing' : 'p-4'} text-center`}>
-                    <Heart className={`mobile-icon ${isMobile ? 'w-6 h-6' : 'w-8 h-8'} text-accent mx-auto mb-2`} />
-                    <h3 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>Ежедневный чек-ин</h3>
-                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>
-                      {lastCheckIn ? 'Обновить состояние' : 'Как дела сегодня?'}
-                    </p>
-                  </CardContent>
-                </Card>
+              {/* Compact Stats Grid - Telegram Wallet Style */}
+              <div className="grid grid-cols-4 gap-2 mb-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-orange-100 flex items-center justify-center">
+                    <Flame className="w-6 h-6 text-orange-600" weight="fill" />
+                  </div>
+                  <div className="text-base font-bold text-gray-900">{userProfile?.streak || 0}</div>
+                  <div className="text-[10px] text-gray-500">дней</div>
+                </div>
                 
-                <Card className={`mobile-card cursor-pointer hover:shadow-md transition-shadow ${isMobile ? 'touch-target' : ''}`} onClick={() => setActiveTab('cohort')}>
-                  <CardContent className={`${isMobile ? 'mobile-spacing' : 'p-4'} text-center`}>
-                    <Users className={`mobile-icon ${isMobile ? 'w-6 h-6' : 'w-8 h-8'} text-primary mx-auto mb-2`} />
-                    <h3 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>Моя группа</h3>
-                    <p className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>Встреча через 2 дня</p>
-                  </CardContent>
-                </Card>
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Lightning className="w-6 h-6 text-blue-600" weight="fill" />
+                  </div>
+                  <div className="text-base font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                  <div className="text-[10px] text-gray-500">XP</div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-green-100 flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-green-600" weight="fill" />
+                  </div>
+                  <div className="text-base font-bold text-gray-900">{userProfile?.completedModules || 0}</div>
+                  <div className="text-[10px] text-gray-500">модулей</div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-purple-100 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-purple-600" weight="fill" />
+                  </div>
+                  <div className="text-base font-bold text-gray-900">A</div>
+                  <div className="text-[10px] text-gray-500">группа</div>
+                </div>
               </div>
 
-              <DailyRecommendationCard 
-                currentLesson={currentLesson} 
-                onLessonComplete={handleLessonComplete} 
-                isLoading={isLoadingLesson} 
-              />
+              {/* Quick Actions - Круглые кнопки как в Telegram Wallet */}
+              <div className="grid grid-cols-4 gap-3 mb-5">
+                <button 
+                  onClick={() => {
+                    if (userProfile?.currentModule) {
+                      setSelectedModule(userProfile.currentModule)
+                    }
+                  }}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                    <Play className="w-7 h-7 text-white" weight="fill" />
+                  </div>
+                  <span className="text-[11px] text-gray-700 font-medium">Учиться</span>
+                </button>
+                
+                <button 
+                  onClick={() => setActiveTab('checkin')}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                    <Heart className="w-7 h-7 text-white" weight="fill" />
+                  </div>
+                  <span className="text-[11px] text-gray-700 font-medium">Чек-ин</span>
+                </button>
+                
+                <button 
+                  onClick={() => setActiveTab('cohort')}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                    <Users className="w-7 h-7 text-white" weight="fill" />
+                  </div>
+                  <span className="text-[11px] text-gray-700 font-medium">Группа</span>
+                </button>
+                
+                <button 
+                  onClick={() => setActiveTab('badges')}
+                  className="flex flex-col items-center gap-1.5"
+                >
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                    <Trophy className="w-7 h-7 text-white" weight="fill" />
+                  </div>
+                  <span className="text-[11px] text-gray-700 font-medium">Награды</span>
+                </button>
+              </div>
 
               {/* Показываем только модуль "Личные границы" для учеников */}
               {isDevMode ? (
@@ -530,43 +495,28 @@ export function App() {
                   onModuleSelect={setSelectedModule}
                 />
               ) : (
-                <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-                  <CardHeader className="text-center pb-4">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center">
-                      <Shield className="w-8 h-8 text-white" />
+                <Card className="bg-white border border-gray-200 overflow-hidden">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Shield className="w-6 h-6 text-white" weight="fill" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-base font-semibold text-gray-900 mb-0.5">Личные границы</h3>
+                        <p className="text-xs text-gray-500">9 уроков • 3 недели • 12+ лет</p>
+                      </div>
                     </div>
-                    <CardTitle className="text-xl font-bold text-gray-900">Личные границы</CardTitle>
-                    <CardDescription className="text-gray-600">
+                    
+                    <p className="text-sm text-gray-600 mb-3">
                       Научись устанавливать здоровые границы в отношениях
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="text-center space-y-4">
-                    <div className="grid grid-cols-3 gap-2 text-sm text-gray-600">
-                      <div className="bg-white/50 rounded-lg p-2">
-                        <div className="font-semibold text-blue-600">9</div>
-                        <div>уроков</div>
-                      </div>
-                      <div className="bg-white/50 rounded-lg p-2">
-                        <div className="font-semibold text-purple-600">3</div>
-                        <div>недели</div>
-                      </div>
-                      <div className="bg-white/50 rounded-lg p-2">
-                        <div className="font-semibold text-green-600">12+</div>
-                        <div>лет</div>
-                      </div>
-                    </div>
-                    
-                    <Button 
-                      onClick={() => setSelectedModule(1)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-                    >
-                      <Shield className="w-5 h-5 mr-2" />
-                      Начать обучение
-                    </Button>
-                    
-                    <p className="text-xs text-gray-500">
-                      Единственный доступный модуль в текущей версии
                     </p>
+                    
+                    <button 
+                      onClick={() => setSelectedModule(1)}
+                      className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+                    >
+                      Начать обучение
+                    </button>
                   </CardContent>
                 </Card>
               )}
