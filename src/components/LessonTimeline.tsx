@@ -28,7 +28,7 @@ export default function LessonTimeline({
   onLessonClick 
 }: LessonTimelineProps) {
   
-  // GOOGLE LEARN YOUR WAY: Пользователь выбирает свой путь (week-based chunking)
+  // Упрощенная навигация - показываем все уроки сразу
   const [selectedWeek, setSelectedWeek] = useState<number | 'all'>('all')
   
   // 🛠️ Режим разработчика: открывает все уроки
@@ -112,98 +112,18 @@ export default function LessonTimeline({
     return Math.round(times.reduce((a, b) => a + b, 0) / times.length)
   }
 
-  // GOOGLE LEARN YOUR WAY + ЕКАТЕРИНА КАРПЕНКО: Week-based cohort learning
-  // Неделя 1-3: каждую субботу главный эфир + 3 эфира (пн/ср/пт)
-  const getWeekFromLesson = (lessonIndex: number): number => {
-    if (lessonIndex < 3) return 1      // Week 1: Основы границ (уроки 1-3)
-    if (lessonIndex < 6) return 2      // Week 2: Защита границ (уроки 4-6)
-    return 3                            // Week 3: Мастерство (уроки 7-9)
-  }
-
-  const filteredLessons = selectedWeek === 'all' 
-    ? lessons 
-    : lessons.filter((_, index) => getWeekFromLesson(index) === selectedWeek)
-
-  const weeks = [
-    { 
-      id: 'all' as const, 
-      label: 'Все недели', 
-      range: '9 уроков',
-      description: 'Полный обзор программы'
-    },
-    { 
-      id: 1, 
-      label: 'Неделя 1', 
-      range: 'Уроки 1-3',
-      description: 'Основы границ + эфир с Екатериной' 
-    },
-    { 
-      id: 2, 
-      label: 'Неделя 2', 
-      range: 'Уроки 4-6',
-      description: 'Защита границ + практика'
-    },
-    { 
-      id: 3, 
-      label: 'Неделя 3', 
-      range: 'Уроки 7-9',
-      description: 'Мастерство + финал'
-    },
-  ]
+  // Упрощенная схема - показываем все уроки сразу
+  const filteredLessons = lessons
 
   return (
     <div className="space-y-4">
-      {/* Header - iOS 26 Typography - Компактный */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900">Дорожная карта обучения</h2>
-        <Badge variant="outline" className="text-xs bg-white/60 backdrop-blur-[20px] border-blue-100/50 text-blue-700 px-2 py-0.5">
+      {/* Упрощенный заголовок */}
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-base font-bold text-gray-900">Все уроки модуля</h2>
+        <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5">
           {completedLessons.length} / {lessons.length}
         </Badge>
       </div>
-
-      {/* Week navigation - Компактный синий стиль */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-        className="mb-4"
-      >
-        <Card className="bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft p-1.5">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
-            {weeks.map((week) => {
-              const isActive = selectedWeek === week.id
-              return (
-                <motion.button
-                  key={week.id}
-                  onClick={() => setSelectedWeek(week.id)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  className={`
-                    relative px-3 py-2 rounded-lg transition-all duration-200 text-left
-                    ${isActive 
-                      ? 'bg-blue-600 text-white shadow-[0_4px_16px_rgba(0,122,255,0.3)]' 
-                      : 'bg-white/40 text-gray-700 hover:bg-white/60'
-                    }
-                  `}
-                >
-                  <div className="text-xs font-semibold mb-0.5">{week.label}</div>
-                  <div className={`text-[10px] ${isActive ? 'text-blue-100' : 'text-gray-500'}`}>
-                    {week.range}
-                  </div>
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeWeek"
-                      className="absolute inset-0 bg-blue-600 rounded-lg -z-10"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
-              )
-            })}
-          </div>
-        </Card>
-      </motion.div>
 
       <div className="relative">
         {/* Vertical connecting line - синяя */}
@@ -358,7 +278,7 @@ export default function LessonTimeline({
       {isDevMode && (
         <div className="fixed bottom-4 right-4 z-50">
           <Badge variant="outline" className="bg-yellow-100 border-yellow-400 text-yellow-800 px-3 py-2 shadow-lg">
-            🛠️ Dev Mode: Все уроки открыты
+            🛠️ Режим разработчика: Все уроки открыты
           </Badge>
         </div>
       )}

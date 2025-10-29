@@ -461,68 +461,68 @@ export default function BoundariesModule({ onBack }: Props) {
 
       {/* Новые компоненты - демо версия */}
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">🎨 Новые визуальные уроки</h2>
-          <p className="text-gray-600 mb-6">Демо версия компонентов с эмоциональной адаптацией</p>
+        <div className="mb-4">
+          <h2 className="text-lg font-bold text-gray-900 mb-2">🎨 Визуальные уроки</h2>
+          <p className="text-sm text-gray-600 mb-4">Демо версия компонентов</p>
         </div>
 
-        {/* Кнопки для демо - Telegram Wallet Style */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+        {/* Кнопки для демо - Супер компактные */}
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-2 mb-6">
           <motion.button
             onClick={() => setShowVisualLessons(!showVisualLessons)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-2xl">🎨</div>
-            <span className="text-sm font-medium">Визуальные уроки</span>
+            <div className="text-lg">🎨</div>
+            <span className="text-xs font-medium">Визуальные уроки</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowInteractiveExercise(!showInteractiveExercise)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-2xl">🎮</div>
-            <span className="text-sm font-medium">Интерактивные упражнения</span>
+            <div className="text-lg">🎮</div>
+            <span className="text-xs font-medium">Интерактивные упражнения</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowMultimodalContent(!showMultimodalContent)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-2xl">🎵</div>
-            <span className="text-sm font-medium">Мультик</span>
+            <div className="text-lg">🎵</div>
+            <span className="text-xs font-medium">Мультик</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowLessonImages(!showLessonImages)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-2xl">🖼️</div>
-            <span className="text-sm font-medium">Картинки к урокам</span>
+            <div className="text-lg">🖼️</div>
+            <span className="text-xs font-medium">Картинки к урокам</span>
           </motion.button>
           
           <motion.button
             onClick={() => setShowSleepMeditation(!showSleepMeditation)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-sm hover:shadow-md transition-all"
           >
-            <div className="text-2xl">💤</div>
-            <span className="text-sm font-medium">Сон и медитация</span>
+            <div className="text-lg">💤</div>
+            <span className="text-xs font-medium">Сон и медитация</span>
           </motion.button>
         </div>
 
         {/* Демо компонентов */}
         {showVisualLessons && (
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">VisualLessonCard Demo</h3>
+            <h3 className="text-xl font-semibold mb-4">Демо визуального урока</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <VisualLessonCard
                 id="demo-1"
@@ -572,7 +572,7 @@ export default function BoundariesModule({ onBack }: Props) {
 
         {showInteractiveExercise && (
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">InteractiveExercise Demo</h3>
+            <h3 className="text-xl font-semibold mb-4">Демо интерактивного упражнения</h3>
             <InteractiveExercise
               id="demo-exercise"
               title="Ролевая игра: Как сказать 'нет'"
