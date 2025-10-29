@@ -466,38 +466,57 @@ export default function BoundariesModule({ onBack }: Props) {
           <p className="text-gray-600 mb-6">Демо версия компонентов с эмоциональной адаптацией</p>
         </div>
 
-        {/* Кнопки для демо */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <Button
+        {/* Кнопки для демо - Telegram Wallet Style */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
+          <motion.button
             onClick={() => setShowVisualLessons(!showVisualLessons)}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-md hover:shadow-lg transition-all"
           >
-            🎨 Визуальные уроки
-          </Button>
-          <Button
+            <div className="text-2xl">🎨</div>
+            <span className="text-sm font-medium">Визуальные уроки</span>
+          </motion.button>
+          
+          <motion.button
             onClick={() => setShowInteractiveExercise(!showInteractiveExercise)}
-            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-md hover:shadow-lg transition-all"
           >
-            🎮 Интерактивные упражнения
-          </Button>
-          <Button
+            <div className="text-2xl">🎮</div>
+            <span className="text-sm font-medium">Интерактивные упражнения</span>
+          </motion.button>
+          
+          <motion.button
             onClick={() => setShowMultimodalContent(!showMultimodalContent)}
-            className="bg-gradient-to-r from-purple-500 to-violet-500 hover:opacity-90"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-md hover:shadow-lg transition-all"
           >
-            🎵 Мультимодальный контент
-          </Button>
-          <Button
+            <div className="text-2xl">🎵</div>
+            <span className="text-sm font-medium">Мультик</span>
+          </motion.button>
+          
+          <motion.button
             onClick={() => setShowLessonImages(!showLessonImages)}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:opacity-90"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-md hover:shadow-lg transition-all"
           >
-            🖼️ Картинки к урокам
-          </Button>
-          <Button
+            <div className="text-2xl">🖼️</div>
+            <span className="text-sm font-medium">Картинки к урокам</span>
+          </motion.button>
+          
+          <motion.button
             onClick={() => setShowSleepMeditation(!showSleepMeditation)}
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:opacity-90"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-2 p-4 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all"
           >
-            💤 Сон и медитация
-          </Button>
+            <div className="text-2xl">💤</div>
+            <span className="text-sm font-medium">Сон и медитация</span>
+          </motion.button>
         </div>
 
         {/* Демо компонентов */}

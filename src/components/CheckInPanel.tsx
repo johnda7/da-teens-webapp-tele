@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Heart, Moon, Brain, CheckCircle, Sparkle } from '@phosphor-icons/react'
+import { Heart, Moon, Brain, CheckCircle, Sparkle, ArrowLeft } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
@@ -99,21 +99,28 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
       >
-        {/* Header - iOS 26 Style */}
-        <div className="text-center pt-6 pb-2">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          >
-            <div className="text-6xl mb-4">💙</div>
-            <h2 className="text-[34px] leading-[41px] tracking-tight font-bold mb-3">
-              Ежедневный чек-ин
-            </h2>
-            <p className="text-[17px] leading-[22px] tracking-tight text-gray-600 dark:text-gray-400">
-              {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
-            </p>
-          </motion.div>
+        {/* Header - Компактный Telegram Wallet Style с кнопкой Назад */}
+        <div className="pt-4 pb-2">
+          <div className="flex items-center gap-3 mb-3">
+            <button
+              onClick={() => window.history.back()}
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+            >
+              <ArrowLeft size={16} className="text-gray-600" />
+            </button>
+            <div className="flex-1 text-center">
+              <h2 className="text-xl font-bold mb-1">
+                Ежедневный чек-ин
+              </h2>
+              <p className="text-sm text-gray-600">
+                {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
+              </p>
+            </div>
+            <div className="w-8"></div> {/* Spacer для центрирования */}
+          </div>
+          <div className="text-center">
+            <div className="text-4xl mb-2">💙</div>
+          </div>
         </div>
 
         {/* Today's Status - Success Badge */}
@@ -169,63 +176,57 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
           <div className="absolute inset-0 rounded-2xl border border-white/30 dark:border-white/10" />
           
           {/* Content */}
-          <div className="relative z-10 p-8">
+          <div className="relative z-10 p-4">
             {/* Header */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <Heart className="w-6 h-6 text-[#FF2D55]" weight="fill" />
-                <h3 className="text-[20px] leading-[25px] font-bold text-gray-900 dark:text-white">
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Heart className="w-5 h-5 text-[#FF2D55]" weight="fill" />
+                <h3 className="text-lg font-bold text-gray-900">
                   Настроение
                 </h3>
               </div>
-              <p className="text-[15px] leading-[20px] text-gray-700 dark:text-gray-300">
+              <p className="text-sm text-gray-600">
                 Как ты себя чувствуешь прямо сейчас?
               </p>
             </div>
 
-            {/* Emoji Grid - 2 rows × 5 columns */}
-            <div className="space-y-3 mb-6">
-              <div className="grid grid-cols-5 gap-3">
+            {/* Emoji Grid - 2 rows × 5 columns (компактный) */}
+            <div className="space-y-2 mb-4">
+              <div className="grid grid-cols-5 gap-2">
                 {moodEmojis.slice(0, 5).map((emoji, index) => (
                   <motion.button
                     key={index}
                     onClick={() => setMood(index + 1)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     className={`
-                      relative p-4 rounded-xl transition-all flex items-center justify-center
+                      relative p-2 rounded-lg transition-all flex items-center justify-center
                       ${mood === index + 1 
-                        ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
-                        : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
+                        ? 'bg-blue-100 ring-2 ring-blue-300' 
+                        : 'bg-gray-50 hover:bg-gray-100'
                       }
                     `}
-                    style={{
-                      backdropFilter: 'blur(10px)',
-                    }}
                   >
-                    <div className="text-3xl leading-none">{emoji}</div>
+                    <div className="text-2xl leading-none">{emoji}</div>
                   </motion.button>
                 ))}
               </div>
-              <div className="grid grid-cols-5 gap-3">
+              <div className="grid grid-cols-5 gap-2">
                 {moodEmojis.slice(5, 10).map((emoji, index) => (
                   <motion.button
                     key={index + 5}
                     onClick={() => setMood(index + 6)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     className={`
-                      relative p-4 rounded-xl transition-all flex items-center justify-center
+                      relative p-2 rounded-lg transition-all flex items-center justify-center
                       ${mood === index + 6 
-                        ? 'bg-[#007AFF]/20 ring-2 ring-[#007AFF] shadow-lg' 
-                        : 'bg-white/60 hover:bg-white/80 dark:bg-gray-800/60 dark:hover:bg-gray-800/80'
+                        ? 'bg-blue-100 ring-2 ring-blue-300' 
+                        : 'bg-gray-50 hover:bg-gray-100'
                       }
                     `}
-                    style={{
-                      backdropFilter: 'blur(10px)',
-                    }}
                   >
-                    <div className="text-3xl leading-none">{emoji}</div>
+                    <div className="text-2xl leading-none">{emoji}</div>
                   </motion.button>
                 ))}
               </div>

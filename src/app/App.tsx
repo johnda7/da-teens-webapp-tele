@@ -349,34 +349,34 @@ export function App() {
             <div>
               <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
               <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
-            </div>
-            
+          </div>
+          
             {/* Right: Profile (компактно) */}
             <button
-              onClick={() => setActiveTab('profile')}
+            onClick={() => setActiveTab('profile')}
               className="relative w-8 h-8 rounded-full overflow-hidden"
-            >
-              {user?.photo_url ? (
-                <img 
-                  src={user.photo_url} 
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
+          >
+            {user?.photo_url ? (
+              <img 
+                src={user.photo_url} 
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
                 <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
-                  {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
-                </div>
-              )}
+                {user?.first_name ? user.first_name.charAt(0).toUpperCase() : 'A'}
+              </div>
+            )}
             </button>
-          </div>
-        </header>
+        </div>
+      </header>
       )}
 
       {/* Main Content */}
-      <main className={`mobile-scroll pb-16 ${isMobile ? 'mobile-spacing' : 'p-2 md:p-3'} space-y-2`}>
+      <main className={`mobile-scroll ${isMobile ? 'pb-16 mobile-spacing' : 'p-2 md:p-3 pb-4'} space-y-2`}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Tab Navigation - Telegram Wallet Style (компактный) */}
-        <TabsList className={`mobile-nav ${isMobile ? 'mobile-tabs' : ''} fixed bottom-0 left-0 right-0 h-14 rounded-none border-t bg-white z-50 grid grid-cols-5`}>
+        {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
+        <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
           <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
             <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
             <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
@@ -447,10 +447,10 @@ export function App() {
               <div className="grid grid-cols-4 gap-3 mb-5">
                 <button 
                   onClick={() => {
-                    if (userProfile?.currentModule) {
-                      setSelectedModule(userProfile.currentModule)
-                    }
-                  }}
+                  if (userProfile?.currentModule) {
+                    setSelectedModule(userProfile.currentModule)
+                  }
+                }}
                   className="flex flex-col items-center gap-1.5"
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
@@ -465,7 +465,7 @@ export function App() {
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
                     <Heart className="w-7 h-7 text-white" weight="fill" />
-                  </div>
+                        </div>
                   <span className="text-[11px] text-gray-700 font-medium">Чек-ин</span>
                 </button>
                 
@@ -475,7 +475,7 @@ export function App() {
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
                     <Users className="w-7 h-7 text-white" weight="fill" />
-                  </div>
+                      </div>
                   <span className="text-[11px] text-gray-700 font-medium">Группа</span>
                 </button>
                 
@@ -485,10 +485,10 @@ export function App() {
                 >
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
                     <Trophy className="w-7 h-7 text-white" weight="fill" />
-                  </div>
+                    </div>
                   <span className="text-[11px] text-gray-700 font-medium">Награды</span>
                 </button>
-              </div>
+                        </div>
 
               {/* Показываем только модуль "Личные границы" для учеников */}
               {isDevMode ? (
@@ -514,9 +514,9 @@ export function App() {
                     </p>
                     
                     <button 
-                      onClick={() => setSelectedModule(1)}
+                        onClick={() => setSelectedModule(1)}
                       className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors"
-                    >
+                      >
                       Начать обучение
                     </button>
                   </CardContent>
