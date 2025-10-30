@@ -110,11 +110,11 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
             </button>
             <div className="flex-1 text-center">
               <h2 className="text-xl font-bold mb-1">
-                Ежедневный чек-ин
-              </h2>
+              Ежедневный чек-ин
+            </h2>
               <p className="text-sm text-gray-600">
-                {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
-              </p>
+              {hasCheckedInToday ? 'Обновить сегодняшние ощущения' : 'Как дела сегодня?'}
+            </p>
             </div>
             <div className="w-8"></div> {/* Spacer для центрирования */}
           </div>

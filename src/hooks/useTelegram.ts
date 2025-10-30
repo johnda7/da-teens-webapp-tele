@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 export const useTelegram = () => {
   const [isReady, setIsReady] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
   const tg = window.Telegram?.WebApp;
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export const useTelegram = () => {
     // Handle viewport changes for mobile
     const handleResize = () => {
       setViewportHeight(window.innerHeight);
+      setViewportWidth(window.innerWidth);
     };
 
     window.addEventListener('resize', handleResize);
@@ -54,7 +56,8 @@ export const useTelegram = () => {
     colorScheme: tg?.colorScheme || 'light',
     themeParams: tg?.themeParams || {},
     viewportHeight,
-    isMobile: viewportHeight < 768,
-    isSmallMobile: viewportHeight < 600,
+    // Определяем мобильность по ширине вьюпорта (надёжнее для десктопа)
+    isMobile: viewportWidth < 768,
+    isSmallMobile: viewportWidth < 360 || viewportHeight < 600,
   };
 };

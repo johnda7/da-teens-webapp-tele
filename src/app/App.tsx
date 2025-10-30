@@ -382,7 +382,7 @@ export function App() {
           <div className="absolute bottom-0 left-1/3 w-20 h-20 bg-sky-200 rounded-full blur-xl"></div>
         </div>
       </div>
-
+        
       {/* Pull-to-refresh indicator */}
       {isRefreshing && (
         <motion.div

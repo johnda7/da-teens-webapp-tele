@@ -15,6 +15,7 @@ import {
   Headphones, 
   Video,
   Sparkle,
+  Lightning,
   CheckCircle,
   ArrowRight,
   ArrowLeft,

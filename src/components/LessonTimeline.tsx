@@ -195,18 +195,18 @@ const LessonTimeline = memo(function LessonTimeline({
                         <div className="flex items-center justify-between mb-1">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[10px] text-gray-500 font-medium">
-                              Урок {realIndex + 1}
-                            </span>
-                            {status === 'current' && (
+                            Урок {realIndex + 1}
+                          </span>
+                          {status === 'current' && (
                               <Badge className="bg-blue-600 text-white text-[9px] border-0 px-1.5 py-0.5">
-                                Текущий
-                              </Badge>
-                            )}
-                            {status === 'completed' && (
+                              Текущий
+                            </Badge>
+                          )}
+                          {status === 'completed' && (
                               <Badge className="bg-green-600 text-white text-[9px] border-0 px-1.5 py-0.5">
                                 ✓
-                              </Badge>
-                            )}
+                            </Badge>
+                          )}
                           </div>
                           <div className="flex items-center gap-1 text-[10px] text-gray-500">
                             <Clock size={10} />
@@ -227,8 +227,8 @@ const LessonTimeline = memo(function LessonTimeline({
                             <div className="flex items-center gap-0.5">
                               <Lightning size={10} className="text-orange-500" weight="fill" />
                               <span className="text-[9px] text-orange-600 font-medium">
-                                50-100 XP
-                              </span>
+                              50-100 XP
+                            </span>
                             </div>
                           </div>
                         </div>

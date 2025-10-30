@@ -48,38 +48,38 @@ export default function BoundariesHero({
           </div>
           <div className="flex-1">
             <Badge className="text-[10px] bg-blue-100 text-blue-700 border-0 mb-1">
-              ✨ Адаптивный модуль
-            </Badge>
+                  ✨ Адаптивный модуль
+                </Badge>
             <h1 className="text-lg font-bold text-gray-900">Личные границы</h1>
             <p className="text-xs text-gray-500">Научись говорить "нет" и строить здоровые отношения</p>
-          </div>
-        </div>
+              </div>
+            </div>
 
         {/* Compact Stats - 3 numbers inline */}
         <div className="grid grid-cols-3 gap-2 mb-3">
           <div className="text-center bg-blue-50 rounded-lg py-2">
             <div className="text-base font-bold text-blue-600">{progress.totalLessons}</div>
-            <div className="text-[10px] text-gray-600">Уроков</div>
+                <div className="text-[10px] text-gray-600">Уроков</div>
           </div>
           <div className="text-center bg-green-50 rounded-lg py-2">
             <div className="text-base font-bold text-green-600">5</div>
-            <div className="text-[10px] text-gray-600">Форматов</div>
+                <div className="text-[10px] text-gray-600">Форматов</div>
           </div>
           <div className="text-center bg-orange-50 rounded-lg py-2">
             <div className="text-base font-bold text-orange-600">3-4</div>
-            <div className="text-[10px] text-gray-600">Недели</div>
+                <div className="text-[10px] text-gray-600">Недели</div>
           </div>
-        </div>
+            </div>
 
         {/* CTA Button - Simple Telegram style */}
         <button 
-          onClick={onStartLearning}
+                  onClick={onStartLearning}
           className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
-        >
+                >
           <Play size={18} weight="fill" />
-          {progress.lessonsCompleted === 0 ? 'Начать' : 'Продолжить'}
+                  {progress.lessonsCompleted === 0 ? 'Начать' : 'Продолжить'}
         </button>
-      </div>
+          </div>
 
       {/* Compact Progress Stats - только если есть прогресс */}
       {progress.lessonsCompleted > 0 && (
@@ -89,14 +89,14 @@ export default function BoundariesHero({
               <span className="text-xs text-gray-600">Прогресс модуля</span>
               <span className="text-xs font-semibold text-blue-600">
                 {progress.lessonsCompleted}/{progress.totalLessons} уроков
-              </span>
-            </div>
+                </span>
+              </div>
             <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-300"
                 style={{ width: `${completionPercentage}%` }}
-              />
-            </div>
+                />
+              </div>
             <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
               <div className="flex items-center gap-1 text-gray-600">
                 <Lightning size={12} className="text-orange-500" weight="fill" />
@@ -106,9 +106,9 @@ export default function BoundariesHero({
                 <Brain size={12} className="text-green-500" weight="fill" />
                 <span>{progress.skillsUnlocked} навыков</span>
               </div>
-            </div>
-          </div>
-        </div>
+                  </div>
+                </div>
+              </div>
       )}
     </div>
   )
