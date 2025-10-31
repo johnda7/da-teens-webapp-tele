@@ -11,7 +11,7 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { 
   User, 
-  TrendingUp, 
+  TrendUp, 
   BookOpen, 
   Calendar,
   Flame,
@@ -146,7 +146,7 @@ export default function ParentDashboard({
 
                 <div className="text-center">
                   <div className="w-10 h-10 mx-auto mb-1 rounded-full bg-purple-100 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-purple-600" weight="fill" />
+                    <TrendUp className="w-5 h-5 text-purple-600" weight="fill" />
                   </div>
                   <div className="text-lg font-bold text-gray-900">{childProgress.attendance}%</div>
                   <div className="text-[10px] text-gray-500">был</div>
