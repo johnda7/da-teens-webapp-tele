@@ -117,7 +117,7 @@ export function App() {
     localStorage.getItem('devMode') === 'true'
 
   // Feature flag для системы ролей
-  const ENABLE_PARENT_ROLES = true
+  const ENABLE_PARENT_ROLES = false
 
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
@@ -134,7 +134,7 @@ export function App() {
     completedModules: 0,
     streak: 7,
     cohortId: 'teens-14-16-cohort-a',
-    role: 'parent', // 🎯 ДЕМОНСТРАЦИЯ: роль родителя
+    role: 'teen', // Default to teen role
     children: [] // Empty for teens, populated for parents
   })
 
