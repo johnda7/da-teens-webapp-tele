@@ -46,17 +46,9 @@ export default function RoleBasedLayout({
     return <>{teenDashboard}</>
   }
 
-  // Если родитель без детей - показываем ParentDashboard (у него своя пустая логика)
+  // Если родитель без детей - показываем ParentDashboard (empty state)
   if (currentRole === 'parent' && !hasChildren) {
-    return (
-      <>
-        {parentDashboard || (
-          <div className="p-4 text-center py-12">
-            <p className="text-gray-500">Мои уроки родителя (скоро)</p>
-          </div>
-        )}
-      </>
-    )
+    return <>{parentDashboard}</>
   }
 
   // Если родитель с детьми - показываем переключатель
