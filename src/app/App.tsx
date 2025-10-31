@@ -32,6 +32,7 @@ const DashboardHero = lazy(() => import('@/components/DashboardHero'))
 const DailyRecommendationCard = lazy(() => import('@/components/DailyRecommendationCard'))
 const RoleBasedLayout = lazy(() => import('@/components/RoleBasedLayout'))
 const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
+const ParentBoundariesModule = lazy(() => import('@/components/ParentBoundariesModule'))
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
@@ -122,6 +123,7 @@ export function App() {
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
+  const [showParentModule, setShowParentModule] = useState(false) // ✨ For parent lessons
   const [currentLesson, setCurrentLesson] = useState<LessonRecommendation | null>(null)
   const [isLoadingLesson, setIsLoadingLesson] = useState(false)
 
@@ -436,8 +438,15 @@ export function App() {
 
       {/* Main Content */}
       <main className={`mobile-scroll ${isMobile ? 'pb-16 mobile-spacing' : 'p-2 md:p-3 pb-4'} space-y-2`}>
+        {/* Parent Module Viewer - when showParentModule is true */}
+        {showParentModule && (
+          <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
+            <ParentBoundariesModule onBack={() => setShowParentModule(false)} />
+          </Suspense>
+        )}
+
         {/* Role-Based Layout Integration */}
-        {ENABLE_PARENT_ROLES ? (
+        {!showParentModule && ENABLE_PARENT_ROLES ? (
           <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
             <RoleBasedLayout
               userProfile={userProfile}
@@ -628,12 +637,14 @@ export function App() {
               }
               parentDashboard={
                 <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
-                  <ParentDashboard />
+                  <ParentDashboard 
+                    onContinueLearning={() => setShowParentModule(true)}
+                  />
                 </Suspense>
               }
             />
           </Suspense>
-        ) : (
+        ) : !showParentModule && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
             <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>

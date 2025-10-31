@@ -45,11 +45,13 @@ interface ParentProgress {
 interface ParentDashboardProps {
   childProgress?: ChildProgress
   parentProgress?: ParentProgress
+  onContinueLearning?: () => void // ✨ Callback для открытия уроков
 }
 
 export default function ParentDashboard({ 
   childProgress,
-  parentProgress 
+  parentProgress,
+  onContinueLearning
 }: ParentDashboardProps) {
   
   // Если нет данных о ребёнке
@@ -201,7 +203,10 @@ export default function ParentDashboard({
                 </p>
               </div>
 
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+              <button 
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                onClick={onContinueLearning}
+              >
                 Продолжить обучение
               </button>
 
