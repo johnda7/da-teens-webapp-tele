@@ -7,10 +7,12 @@ export interface User {
   firstName?: string
   lastName?: string
   age: number
-  role: 'teen' | 'curator' | 'mentor' | 'admin'
+  role: 'teen' | 'parent' | 'curator' | 'mentor' | 'admin' // ✨ Added 'parent'
   locale: string
   timezone?: string
   consentParent?: boolean
+  children?: string[] // Array of child Telegram IDs (for parents)
+  parentId?: string // Parent Telegram ID (for teens)
   createdAt: Date
   updatedAt: Date
 }

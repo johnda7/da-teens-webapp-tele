@@ -49,6 +49,8 @@ interface UserProfile {
   completedModules: number
   streak: number
   cohortId: string
+  role?: 'teen' | 'parent' // ✨ Added role for parents/teens
+  children?: string[] // Array of child Telegram IDs (for parents)
 }
 
 interface AdaptiveProgress {
@@ -126,7 +128,9 @@ export function App() {
     currentWeek: 2,
     completedModules: 0,
     streak: 7,
-    cohortId: 'teens-14-16-cohort-a'
+    cohortId: 'teens-14-16-cohort-a',
+    role: 'teen', // Default to teen role
+    children: [] // Empty for teens, populated for parents
   })
 
   const [userBadges, setUserBadges] = useKV<string[]>('user-badges', ['first-step', 'check-in-streak-7'])
