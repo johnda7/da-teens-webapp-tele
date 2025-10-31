@@ -436,189 +436,388 @@ export function App() {
 
       {/* Main Content */}
       <main className={`mobile-scroll ${isMobile ? 'pb-16 mobile-spacing' : 'p-2 md:p-3 pb-4'} space-y-2`}>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
-        <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
-          <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
-            <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
-            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
-          </TabsTrigger>
-          <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
-            <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
-            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Чек-ин</span>
-          </TabsTrigger>
-          <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
-            <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
-            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Группа</span>
-          </TabsTrigger>
-          <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
-            <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
-            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Награды</span>
-          </TabsTrigger>
-          <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
-            <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
-            <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Прогресс</span>
-          </TabsTrigger>
-        </TabsList>
+        {/* Role-Based Layout Integration */}
+        {ENABLE_PARENT_ROLES ? (
+          <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
+            <RoleBasedLayout
+              userProfile={userProfile}
+              teenDashboard={
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
+                  <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
+                    <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                      <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                      <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                      <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                      <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Чек-ин</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                      <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                      <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Группа</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                      <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                      <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Награды</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                      <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                      <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Прогресс</span>
+                    </TabsTrigger>
+                  </TabsList>
 
-        {/* Tab Contents */}
-        <TabsContent value="dashboard" className="mt-0 p-4">
-          {selectedModule ? (
-            <UniversalModuleViewer 
-              moduleId={selectedModule} 
-              onBack={() => setSelectedModule(null)} 
+                  {/* Tab Contents */}
+                  <TabsContent value="dashboard" className="mt-0 p-4">
+                    {selectedModule ? (
+                      <UniversalModuleViewer 
+                        moduleId={selectedModule} 
+                        onBack={() => setSelectedModule(null)} 
+                      />
+                    ) : (
+                      <>
+                        {/* Compact Stats Grid - Telegram Wallet Style */}
+                        <div className="grid grid-cols-4 gap-2 mb-4">
+                          <div className="text-center">
+                            <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-orange-100 flex items-center justify-center">
+                              <Flame className="w-6 h-6 text-orange-600" weight="fill" />
+                            </div>
+                            <div className="text-base font-bold text-gray-900">{userProfile?.streak || 0}</div>
+                            <div className="text-[10px] text-gray-500">дней</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-blue-100 flex items-center justify-center">
+                              <Lightning className="w-6 h-6 text-blue-600" weight="fill" />
+                            </div>
+                            <div className="text-base font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                            <div className="text-[10px] text-gray-500">XP</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-green-100 flex items-center justify-center">
+                              <CheckCircle className="w-6 h-6 text-green-600" weight="fill" />
+                            </div>
+                            <div className="text-base font-bold text-gray-900">{userProfile?.completedModules || 0}</div>
+                            <div className="text-[10px] text-gray-500">модулей</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-purple-100 flex items-center justify-center">
+                              <Users className="w-6 h-6 text-purple-600" weight="fill" />
+                            </div>
+                            <div className="text-base font-bold text-gray-900">A</div>
+                            <div className="text-[10px] text-gray-500">группа</div>
+                          </div>
+                        </div>
+
+                        {/* Quick Actions - Круглые кнопки как в Telegram Wallet */}
+                        <div className="grid grid-cols-4 gap-3 mb-5">
+                          <button 
+                            onClick={() => {
+                            if (userProfile?.currentModule) {
+                              setSelectedModule(userProfile.currentModule)
+                            }
+                          }}
+                            className="flex flex-col items-center gap-1.5"
+                          >
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                              <Play className="w-7 h-7 text-white" weight="fill" />
+                            </div>
+                            <span className="text-[11px] text-gray-700 font-medium">Учиться</span>
+                          </button>
+                          
+                          <button 
+                            onClick={() => setActiveTab('checkin')}
+                            className="flex flex-col items-center gap-1.5"
+                          >
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                              <Heart className="w-7 h-7 text-white" weight="fill" />
+                                  </div>
+                            <span className="text-[11px] text-gray-700 font-medium">Чек-ин</span>
+                          </button>
+                          
+                          <button 
+                            onClick={() => setActiveTab('cohort')}
+                            className="flex flex-col items-center gap-1.5"
+                          >
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                              <Users className="w-7 h-7 text-white" weight="fill" />
+                                </div>
+                            <span className="text-[11px] text-gray-700 font-medium">Группа</span>
+                          </button>
+                          
+                          <button 
+                            onClick={() => setActiveTab('badges')}
+                            className="flex flex-col items-center gap-1.5"
+                          >
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                              <Trophy className="w-7 h-7 text-white" weight="fill" />
+                              </div>
+                            <span className="text-[11px] text-gray-700 font-medium">Награды</span>
+                          </button>
+                                  </div>
+
+                        {/* Показываем только модуль "Личные границы" для учеников */}
+                        {isDevMode ? (
+                          <ModuleGrid 
+                            currentModule={userProfile?.currentModule || 1}
+                            onModuleSelect={setSelectedModule}
+                          />
+                        ) : (
+                          <Card className="bg-white border border-gray-200 overflow-hidden">
+                            <CardContent className="p-4">
+                              <div className="flex items-center gap-3 mb-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                                  <Shield className="w-6 h-6 text-white" weight="fill" />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="text-base font-semibold text-gray-900 mb-0.5">Личные границы</h3>
+                                  <p className="text-xs text-gray-500">9 уроков • 3 недели • 12+ лет</p>
+                                </div>
+                              </div>
+                              
+                              <p className="text-sm text-gray-600 mb-3">
+                                Научись устанавливать здоровые границы в отношениях
+                              </p>
+                              
+                              <button 
+                                  onClick={() => setSelectedModule(1)}
+                                className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+                                >
+                                Начать обучение
+                              </button>
+                            </CardContent>
+                          </Card>
+                        )}
+                      </>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="checkin" className="mt-0">
+                    <CheckInPanel 
+                      onCheckIn={(data: CheckInData) => setLastCheckIn(data)} 
+                      lastCheckIn={lastCheckIn || null} 
+                    />
+                  </TabsContent>
+
+                  <TabsContent value="cohort" className="mt-0">
+                    <CohortSchedule cohortId={userProfile?.cohortId || ''} />
+                  </TabsContent>
+
+                  <TabsContent value="badges" className="mt-0 p-4">
+                    <BadgeGrid userBadges={userBadges || []} />
+                  </TabsContent>
+
+                  <TabsContent value="profile" className="mt-0">
+                    <ProgressStats 
+                      userProfile={userProfile || {
+                        name: defaultName,
+                        age: 16,
+                        currentModule: 1,
+                        currentWeek: 2,
+                        completedModules: 0,
+                        streak: 7,
+                        cohortId: 'teens-14-16-cohort-a'
+                      }} 
+                      checkIns={lastCheckIn ? [lastCheckIn] : []} 
+                      badgeCount={userBadges?.length || 0}
+                    />
+                  </TabsContent>
+                </Tabs>
+              }
+              parentDashboard={
+                <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
+                  <ParentDashboard />
+                </Suspense>
+              }
             />
-          ) : (
-            <>
-              {/* Compact Stats Grid - Telegram Wallet Style */}
-              <div className="grid grid-cols-4 gap-2 mb-4">
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-orange-100 flex items-center justify-center">
-                    <Flame className="w-6 h-6 text-orange-600" weight="fill" />
-                  </div>
-                  <div className="text-base font-bold text-gray-900">{userProfile?.streak || 0}</div>
-                  <div className="text-[10px] text-gray-500">дней</div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Lightning className="w-6 h-6 text-blue-600" weight="fill" />
-                  </div>
-                  <div className="text-base font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
-                  <div className="text-[10px] text-gray-500">XP</div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-green-100 flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-green-600" weight="fill" />
-                  </div>
-                  <div className="text-base font-bold text-gray-900">{userProfile?.completedModules || 0}</div>
-                  <div className="text-[10px] text-gray-500">модулей</div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-purple-100 flex items-center justify-center">
-                    <Users className="w-6 h-6 text-purple-600" weight="fill" />
-                  </div>
-                  <div className="text-base font-bold text-gray-900">A</div>
-                  <div className="text-[10px] text-gray-500">группа</div>
-                </div>
-              </div>
+          </Suspense>
+        ) : (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
+            <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
+              <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
+              </TabsTrigger>
+              <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Чек-ин</span>
+              </TabsTrigger>
+              <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Группа</span>
+              </TabsTrigger>
+              <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Награды</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+                <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
+                <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Прогресс</span>
+              </TabsTrigger>
+            </TabsList>
 
-              {/* Quick Actions - Круглые кнопки как в Telegram Wallet */}
-              <div className="grid grid-cols-4 gap-3 mb-5">
-                <button 
-                  onClick={() => {
-                  if (userProfile?.currentModule) {
-                    setSelectedModule(userProfile.currentModule)
-                  }
-                }}
-                  className="flex flex-col items-center gap-1.5"
-                >
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
-                    <Play className="w-7 h-7 text-white" weight="fill" />
-                  </div>
-                  <span className="text-[11px] text-gray-700 font-medium">Учиться</span>
-                </button>
-                
-                <button 
-                  onClick={() => setActiveTab('checkin')}
-                  className="flex flex-col items-center gap-1.5"
-                >
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
-                    <Heart className="w-7 h-7 text-white" weight="fill" />
-                        </div>
-                  <span className="text-[11px] text-gray-700 font-medium">Чек-ин</span>
-                </button>
-                
-                <button 
-                  onClick={() => setActiveTab('cohort')}
-                  className="flex flex-col items-center gap-1.5"
-                >
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
-                    <Users className="w-7 h-7 text-white" weight="fill" />
-                      </div>
-                  <span className="text-[11px] text-gray-700 font-medium">Группа</span>
-                </button>
-                
-                <button 
-                  onClick={() => setActiveTab('badges')}
-                  className="flex flex-col items-center gap-1.5"
-                >
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
-                    <Trophy className="w-7 h-7 text-white" weight="fill" />
-                    </div>
-                  <span className="text-[11px] text-gray-700 font-medium">Награды</span>
-                </button>
-                        </div>
-
-              {/* Показываем только модуль "Личные границы" для учеников */}
-              {isDevMode ? (
-                <ModuleGrid 
-                  currentModule={userProfile?.currentModule || 1}
-                  onModuleSelect={setSelectedModule}
+            {/* Tab Contents */}
+            <TabsContent value="dashboard" className="mt-0 p-4">
+              {selectedModule ? (
+                <UniversalModuleViewer 
+                  moduleId={selectedModule} 
+                  onBack={() => setSelectedModule(null)} 
                 />
               ) : (
-                <Card className="bg-white border border-gray-200 overflow-hidden">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <Shield className="w-6 h-6 text-white" weight="fill" />
+                <>
+                  {/* Compact Stats Grid - Telegram Wallet Style */}
+                  <div className="grid grid-cols-4 gap-2 mb-4">
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-orange-100 flex items-center justify-center">
+                        <Flame className="w-6 h-6 text-orange-600" weight="fill" />
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-base font-semibold text-gray-900 mb-0.5">Личные границы</h3>
-                        <p className="text-xs text-gray-500">9 уроков • 3 недели • 12+ лет</p>
-                      </div>
+                      <div className="text-base font-bold text-gray-900">{userProfile?.streak || 0}</div>
+                      <div className="text-[10px] text-gray-500">дней</div>
                     </div>
                     
-                    <p className="text-sm text-gray-600 mb-3">
-                      Научись устанавливать здоровые границы в отношениях
-                    </p>
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-blue-100 flex items-center justify-center">
+                        <Lightning className="w-6 h-6 text-blue-600" weight="fill" />
+                      </div>
+                      <div className="text-base font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                      <div className="text-[10px] text-gray-500">XP</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-green-100 flex items-center justify-center">
+                        <CheckCircle className="w-6 h-6 text-green-600" weight="fill" />
+                      </div>
+                      <div className="text-base font-bold text-gray-900">{userProfile?.completedModules || 0}</div>
+                      <div className="text-[10px] text-gray-500">модулей</div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="w-12 h-12 mx-auto mb-1 rounded-full bg-purple-100 flex items-center justify-center">
+                        <Users className="w-6 h-6 text-purple-600" weight="fill" />
+                      </div>
+                      <div className="text-base font-bold text-gray-900">A</div>
+                      <div className="text-[10px] text-gray-500">группа</div>
+                    </div>
+                  </div>
+
+                  {/* Quick Actions - Круглые кнопки как в Telegram Wallet */}
+                  <div className="grid grid-cols-4 gap-3 mb-5">
+                    <button 
+                      onClick={() => {
+                      if (userProfile?.currentModule) {
+                        setSelectedModule(userProfile.currentModule)
+                      }
+                    }}
+                      className="flex flex-col items-center gap-1.5"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                        <Play className="w-7 h-7 text-white" weight="fill" />
+                      </div>
+                      <span className="text-[11px] text-gray-700 font-medium">Учиться</span>
+                    </button>
                     
                     <button 
-                        onClick={() => setSelectedModule(1)}
-                      className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors"
-                      >
-                      Начать обучение
+                      onClick={() => setActiveTab('checkin')}
+                      className="flex flex-col items-center gap-1.5"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                        <Heart className="w-7 h-7 text-white" weight="fill" />
+                            </div>
+                      <span className="text-[11px] text-gray-700 font-medium">Чек-ин</span>
                     </button>
-                  </CardContent>
-                </Card>
+                    
+                    <button 
+                      onClick={() => setActiveTab('cohort')}
+                      className="flex flex-col items-center gap-1.5"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                        <Users className="w-7 h-7 text-white" weight="fill" />
+                          </div>
+                      <span className="text-[11px] text-gray-700 font-medium">Группа</span>
+                    </button>
+                    
+                    <button 
+                      onClick={() => setActiveTab('badges')}
+                      className="flex flex-col items-center gap-1.5"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-md active:scale-95 transition-transform">
+                        <Trophy className="w-7 h-7 text-white" weight="fill" />
+                        </div>
+                      <span className="text-[11px] text-gray-700 font-medium">Награды</span>
+                    </button>
+                            </div>
+
+                  {/* Показываем только модуль "Личные границы" для учеников */}
+                  {isDevMode ? (
+                    <ModuleGrid 
+                      currentModule={userProfile?.currentModule || 1}
+                      onModuleSelect={setSelectedModule}
+                    />
+                  ) : (
+                    <Card className="bg-white border border-gray-200 overflow-hidden">
+                      <CardContent className="p-4">
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <Shield className="w-6 h-6 text-white" weight="fill" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-base font-semibold text-gray-900 mb-0.5">Личные границы</h3>
+                            <p className="text-xs text-gray-500">9 уроков • 3 недели • 12+ лет</p>
+                          </div>
+                        </div>
+                        
+                        <p className="text-sm text-gray-600 mb-3">
+                          Научись устанавливать здоровые границы в отношениях
+                        </p>
+                        
+                        <button 
+                            onClick={() => setSelectedModule(1)}
+                          className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2.5 rounded-lg transition-colors"
+                          >
+                          Начать обучение
+                        </button>
+                      </CardContent>
+                    </Card>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </TabsContent>
+            </TabsContent>
 
-        <TabsContent value="checkin" className="mt-0">
-          <CheckInPanel 
-            onCheckIn={(data: CheckInData) => setLastCheckIn(data)} 
-            lastCheckIn={lastCheckIn || null} 
-          />
-        </TabsContent>
+            <TabsContent value="checkin" className="mt-0">
+              <CheckInPanel 
+                onCheckIn={(data: CheckInData) => setLastCheckIn(data)} 
+                lastCheckIn={lastCheckIn || null} 
+              />
+            </TabsContent>
 
-        <TabsContent value="cohort" className="mt-0">
-          <CohortSchedule cohortId={userProfile?.cohortId || ''} />
-        </TabsContent>
+            <TabsContent value="cohort" className="mt-0">
+              <CohortSchedule cohortId={userProfile?.cohortId || ''} />
+            </TabsContent>
 
-        <TabsContent value="badges" className="mt-0 p-4">
-          <BadgeGrid userBadges={userBadges || []} />
-        </TabsContent>
+            <TabsContent value="badges" className="mt-0 p-4">
+              <BadgeGrid userBadges={userBadges || []} />
+            </TabsContent>
 
-        <TabsContent value="profile" className="mt-0">
-          <ProgressStats 
-            userProfile={userProfile || {
-              name: defaultName,
-              age: 16,
-              currentModule: 1,
-              currentWeek: 2,
-              completedModules: 0,
-              streak: 7,
-              cohortId: 'teens-14-16-cohort-a'
-            }} 
-            checkIns={lastCheckIn ? [lastCheckIn] : []} 
-            badgeCount={userBadges?.length || 0}
-          />
-        </TabsContent>
-      </Tabs>
+            <TabsContent value="profile" className="mt-0">
+              <ProgressStats 
+                userProfile={userProfile || {
+                  name: defaultName,
+                  age: 16,
+                  currentModule: 1,
+                  currentWeek: 2,
+                  completedModules: 0,
+                  streak: 7,
+                  cohortId: 'teens-14-16-cohort-a'
+                }} 
+                checkIns={lastCheckIn ? [lastCheckIn] : []} 
+                badgeCount={userBadges?.length || 0}
+              />
+            </TabsContent>
+          </Tabs>
+        )}
       </main>
     </div>
   )

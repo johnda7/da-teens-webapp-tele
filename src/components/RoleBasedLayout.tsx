@@ -15,7 +15,7 @@ interface UserProfile {
 }
 
 interface RoleBasedLayoutProps {
-  userProfile: UserProfile
+  userProfile: UserProfile | undefined
   teenDashboard: React.ReactNode
   parentDashboard?: React.ReactNode
   onRoleChange?: (role: 'teen' | 'parent') => void
