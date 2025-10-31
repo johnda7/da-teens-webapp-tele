@@ -115,6 +115,9 @@ export function App() {
   const isDevMode = typeof window !== 'undefined' && 
     localStorage.getItem('devMode') === 'true'
 
+  // Feature flag для системы ролей
+  const ENABLE_PARENT_ROLES = false
+
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
