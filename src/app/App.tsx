@@ -134,7 +134,7 @@ export function App() {
     completedModules: 0,
     streak: 7,
     cohortId: 'teens-14-16-cohort-a',
-    role: 'teen', // Default to teen role
+    role: 'parent', // ДЕМОНСТРАЦИЯ: показываем родительский интерфейс
     children: [] // Empty for teens, populated for parents
   })
 
