@@ -31,6 +31,7 @@ const ProgressStats = lazy(() => import('@/components/ProgressStats'))
 const DashboardHero = lazy(() => import('@/components/DashboardHero'))
 const DailyRecommendationCard = lazy(() => import('@/components/DailyRecommendationCard'))
 const RoleBasedLayout = lazy(() => import('@/components/RoleBasedLayout'))
+const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
