@@ -263,11 +263,3 @@ export default function BadgeGrid({ userBadges }: BadgeGridProps) {
     </div>
   )
 }
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  )
-}

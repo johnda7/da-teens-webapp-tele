@@ -513,22 +513,3 @@ export function getLevelTitle(level: number): { title: string; emoji: string } {
 
 // Экспорт
 export const gamification = new GamificationEngine()
-
-  { level: 1, title: 'Новичок', emoji: '🌱' },
-  { level: 3, title: 'Искатель', emoji: '🔍' },
-  { level: 5, title: 'Ученик', emoji: '📖' },
-  { level: 10, title: 'Практик', emoji: '🎯' },
-  { level: 15, title: 'Мастер', emoji: '⭐' },
-  { level: 20, title: 'Эксперт', emoji: '🏆' },
-  { level: 30, title: 'Наставник', emoji: '🦉' },
-  { level: 50, title: 'Легенда', emoji: '👑' }
-]
-
-export function getLevelTitle(level: number): { title: string; emoji: string } {
-  const sorted = [...LEVEL_TITLES].sort((a, b) => b.level - a.level)
-  const match = sorted.find(lt => level >= lt.level)
-  return match || LEVEL_TITLES[0]
-}
-
-// Экспорт
-export const gamification = new GamificationEngine()
