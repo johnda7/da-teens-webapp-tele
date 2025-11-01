@@ -118,12 +118,13 @@ export function App() {
     localStorage.getItem('devMode') === 'true'
 
   // Feature flag для системы ролей
-  const ENABLE_PARENT_ROLES = false
+  const ENABLE_PARENT_ROLES = false // ДЕМО ДЛЯ РОДИТЕЛЕЙ
 
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')
   const [selectedModule, setSelectedModule] = useState<number | null>(null)
   const [showParentModule, setShowParentModule] = useState(false) // ✨ For parent lessons
+  const [demoRole, setDemoRole] = useState<'teen' | 'parent'>('teen') // ДЕМО: переключатель ролей
   const [currentLesson, setCurrentLesson] = useState<LessonRecommendation | null>(null)
   const [isLoadingLesson, setIsLoadingLesson] = useState(false)
 
@@ -136,7 +137,7 @@ export function App() {
     completedModules: 0,
     streak: 7,
     cohortId: 'teens-14-16-cohort-a',
-    role: 'teen', // Default to teen role
+    role: 'teen' as const, // Default
     children: [] // Empty for teens, populated for parents
   })
 
@@ -415,6 +416,32 @@ export function App() {
               <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
           </div>
           
+          {/* Center: DEMO Role Switcher */}
+          {ENABLE_PARENT_ROLES && (
+            <div className="bg-gray-100 rounded-lg p-1 flex gap-1">
+              <button
+                onClick={() => setDemoRole('teen')}
+                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                  demoRole === 'teen' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                👤 Teen
+              </button>
+              <button
+                onClick={() => setDemoRole('parent')}
+                className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                  demoRole === 'parent' 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                👨‍👩‍👧‍👦 Parent
+              </button>
+            </div>
+          )}
+          
             {/* Right: Profile (компактно) */}
             <button
             onClick={() => setActiveTab('profile')}
@@ -449,7 +476,7 @@ export function App() {
         {!showParentModule && ENABLE_PARENT_ROLES ? (
           <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
             <RoleBasedLayout
-              userProfile={userProfile}
+              userProfile={{ ...userProfile, role: demoRole }}
               teenDashboard={
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
@@ -638,6 +665,12 @@ export function App() {
               parentDashboard={
                 <Suspense fallback={<div className="text-center py-8">Загрузка...</div>}>
                   <ParentDashboard 
+                    parentProgress={{
+                      currentModule: 13,
+                      completedLessons: 2,
+                      totalLessons: 5,
+                      lastActivity: 'вчера'
+                    }}
                     onContinueLearning={() => setShowParentModule(true)}
                   />
                 </Suspense>
