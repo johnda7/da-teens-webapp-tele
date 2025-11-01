@@ -1341,6 +1341,71 @@ export const boundariesModule = {
               }
             ]
           }
+        },
+        
+        video: {
+          type: 'video',
+          estimatedTime: 8,
+          content: {
+            url: '/videos/boundaries/lesson6-relationships.mp4',
+            thumbnail: '/images/boundaries/lesson6-thumb.jpg',
+            transcript: 'Дружба и романтические отношения — это про взаимное уважение и баланс...',
+            subtitles: true,
+            pausePoints: [150, 300]
+          }
+        },
+        
+        audio: {
+          type: 'audio',
+          estimatedTime: 7,
+          content: {
+            url: '/audio/boundaries/lesson6-podcast.mp3',
+            transcript: 'История о том, как научиться распознавать токсичные паттерны...',
+            background: 'calm-music',
+            narration: 'friendly-teen-voice'
+          }
+        },
+        
+        interactive: {
+          type: 'interactive',
+          estimatedTime: 12,
+          content: {
+            type: 'relationship-simulator',
+            title: 'Симулятор отношений',
+            instructions: 'Проверь, насколько здоровы твои отношения',
+            activity: {
+              type: 'quiz-assessment',
+              questions: [
+                'Друг поддерживает тебя в сложные моменты?',
+                'Ты можешь быть собой в этих отношениях?',
+                'Ваши границы уважаются?',
+                'Есть взаимность в общении?'
+              ],
+              scale: '1-10'
+            }
+          }
+        },
+        
+        mindmap: {
+          type: 'mindmap',
+          estimatedTime: 6,
+          content: {
+            centralTopic: 'Здоровые отношения',
+            branches: [
+              {
+                topic: 'Красные флаги',
+                subtopics: ['Контроль', 'Манипуляции', 'Неуважение']
+              },
+              {
+                topic: 'Зеленые флаги',
+                subtopics: ['Поддержка', 'Уважение', 'Взаимность']
+              },
+              {
+                topic: 'Границы',
+                subtopics: ['Физические', 'Эмоциональные', 'Цифровые']
+              }
+            ]
+          }
         }
       },
       
@@ -1356,6 +1421,31 @@ export const boundariesModule = {
           ],
           correctAnswer: 'b',
           explanation: 'Здоровые отношения не требуют изоляции от друзей и семьи. Это попытка контроля, замаскированная под "любовь".'
+        },
+        {
+          id: 'q6-2',
+          question: 'Какие признаки указывают на токсичную дружбу?',
+          type: 'multiple',
+          options: [
+            { id: 'a', text: 'Друг поддерживает тебя' },
+            { id: 'b', text: 'Друг критикует постоянно' },
+            { id: 'c', text: 'Друг нарушает твои секреты' },
+            { id: 'd', text: 'Друг контролирует твое время' }
+          ],
+          correctAnswer: ['b', 'c', 'd'],
+          explanation: 'Токсичные паттерны включают постоянную критику, нарушение доверия и контроль. Здоровый друг поддерживает и уважает твои границы.'
+        },
+        {
+          id: 'q6-3',
+          question: 'В романтических отношениях важно:',
+          type: 'single',
+          options: [
+            { id: 'a', text: 'Отдать всю себя партнеру' },
+            { id: 'b', text: 'Сохранить баланс: отношения + личное пространство' },
+            { id: 'c', text: 'Никогда не расходиться во мнениях' }
+          ],
+          correctAnswer: 'b',
+          explanation: 'Здоровые отношения требуют баланса между близостью и автономией. Полная отдача без границ ведет к потере себя.'
         }
       ],
       
@@ -1376,6 +1466,21 @@ export const boundariesModule = {
         tips: [
           'Будь честен с собой',
           'Низкая оценка — не приговор, но сигнал действовать'
+        ]
+      },
+      
+      homework: {
+        title: 'Неделя здоровых границ в отношениях',
+        description: 'Применяй знания на практике',
+        tasks: [
+          'Отметь 1-2 ситуации, где твои границы в отношениях нарушаются',
+          'Попробуй установить границу (используй техники из Урока 4)',
+          'Оцени результат: что изменилось?'
+        ],
+        reflectionPrompts: [
+          'С какими людьми легче всего держать границы?',
+          'Где ты чувствуешь давление?',
+          'Что изменилось в твоих отношениях?'
         ]
       }
     },
@@ -1436,8 +1541,76 @@ export const boundariesModule = {
               }
             ]
           }
+        },
+        
+        video: {
+          type: 'video',
+          estimatedTime: 8,
+          content: {
+            url: '/videos/boundaries/lesson7-digital.mp4',
+            thumbnail: '/images/boundaries/lesson7-thumb.jpg',
+            transcript: 'Цифровые границы — это защита твоей личности онлайн...',
+            subtitles: true
+          }
+        },
+        
+        audio: {
+          type: 'audio',
+          estimatedTime: 6,
+          content: {
+            url: '/audio/boundaries/lesson7-podcast.mp3',
+            transcript: 'История о том, как социальные сети влияют на самооценку...',
+            background: 'calm-music',
+            narration: 'friendly-teen-voice'
+          }
+        },
+        
+        interactive: {
+          type: 'interactive',
+          estimatedTime: 10,
+          content: {
+            type: 'digital-audit',
+            title: 'Аудит цифрового пространства',
+            instructions: 'Проверь свое взаимодействие с соцсетями',
+            activity: {
+              type: 'quiz-assessment',
+              questions: [
+                'Сколько часов в день ты проводишь в телефоне?',
+                'Как ты себя чувствуешь после листания ленты?',
+                'Кто может видеть твою личную информацию?'
+              ]
+            }
+          }
         }
       },
+      
+      quiz: [
+        {
+          id: 'q7-1',
+          question: 'Кто-то постят фото с тобой без твоего разрешения. Это:',
+          type: 'single',
+          options: [
+            { id: 'a', text: 'Нормально, это же просто фото' },
+            { id: 'b', text: 'Нарушение твоей цифровой границы' },
+            { id: 'c', text: 'Моя вина, нужно было предупредить' }
+          ],
+          correctAnswer: 'b',
+          explanation: 'Твои фото — это твоя цифровая граница. Люди должны спрашивать разрешения перед публикацией изображений с тобой.'
+        },
+        {
+          id: 'q7-2',
+          question: 'Здоровые цифровые границы включают:',
+          type: 'multiple',
+          options: [
+            { id: 'a', text: 'Проверка соцсетей весь день' },
+            { id: 'b', text: 'Ограничение экранного времени' },
+            { id: 'c', text: 'Отписка от токсичных аккаунтов' },
+            { id: 'd', text: 'Закрытый профиль при необходимости' }
+          ],
+          correctAnswer: ['b', 'c', 'd'],
+          explanation: 'Здоровые границы — это баланс и защита себя. Неумеренное использование соцсетей вредит психическому здоровью.'
+        }
+      ],
       
       practiceExercise: {
         title: 'Недельный цифровой детокс',
@@ -1455,6 +1628,21 @@ export const boundariesModule = {
           'В конце недели оцени: что изменилось?'
         ],
         tips: ['Начни с малого', 'Используй функции "экранное время" в телефоне']
+      },
+      
+      homework: {
+        title: 'Мой цифровой бюджет',
+        description: 'Создай план здорового использования технологий',
+        tasks: [
+          'Запиши, сколько часов ты реально проводишь в телефоне',
+          'Установи 3 цифровые границы на неделю',
+          'Отслеживай, как изменилось твое настроение'
+        ],
+        reflectionPrompts: [
+          'Что изменилось в моем самоощущении?',
+          'Какие соцсети вызывают негатив?',
+          'Как я могу улучшить свои цифровые границы?'
+        ]
       }
     },
 
@@ -1524,8 +1712,58 @@ export const boundariesModule = {
               }
             ]
           }
+        },
+        
+        video: {
+          type: 'video',
+          estimatedTime: 9,
+          content: {
+            url: '/videos/boundaries/lesson8-protection.mp4',
+            thumbnail: '/images/boundaries/lesson8-thumb.jpg',
+            transcript: 'Защита границ — это навык, который требует практики...',
+            subtitles: true
+          }
+        },
+        
+        audio: {
+          type: 'audio',
+          estimatedTime: 8,
+          content: {
+            url: '/audio/boundaries/lesson8-podcast.mp3',
+            transcript: 'История о том, как важно вовремя обратиться за помощью...',
+            background: 'calm-music',
+            narration: 'friendly-teen-voice'
+          }
         }
       },
+      
+      quiz: [
+        {
+          id: 'q8-1',
+          question: 'Когда нужно обратиться к взрослому?',
+          type: 'multiple',
+          options: [
+            { id: 'a', text: 'Физическое насилие или угрозы' },
+            { id: 'b', text: 'Обычный спор с другом' },
+            { id: 'c', text: 'Кибербуллинг' },
+            { id: 'd', text: 'Чувство опасности' }
+          ],
+          correctAnswer: ['a', 'c', 'd'],
+          explanation: 'Физические угрозы, кибербуллинг и чувство опасности требуют вмешательства взрослых. Обычные споры можно решить самостоятельно.'
+        },
+        {
+          id: 'q8-2',
+          question: 'Что делать при повторяющихся нарушениях границ?',
+          type: 'single',
+          options: [
+            { id: 'a', text: 'Терпеть и не говорить ничего' },
+            { id: 'b', text: 'Установить твердую границу и обозначить последствия' },
+            { id: 'c', text: 'Сразу прекратить общение' }
+          ],
+          correctAnswer: 'b',
+          explanation: 'При повторяющихся нарушениях важно установить твердую границу и четко обозначить последствия. Это защищает тебя и дает человеку шанс изменить поведение.'
+        }
+      ],
       
       practiceExercise: {
         title: 'План реагирования',
@@ -1542,6 +1780,21 @@ export const boundariesModule = {
           '  • Когда я уйду из ситуации (линия красная)'
         ],
         tips: ['Имей план Б на случай эскалации', 'Безопасность важнее, чем быть "хорошим"']
+      },
+      
+      homework: {
+        title: 'Карта помощи',
+        description: 'Определи свои ресурсы поддержки',
+        tasks: [
+          'Составь список из 3-5 взрослых, которым доверяешь',
+          'Сохрани номера телефонов доверия в телефоне',
+          'Подумай, к кому обратишься в разных ситуациях'
+        ],
+        reflectionPrompts: [
+          'У кого я чувствую себя безопаснее всего?',
+          'Кому мне легче всего открыться?',
+          'Что мешает мне просить о помощи?'
+        ]
       }
     },
 
@@ -1618,8 +1871,77 @@ export const boundariesModule = {
               }
             ]
           }
+        },
+        
+        video: {
+          type: 'video',
+          estimatedTime: 8,
+          content: {
+            url: '/videos/boundaries/lesson9-maintenance.mp4',
+            thumbnail: '/images/boundaries/lesson9-thumb.jpg',
+            transcript: 'Поддержание границ — это путешествие длиною в жизнь...',
+            subtitles: true
+          }
+        },
+        
+        audio: {
+          type: 'audio',
+          estimatedTime: 7,
+          content: {
+            url: '/audio/boundaries/lesson9-podcast.mp3',
+            transcript: 'Финал модуля — создаем свой манифест границ...',
+            background: 'calm-music',
+            narration: 'friendly-teen-voice'
+          }
+        },
+        
+        interactive: {
+          type: 'interactive',
+          estimatedTime: 15,
+          content: {
+            type: 'manifest-creator',
+            title: 'Создай свой манифест',
+            instructions: 'Интерактивное создание личного манифеста границ',
+            activity: {
+              type: 'guided-creation',
+              sections: [
+                'Мои ценности',
+                'Мои права',
+                'Мои границы',
+                'Моя мантра'
+              ]
+            }
+          }
         }
       },
+      
+      quiz: [
+        {
+          id: 'q9-1',
+          question: 'Что делать, если ты "провалился" и не защитил границу?',
+          type: 'single',
+          options: [
+            { id: 'a', text: 'Бить себя и думать, что я неудачник' },
+            { id: 'b', text: 'Принять это как опыт и продолжать практиковать' },
+            { id: 'c', text: 'Перестать пытаться устанавливать границы' }
+          ],
+          correctAnswer: 'b',
+          explanation: 'Провалы — это часть обучения. Важно быть добрым к себе и продолжать практиковать. Каждый раз ты становишься сильнее.'
+        },
+        {
+          id: 'q9-2',
+          question: 'Что включает система поддержки границ?',
+          type: 'multiple',
+          options: [
+            { id: 'a', text: 'Ежедневная практика' },
+            { id: 'b', text: 'Еженедельная рефлексия' },
+            { id: 'c', text: 'Сообщество поддержки' },
+            { id: 'd', text: 'Ресурсы для перезарядки' }
+          ],
+          correctAnswer: ['a', 'b', 'c', 'd'],
+          explanation: 'Система поддержки включает все эти элементы. Они работают вместе, создавая устойчивость и мотивацию продолжать.'
+        }
+      ],
       
       practiceExercise: {
         title: 'Личный манифест границ',
