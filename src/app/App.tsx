@@ -118,7 +118,7 @@ export function App() {
     localStorage.getItem('devMode') === 'true'
 
   // Feature flag для системы ролей
-  const ENABLE_PARENT_ROLES = false // ДЕМО ДЛЯ РОДИТЕЛЕЙ
+  const ENABLE_PARENT_ROLES = true // ДЕМО ДЛЯ РОДИТЕЛЕЙ - ВКЛЮЧЕНО ДЛЯ ЛОКАЛЬНОЙ РАЗРАБОТКИ
 
   // Tab navigation
   const [activeTab, setActiveTab] = useState('dashboard')

@@ -32,6 +32,8 @@ import RealWorldScenario, { exampleScenarios } from './RealWorldScenario'
 import PeerLearningFeed, { examplePeerStories } from './PeerLearningFeed'
 import SkillsTracker, { boundariesSkills, type Skill } from './SkillsTracker'
 import SleepIntegration from './SleepIntegration'
+import CirclesOfIntimacyDiagram from './CirclesOfIntimacyDiagram'
+import HouseMetaphorDiagram from './HouseMetaphorDiagram'
 
 interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
@@ -423,7 +425,7 @@ export default function AdaptiveLessonViewer({
               {availableFormats.map(format => (
                 <TabsContent key={format} value={format} className="mt-6">
                   {format === 'text' && lesson.formats.text && (
-                    <TextLessonContent content={lesson.formats.text.content} />
+                    <TextLessonContent content={lesson.formats.text.content} lessonId={lesson.id} />
                   )}
                   {format === 'video' && lesson.formats.video && (
                     <VideoLessonContent content={lesson.formats.video.content} />
@@ -607,13 +609,27 @@ export default function AdaptiveLessonViewer({
 // Компоненты форматов
 // ============================================
 
-function TextLessonContent({ content }: { content: any }) {
+function TextLessonContent({ content, lessonId }: { content: any, lessonId?: string }) {
   return (
     <div className="prose prose-sm max-w-none">
       {content.sections?.map((section: any, idx: number) => (
         <div key={idx} className="mb-6">
           <h3 className="text-lg font-semibold mb-3">{section.heading}</h3>
           <div className="whitespace-pre-line text-gray-700">{section.body}</div>
+          
+          {/* Интерактивная диаграмма для секции "5 кругов близости" */}
+          {section.heading.includes('круги близости') && (
+            <div className="my-8">
+              <CirclesOfIntimacyDiagram />
+            </div>
+          )}
+          
+          {/* Интерактивная диаграмма для секции "Метафора Дома" */}
+          {section.heading.toLowerCase().includes('дом') && (
+            <div className="my-8">
+              <HouseMetaphorDiagram />
+            </div>
+          )}
         </div>
       ))}
 
