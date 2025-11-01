@@ -439,6 +439,16 @@
     padding-left: max(env(safe-area-inset-left), var(--spacing-md));
     padding-right: max(env(safe-area-inset-right), var(--spacing-md));
   }
+
+  /* Scrollbar hide utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* ============================================

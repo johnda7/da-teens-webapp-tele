@@ -716,7 +716,7 @@ export default function ParentBoundariesModule({ onBack }: Props) {
         {/* Демо SleepMeditationHub */}
         {showSleepMeditation && (
           <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">💤 Сон и медитация (Calm + Headspace)</h3>
+            <h3 className="text-xl font-semibold mb-4">💤 Сон и медитация</h3>
             <SleepMeditationHub
               currentMood={emotionalState.mood}
               onContentSelect={(content) => console.log('Sleep content selected:', content)}

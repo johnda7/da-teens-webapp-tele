@@ -17,7 +17,7 @@ import {
   SpeakerHigh,
   SpeakerX
 } from '@phosphor-icons/react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 interface SleepContent {
   id: string
@@ -35,6 +35,16 @@ interface SleepMeditationHubProps {
   currentMood?: 'stressed' | 'anxious' | 'tired' | 'energetic' | 'calm'
 }
 
+// Бесплатные аудио-ресурсы для медитаций
+// 
+// ИСТОЧНИКИ БЕСПЛАТНЫХ ЗВУКОВ:
+// 1. Pixabay.com/music - бесплатные звуки природы, CC0 лицензия
+// 2. Freesound.org - CC0 public domain звуки
+// 3. Archive.org - публичные медитации
+//
+// Для треков без audioUrl используется синтетический розовый шум через Web Audio API
+// (более приятный чем белый шум, с lowpass фильтром для успокаивающего эффекта)
+
 const sleepContent: SleepContent[] = [
   {
     id: 'sleep-story-1',
@@ -43,7 +53,8 @@ const sleepContent: SleepContent[] = [
     duration: 15,
     type: 'sleep_story',
     category: 'calm',
-    image: '/images/sleep/stars.jpg'
+    image: 'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&q=80', // Stars
+    audioUrl: null
   },
   {
     id: 'meditation-1',
@@ -52,7 +63,8 @@ const sleepContent: SleepContent[] = [
     duration: 10,
     type: 'meditation',
     category: 'headspace',
-    image: '/images/meditation/breathing.jpg'
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', // Mountain landscape
+    audioUrl: null
   },
   {
     id: 'nature-1',
@@ -61,7 +73,8 @@ const sleepContent: SleepContent[] = [
     duration: 30,
     type: 'nature_sounds',
     category: 'calm',
-    image: '/images/nature/forest.jpg'
+    image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80', // Forest
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3'
   },
   {
     id: 'breathing-1',
@@ -70,7 +83,8 @@ const sleepContent: SleepContent[] = [
     duration: 5,
     type: 'breathing',
     category: 'custom',
-    image: '/images/breathing/478.jpg'
+    image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80', // Sky with clouds
+    audioUrl: null
   },
   {
     id: 'sleep-story-2',
@@ -79,7 +93,8 @@ const sleepContent: SleepContent[] = [
     duration: 20,
     type: 'sleep_story',
     category: 'calm',
-    image: '/images/sleep/ocean.jpg'
+    image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&q=80', // Ocean
+    audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3'
   },
   {
     id: 'meditation-2',
@@ -88,7 +103,8 @@ const sleepContent: SleepContent[] = [
     duration: 12,
     type: 'meditation',
     category: 'headspace',
-    image: '/images/meditation/body-scan.jpg'
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', // Mountain landscape
+    audioUrl: null
   }
 ]
 
@@ -109,6 +125,12 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
   const [selectedContent, setSelectedContent] = useState<SleepContent | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(70)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
 
   const getMoodRecommendations = () => {
     switch (currentMood) {
@@ -125,9 +147,210 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
     }
   }
 
+  // Инициализация аудио при выборе контента
+  useEffect(() => {
+    if (!selectedContent) {
+      // Очистка при сбросе выбора
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.src = ''
+        audioRef.current = null
+      }
+      if (sourceNodeRef.current) {
+        try {
+          sourceNodeRef.current.stop()
+        } catch (e) {}
+        sourceNodeRef.current = null
+      }
+      gainNodeRef.current = null
+      if (audioContextRef.current) {
+        audioContextRef.current.close().catch(() => {})
+        audioContextRef.current = null
+      }
+      return
+    }
+
+    // Если есть URL - используем HTML5 audio
+    if (selectedContent.audioUrl) {
+      const audio = new Audio(selectedContent.audioUrl)
+      audio.loop = true
+      audio.volume = volume / 100
+      
+      audio.addEventListener('loadedmetadata', () => {
+        setDuration(audio.duration)
+      })
+      
+      audio.addEventListener('timeupdate', () => {
+        setCurrentTime(audio.currentTime)
+      })
+      
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false)
+        setCurrentTime(0)
+      })
+      
+      audioRef.current = audio
+      
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause()
+          audioRef.current.src = ''
+        }
+      }
+    } else {
+      // Для синтетических звуков просто устанавливаем длительность
+      setDuration(selectedContent.duration * 60)
+    }
+  }, [selectedContent, volume])
+
+  // Управление воспроизведением
+  useEffect(() => {
+    if (!selectedContent) return
+
+    // HTML5 Audio
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play().catch(console.error)
+      } else {
+        audioRef.current.pause()
+      }
+      return
+    }
+
+    // Web Audio API для синтетических звуков
+    if (!selectedContent.audioUrl) {
+      if (isPlaying) {
+        try {
+          const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+          
+          // Создаём контекст если его нет
+          if (!audioContextRef.current) {
+            audioContextRef.current = new AudioContextClass()
+          }
+          
+          const audioContext = audioContextRef.current
+          
+          // Возобновляем если приостановлен
+          if (audioContext.state === 'suspended') {
+            audioContext.resume()
+          }
+          
+          // Генерируем успокаивающий звук (розовый шум)
+          const bufferLength = audioContext.sampleRate * 2 // 2 секунды буфера для loop
+          const buffer = audioContext.createBuffer(1, bufferLength, audioContext.sampleRate)
+          const data = buffer.getChannelData(0)
+          
+          // Генерация розового шума
+          let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0
+          for (let i = 0; i < bufferLength; i++) {
+            const white = Math.random() * 2 - 1
+            b0 = 0.99886 * b0 + white * 0.0555179
+            b1 = 0.99332 * b1 + white * 0.0750759
+            b2 = 0.96900 * b2 + white * 0.1538520
+            b3 = 0.86650 * b3 + white * 0.3104856
+            b4 = 0.55000 * b4 + white * 0.5329522
+            b5 = -0.7616 * b5 - white * 0.0168980
+            data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362
+            data[i] *= 0.11 // Нормализация
+            b6 = white * 0.115926
+          }
+          
+          const source = audioContext.createBufferSource()
+          source.buffer = buffer
+          source.loop = true
+          
+          // Добавляем фильтр для более приятного звука
+          const filter = audioContext.createBiquadFilter()
+          filter.type = 'lowpass'
+          filter.frequency.value = 800
+          filter.Q.value = 1
+          
+          const gainNode = audioContext.createGain()
+          gainNode.gain.value = volume / 100
+          gainNodeRef.current = gainNode
+          
+          source.connect(filter)
+          filter.connect(gainNode)
+          gainNode.connect(audioContext.destination)
+          
+          source.start(0)
+          sourceNodeRef.current = source
+        } catch (e) {
+          console.error('Ошибка воспроизведения аудио:', e)
+          setIsPlaying(false)
+        }
+      } else {
+        // Останавливаем синтетический звук
+        if (sourceNodeRef.current) {
+          try {
+            sourceNodeRef.current.stop()
+          } catch (e) {}
+          sourceNodeRef.current = null
+        }
+        gainNodeRef.current = null
+      }
+    }
+  }, [isPlaying, selectedContent, volume])
+
+  // Обновление громкости
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100
+    }
+    // Обновляем громкость для синтетического звука
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = volume / 100
+    }
+  }, [volume])
+
+  // Таймер для синтетического звука
+  useEffect(() => {
+    if (!selectedContent || !isPlaying || selectedContent.audioUrl) return
+    
+    const interval = setInterval(() => {
+      setCurrentTime(prev => {
+        const next = prev + 0.1
+        if (next >= duration) {
+          setIsPlaying(false)
+          return 0
+        }
+        return next
+      })
+    }, 100)
+    
+    return () => clearInterval(interval)
+  }, [isPlaying, selectedContent, duration])
+
   const handleContentSelect = (content: SleepContent) => {
+    // Останавливаем предыдущее воспроизведение
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    }
+    if (sourceNodeRef.current) {
+      try {
+        sourceNodeRef.current.stop()
+      } catch (e) {}
+    }
+    
     setSelectedContent(content)
+    setCurrentTime(0)
+    setIsPlaying(false)
     onContentSelect?.(content)
+  }
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying)
+  }
+
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(Math.max(0, Math.min(100, newVolume)))
+  }
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   const formatDuration = (minutes: number) => {
@@ -137,41 +360,47 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
     return `${hours}ч ${mins}мин`
   }
 
+  // Генерация градиентов для картинок на основе типа
+  const getImageGradient = (type: string) => {
+    const gradients: Record<string, string> = {
+      sleep_story: 'from-blue-600 via-indigo-600 to-purple-600',
+      meditation: 'from-cyan-600 via-blue-600 to-indigo-600',
+      breathing: 'from-emerald-600 via-teal-600 to-cyan-600',
+      nature_sounds: 'from-green-600 via-emerald-600 to-teal-600'
+    }
+    return gradients[type] || 'from-gray-600 to-gray-800'
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center">
+    <div className="space-y-4">
+      {/* Header - более компактный */}
+      <div className="text-center mb-4">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-3 mb-4"
+          className="flex items-center justify-center gap-2 mb-2"
         >
-          <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-full p-3">
-            <Moon className="w-6 h-6 text-white" />
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full p-2.5">
+            <Moon className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Сон и Медитация
           </h2>
         </motion.div>
         
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Персонализированные программы для сна и медитации, вдохновлённые Calm и Headspace
+        <p className="text-sm text-gray-600">
+          Персонализированные программы для сна и медитации
         </p>
       </div>
 
-      {/* Mood-based recommendations */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.2 }}
-        className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200"
-      >
-        <div className="flex items-center gap-3 mb-4">
-          <Heart className="w-5 h-5 text-pink-500" />
-          <h3 className="font-semibold text-gray-800">Рекомендации для твоего настроения</h3>
+      {/* Mood-based recommendations - горизонтальный скролл, 2 в ряд */}
+      <div className="mb-3">
+        <div className="flex items-center gap-2 mb-2 px-1">
+          <Heart className="w-4 h-4 text-pink-500" />
+          <h3 className="text-sm font-semibold text-gray-800">Для твоего настроения</h3>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
           {getMoodRecommendations().slice(0, 4).map((content) => {
             const typeConfig = typeIcons[content.type]
             const Icon = typeConfig.icon
@@ -179,173 +408,230 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
             return (
               <motion.div
                 key={content.id}
-                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                className="flex-shrink-0"
               >
                 <Card 
-                  className="cursor-pointer hover:shadow-md transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm"
+                  className="cursor-pointer transition-all duration-300 border-0 w-[120px] bg-white/90 backdrop-blur-sm shadow-sm hover:shadow-md overflow-hidden"
                   onClick={() => handleContentSelect(content)}
                 >
-                  <CardContent className="p-4 text-center">
-                    <div className={`${typeConfig.color} rounded-full p-2 w-12 h-12 mx-auto mb-3 flex items-center justify-center`}>
-                      <Icon className="w-6 h-6 text-white" />
+                  <CardContent className="p-0">
+                    {/* Real image */}
+                    {content.image ? (
+                      <div className="relative h-16 w-full overflow-hidden">
+                        <img 
+                          src={content.image} 
+                          alt={content.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                      </div>
+                    ) : (
+                      <div className={`bg-gradient-to-br ${getImageGradient(content.type)} rounded-xl h-16 w-full flex items-center justify-center`}>
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                    )}
+                    <div className="p-1.5 text-center">
+                      <h4 className="font-medium text-[10px] mb-0.5 leading-tight line-clamp-2">{content.title}</h4>
+                      <p className="text-[9px] text-gray-500">{formatDuration(content.duration)}</p>
                     </div>
-                    <h4 className="font-medium text-sm mb-1">{content.title}</h4>
-                    <p className="text-xs text-gray-500">{formatDuration(content.duration)}</p>
                   </CardContent>
                 </Card>
               </motion.div>
             )
           })}
         </div>
-      </motion.div>
-
-      {/* All content grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {sleepContent.map((content, index) => {
-          const typeConfig = typeIcons[content.type]
-          const Icon = typeConfig.icon
-          const isSelected = selectedContent?.id === content.id
-
-          return (
-            <motion.div
-              key={content.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Card 
-                className={`cursor-pointer transition-all duration-300 border-0 bg-white/70 backdrop-blur-sm ${
-                  isSelected ? 'ring-2 ring-purple-500 shadow-lg' : 'hover:shadow-md'
-                }`}
-                onClick={() => handleContentSelect(content)}
-              >
-                <CardContent className="p-0">
-                  {/* Image placeholder */}
-                  <div className="relative h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                    <div className="text-center">
-                      <Icon className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                      <p className="text-xs text-gray-500">{content.title}</p>
-                    </div>
-                    
-                    {/* Type badge */}
-                    <div className="absolute top-2 left-2">
-                      <Badge className={`${typeConfig.color} text-white text-xs`}>
-                        <Icon className="w-3 h-3 mr-1" />
-                        {typeConfig.label}
-                      </Badge>
-                    </div>
-
-                    {/* Category badge */}
-                    <div className="absolute top-2 right-2">
-                      <Badge variant="outline" className={`text-xs ${categoryColors[content.category]}`}>
-                        {content.category}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Content info */}
-                  <div className="p-4">
-                    <h3 className="font-semibold mb-2">{content.title}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{content.description}</p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Timer className="w-4 h-4" />
-                        {formatDuration(content.duration)}
-                      </div>
-                      
-                      <Button 
-                        size="sm" 
-                        className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setIsPlaying(!isPlaying)
-                        }}
-                      >
-                        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )
-        })}
       </div>
 
-      {/* Player (when content is selected) */}
+      {/* All content - горизонтальный скролл, 2 видимые карточки */}
+      <div className="mb-4">
+        <h3 className="text-sm font-semibold text-gray-800 mb-2 px-1">Все программы</h3>
+        <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+          {sleepContent.map((content, index) => {
+            const typeConfig = typeIcons[content.type]
+            const Icon = typeConfig.icon
+            const isSelected = selectedContent?.id === content.id
+
+            return (
+              <motion.div
+                key={content.id}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex-shrink-0"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all duration-300 border-0 w-[140px] bg-white/90 backdrop-blur-sm shadow-sm overflow-hidden ${
+                    isSelected ? 'ring-2 ring-blue-500 shadow-md' : 'hover:shadow-md'
+                  }`}
+                  onClick={() => handleContentSelect(content)}
+                >
+                  <CardContent className="p-0">
+                    {/* Real image */}
+                    {content.image ? (
+                      <div className="relative h-20 w-full overflow-hidden">
+                        <img 
+                          src={content.image} 
+                          alt={content.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                        {/* Type badge */}
+                        <div className="absolute top-1 left-1">
+                          <Badge className={`bg-black/40 text-white text-[9px] px-1 py-0 border-0 backdrop-blur-sm`}>
+                            {typeConfig.label}
+                          </Badge>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={`relative bg-gradient-to-br ${getImageGradient(content.type)} h-20 w-full flex items-center justify-center`}>
+                        <Icon className="w-6 h-6 text-white/90" />
+                        {/* Type badge */}
+                        <div className="absolute top-1 left-1">
+                          <Badge className={`bg-black/40 text-white text-[9px] px-1 py-0 border-0 backdrop-blur-sm`}>
+                            {typeConfig.label}
+                          </Badge>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Content info - компактнее */}
+                    <div className="p-2">
+                      <h3 className="font-semibold text-[10px] mb-0.5 leading-tight line-clamp-2">{content.title}</h3>
+                      <p className="text-[9px] text-gray-600 mb-1 line-clamp-2 leading-tight">{content.description}</p>
+                      
+                      <div className="flex items-center gap-0.5 text-[9px] text-gray-500">
+                        <Timer className="w-2.5 h-2.5" />
+                        {formatDuration(content.duration)}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Player (when content is selected) - Liquid Glass */}
       {selectedContent && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl p-6 text-white"
+          className="glass rounded-xl p-4 border border-white/40"
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="bg-white/20 rounded-full p-3">
-              {(() => {
-                const Icon = typeIcons[selectedContent.type].icon
-                return <Icon className="w-6 h-6" />
-              })()}
+          <div className="flex items-center gap-3 mb-3">
+            {/* Thumbnail */}
+            {selectedContent.image ? (
+              <div className="relative w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                <img 
+                  src={selectedContent.image} 
+                  alt={selectedContent.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+            ) : (
+              <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl w-12 h-12 flex items-center justify-center flex-shrink-0">
+                {(() => {
+                  const Icon = typeIcons[selectedContent.type].icon
+                  return <Icon className="w-6 h-6 text-white" />
+                })()}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-sm truncate">{selectedContent.title}</h3>
+              <p className="text-xs text-gray-600 truncate">{selectedContent.description}</p>
             </div>
-            <div>
-              <h3 className="font-semibold text-lg">{selectedContent.title}</h3>
-              <p className="text-white/80">{selectedContent.description}</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 flex-shrink-0"
+              onClick={() => {
+                handleContentSelect(selectedContent)
+                setSelectedContent(null)
+              }}
+            >
+              ✕
+            </Button>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-3">
+            <div className="w-full bg-white/40 rounded-full h-1.5 overflow-hidden">
+              <motion.div
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-1.5 rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
+                transition={{ duration: 0.1 }}
+              />
+            </div>
+            <div className="flex items-center justify-between text-[10px] text-gray-600 mt-1">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration || selectedContent.duration * 60)}</span>
             </div>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Button
               size="lg"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-              onClick={() => setIsPlaying(!isPlaying)}
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white border-0 rounded-full h-10 w-10 p-0 shadow-md flex-shrink-0"
+              onClick={handlePlayPause}
             >
-              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+              {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-0.5" />}
             </Button>
 
             <div className="flex items-center gap-2 flex-1">
-              <SpeakerX className="w-4 h-4" />
-              <div className="flex-1 bg-white/20 rounded-full h-2">
+              <SpeakerX 
+                className="w-3.5 h-3.5 text-gray-600 cursor-pointer flex-shrink-0" 
+                onClick={() => handleVolumeChange(0)}
+              />
+              <div 
+                className="flex-1 bg-white/40 rounded-full h-1.5 cursor-pointer relative"
+                onClick={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const x = e.clientX - rect.left
+                  const newVolume = (x / rect.width) * 100
+                  handleVolumeChange(newVolume)
+                }}
+              >
                 <div 
-                  className="bg-white rounded-full h-2 transition-all duration-300"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full h-1.5 transition-all duration-300"
                   style={{ width: `${volume}%` }}
                 />
               </div>
-              <SpeakerHigh className="w-4 h-4" />
-            </div>
-
-            <div className="text-sm text-white/80">
-              {formatDuration(selectedContent.duration)}
+              <SpeakerHigh 
+                className="w-3.5 h-3.5 text-gray-600 cursor-pointer flex-shrink-0"
+                onClick={() => handleVolumeChange(100)}
+              />
             </div>
           </div>
+
+          {/* Скрытый audio элемент для URL-based аудио */}
+          {selectedContent.audioUrl && (
+            <audio
+              ref={audioRef as any}
+              src={selectedContent.audioUrl}
+              loop
+              preload="metadata"
+            />
+          )}
         </motion.div>
       )}
 
-      {/* Calm & Headspace integration info */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border border-green-200"
-      >
-        <div className="flex items-start gap-3">
-          <div className="bg-green-100 rounded-full p-2">
-            <Star className="w-5 h-5 text-green-600" />
+      {/* Integration info - более компактный */}
+      <div className="bg-gradient-to-r from-blue-50/80 to-indigo-50/80 backdrop-blur-sm rounded-lg p-3 border border-blue-100/50">
+        <div className="flex items-center gap-2">
+          <div className="bg-blue-100 rounded-full p-1.5">
+            <Star className="w-4 h-4 text-blue-600" />
           </div>
           <div>
-            <h4 className="font-semibold text-green-900 mb-1">
-              Интеграция с Calm и Headspace
-            </h4>
-            <p className="text-sm text-green-700">
-              Мы используем лучшие практики из ведущих приложений для сна и медитации. 
-              Персонализированные рекомендации на основе твоего эмоционального состояния.
-            </p>
+            <h4 className="font-semibold text-blue-900 text-xs">Персонализированные рекомендации</h4>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

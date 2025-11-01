@@ -64,7 +64,7 @@
 
 **Файлы:**
 - ✅ `src/components/DashboardHero.tsx` (СОЗДАН - 170 строк)
-- ✅ `src/App.tsx` - интегрирован
+- ✅ `src/app/App.tsx` - интегрирован
 
 **Реализовано:**
 - Animated gradient background (purple → blue → indigo)
@@ -102,7 +102,7 @@
 - [ ] Safe area для iOS
 
 **Файлы:**
-- `src/App.tsx` - обновить навигацию
+- `src/app/App.tsx` - обновить навигацию
 - Создать `src/components/BottomTabBar.tsx`
 
 ---
@@ -128,7 +128,7 @@
 - [ ] Smooth scroll behavior
 
 **Файлы:**
-- `src/App.tsx` - обернуть в AnimatePresence
+- `src/app/App.tsx` - обернуть в AnimatePresence
 - Все компоненты списков
 
 ---
@@ -142,7 +142,7 @@
 
 **Файлы:**
 - `src/hooks/useTelegram.ts` - расширить
-- `src/App.tsx` - применить
+- `src/app/App.tsx` - применить
 
 ---
 

@@ -58,7 +58,7 @@ export default function MicroLearningCard({
     <div className="space-y-4">
       {/* Progress indicator */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-[15px] leading-[20px]">
           <span className="text-muted-foreground">
             Шаг {currentStep + 1} из {steps.length}
           </span>
@@ -102,7 +102,7 @@ export default function MicroLearningCard({
               <Badge variant="outline" className="mb-2">
                 {lessonTitle}
               </Badge>
-              <CardTitle className="text-xl">{step.title}</CardTitle>
+              <CardTitle className="text-[20px] leading-[25px] font-bold">{step.title}</CardTitle>
             </div>
             {completedSteps.has(currentStep) && (
               <CheckCircle className="w-6 h-6 text-green-500" weight="fill" />
@@ -120,12 +120,12 @@ export default function MicroLearningCard({
 
           {/* Example */}
           {step.example && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="bg-gradient-to-br from-sky-100/60 to-blue-50/40 border border-sky-200/40 rounded-lg p-4 backdrop-blur-sm">
               <div className="flex items-start gap-3">
-                <Lightbulb className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" weight="fill" />
+                <Lightbulb className="w-5 h-5 text-sky-600 flex-shrink-0 mt-0.5" weight="fill" />
                 <div>
-                  <p className="font-semibold text-blue-900 mb-1">Пример</p>
-                  <p className="text-sm text-blue-800">{step.example}</p>
+                  <p className="font-semibold text-sky-900 mb-1">Пример</p>
+                  <p className="text-[15px] leading-[20px] text-sky-800">{step.example}</p>
                 </div>
               </div>
             </div>
@@ -133,24 +133,24 @@ export default function MicroLearningCard({
 
           {/* Quick tip */}
           {step.quickTip && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <div className="bg-gradient-to-br from-peach-100/60 to-amber-50/40 border border-peach-200/40 rounded-lg p-4 backdrop-blur-sm">
               <div className="flex items-start gap-3">
-                <Star className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" weight="fill" />
+                <Star className="w-5 h-5 text-peach-600 flex-shrink-0 mt-0.5" weight="fill" />
                 <div>
-                  <p className="font-semibold text-amber-900 mb-1">Лайфхак</p>
-                  <p className="text-sm text-amber-800">{step.quickTip}</p>
+                  <p className="font-semibold text-peach-900 mb-1">Лайфхак</p>
+                  <p className="text-[15px] leading-[20px] text-peach-800">{step.quickTip}</p>
                 </div>
               </div>
             </div>
           )}
 
           {/* Key takeaway */}
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+          <div className="bg-gradient-to-r from-lavender-100/60 via-lilac-100/40 to-purple-50/40 border border-lavender-200/40 rounded-lg p-4 backdrop-blur-sm">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" weight="fill" />
+              <CheckCircle className="w-5 h-5 text-lavender-700 flex-shrink-0 mt-0.5" weight="fill" />
               <div>
-                <p className="font-semibold text-purple-900 mb-1">Главное</p>
-                <p className="text-sm text-purple-800">{step.keyTakeaway}</p>
+                <p className="font-semibold text-lavender-900 mb-1">Главное</p>
+                <p className="text-[15px] leading-[20px] text-lavender-800">{step.keyTakeaway}</p>
               </div>
             </div>
           </div>
@@ -167,11 +167,11 @@ export default function MicroLearningCard({
           )}
 
           {step.reflection && showReflection && (
-            <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 animate-in fade-in duration-300">
-              <p className="font-semibold text-indigo-900 mb-2">Вопрос для размышления:</p>
-              <p className="text-sm text-indigo-800 mb-3">{step.reflection}</p>
+            <div className="bg-gradient-to-br from-violet-100/60 to-indigo-50/40 border border-violet-200/40 rounded-lg p-4 animate-in fade-in duration-300 backdrop-blur-sm">
+              <p className="font-semibold text-violet-900 mb-2">Вопрос для размышления:</p>
+              <p className="text-[15px] leading-[20px] text-violet-800 mb-3">{step.reflection}</p>
               <textarea
-                className="w-full p-3 border border-indigo-300 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-3 border border-violet-300/60 rounded-lg text-[15px] leading-[20px] resize-none focus:outline-none focus:ring-2 focus:ring-violet-500/50 bg-white/80"
                 rows={3}
                 placeholder="Напиши свои мысли здесь..."
               />

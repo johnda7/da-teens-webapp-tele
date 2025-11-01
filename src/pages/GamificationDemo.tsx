@@ -188,7 +188,7 @@ export default function GamificationDemo() {
               <strong className="text-blue-600">🎯 Duolingo-inspired:</strong> Streak mechanics, XP progression, badge collection
             </p>
             <p>
-              <strong className="text-green-600">🧘 Headspace-inspired:</strong> Wellness Score, emotional growth metrics, calm aesthetics
+              <strong className="text-green-600">🧘 Wellness-focused:</strong> Wellness Score, emotional growth metrics, soft aesthetics
             </p>
             <p>
               <strong className="text-pink-600">💜 Teen-focused:</strong> Мотивирующие сообщения, психологическое благополучие, не токсичная конкуренция

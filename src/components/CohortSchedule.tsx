@@ -7,7 +7,7 @@ import {
   Calendar, 
   VideoCamera, 
   Users, 
-  ChatCircle, 
+  Chat, 
   BookOpen, 
   Clock,
   MapPin,
@@ -87,7 +87,7 @@ const getTypeIcon = (type: string) => {
     case 'practice':
       return <BookOpen className="w-4 h-4 text-accent" />
     case 'reflection':
-      return <ChatCircle className="w-4 h-4 text-purple-600" />
+      return <Chat className="w-4 h-4 text-purple-600" />
     default:
       return <Calendar className="w-4 h-4" />
   }
@@ -186,7 +186,7 @@ export default function CohortSchedule({ cohortId }: CohortScheduleProps) {
             Расписание
           </TabsTrigger>
           <TabsTrigger value="chat" className="gap-1">
-            <ChatCircle className="w-4 h-4" />
+            <Chat className="w-4 h-4" />
             Чат группы
           </TabsTrigger>
           <TabsTrigger value="materials" className="gap-1">
@@ -235,7 +235,7 @@ export default function CohortSchedule({ cohortId }: CohortScheduleProps) {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ChatCircle className="w-5 h-5" />
+                <Chat className="w-5 h-5" />
                 Чат группы
               </CardTitle>
               <CardDescription>
@@ -257,7 +257,7 @@ export default function CohortSchedule({ cohortId }: CohortScheduleProps) {
               </div>
               
               <Button className="w-full gap-2">
-                <ChatCircle className="w-4 h-4" />
+                <Chat className="w-4 h-4" />
                 Открыть чат в Telegram
               </Button>
               
@@ -311,7 +311,7 @@ export default function CohortSchedule({ cohortId }: CohortScheduleProps) {
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <ChatCircle className="w-5 h-5 text-purple-600" />
+                    <Chat className="w-5 h-5 text-purple-600" />
                   </div>
                   <div className="flex-1">
                     <h4 className="font-medium">Дневник рефлексии</h4>

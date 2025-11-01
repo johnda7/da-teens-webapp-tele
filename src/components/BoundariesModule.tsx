@@ -67,6 +67,18 @@ export default function BoundariesModule({ onBack }: Props) {
     localStorage.setItem('boundaries-progress', JSON.stringify(progress))
   }, [progress])
 
+  // Auto-scroll to sleep section when opened
+  useEffect(() => {
+    if (showSleepMeditation) {
+      setTimeout(() => {
+        const element = document.querySelector('[data-sleep-section]')
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+    }
+  }, [showSleepMeditation])
+
   const handleStartLearning = () => {
     // Find first incomplete lesson
     const firstIncomplete = boundariesModule.lessons.find(
@@ -366,19 +378,19 @@ export default function BoundariesModule({ onBack }: Props) {
       </div>
 
       {/* Content - Liquid Glass поверх */}
-      {/* Header */}
+      {/* Header - компактнее */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b"
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-2">
           <Button
             variant="ghost"
             onClick={onBack}
-            className="gap-2"
+            className="gap-1.5 h-8 text-sm"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-3.5 w-3.5" />
             Назад к модулям
           </Button>
         </div>
@@ -398,8 +410,8 @@ export default function BoundariesModule({ onBack }: Props) {
         onCheckIn={() => setShowCheckIn(true)}
       />
 
-      {/* Week Tabs Navigation */}
-      <div className="container mx-auto px-4 py-8">
+      {/* Week Tabs Navigation - компактнее */}
+      <div className="container mx-auto px-4 py-2">
         <WeekTabs
           currentWeek={currentWeek}
           onWeekChange={setCurrentWeek}
@@ -407,9 +419,9 @@ export default function BoundariesModule({ onBack }: Props) {
         />
       </div>
 
-      {/* Adaptive Recommendations */}
+      {/* Adaptive Recommendations - компактнее */}
       {progress.checkIns.length > 0 && (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-2">
           <div className="text-center mb-6">
             <button
               onClick={() => setShowAdaptiveRecommendations(!showAdaptiveRecommendations)}
@@ -446,8 +458,8 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
       )}
 
-      {/* Content Cards for Current Week */}
-      <div className="container mx-auto px-4 py-8">
+      {/* Content Cards for Current Week - компактнее */}
+      <div className="container mx-auto px-4 py-2">
         <ContentCards
           cards={getContentCards()}
           onCardStart={(index) => {
@@ -459,11 +471,11 @@ export default function BoundariesModule({ onBack }: Props) {
         />
       </div>
 
-      {/* Новые компоненты - демо версия */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-4">
-          <h2 className="text-lg font-bold text-gray-900 mb-2">🎨 Визуальные уроки</h2>
-          <p className="text-sm text-gray-600 mb-4">Демо версия компонентов</p>
+      {/* Новые компоненты - демо версия - компактнее */}
+      <div className="container mx-auto px-4 py-2">
+        <div className="mb-2">
+          <h2 className="text-sm font-bold text-gray-900 mb-1">🎨 Визуальные уроки</h2>
+          <p className="text-[10px] text-gray-600">Демо версия компонентов</p>
         </div>
 
         {/* Кнопки для демо - Telegram Wallet Style (супер компактные) */}
@@ -653,14 +665,14 @@ export default function BoundariesModule({ onBack }: Props) {
         )}
       </div>
 
-      {/* Lesson Timeline (Alternative View) */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+      {/* Lesson Timeline (Alternative View) - компактнее */}
+      <div className="container mx-auto px-4 py-2">
+        <div className="text-center mb-3">
+          <h3 className="text-sm font-semibold text-gray-900 mb-1">
             Все уроки модуля
           </h3>
-          <p className="text-sm text-gray-600">
-            Посмотри прогресс по всем 9 урокам
+          <p className="text-[10px] text-gray-600">
+            Прогресс по всем 9 урокам
           </p>
         </div>
         <LessonTimeline
@@ -673,7 +685,7 @@ export default function BoundariesModule({ onBack }: Props) {
 
         {/* Демо LessonImages */}
         {showLessonImages && (
-          <div className="mb-8">
+          <div className="mb-2">
             <h3 className="text-xl font-semibold mb-4">🖼️ Картинки к урокам (Google Learn Your Way стиль)</h3>
             <LessonImages
               lessonId="boundaries-lesson-1"
@@ -714,8 +726,7 @@ export default function BoundariesModule({ onBack }: Props) {
 
         {/* Демо SleepMeditationHub */}
         {showSleepMeditation && (
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold mb-4">💤 Сон и медитация (Calm + Headspace)</h3>
+          <div className="mb-2" data-sleep-section>
             <SleepMeditationHub
               currentMood={emotionalState.mood}
               onContentSelect={(content) => console.log('Sleep content selected:', content)}

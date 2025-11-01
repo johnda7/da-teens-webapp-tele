@@ -54,7 +54,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5174,
-    strictPort: false, // Позволит выбрать другой порт если 5173 занят
+    // ⚠️ ВАЖНО: Spark plugin переопределяет порт на 5000 по умолчанию
+    // Если 5000 занят, Vite автоматически выберет свободный (5001, 5002, и т.д.)
+    strictPort: false, // Автоматический выбор порта если указанный занят
     allowedHosts: true,
   },
   preview: {

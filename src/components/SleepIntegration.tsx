@@ -277,7 +277,7 @@ export default function SleepIntegration({ currentMood, onComplete, onClose }: S
       <div className="mt-6 p-4 bg-blue-50 rounded-xl">
         <div className="flex items-center gap-2 mb-2">
           <Heart className="w-5 h-5 text-blue-500" />
-          <span className="text-sm font-medium text-blue-700">Интеграция с Calm и Headspace</span>
+          <span className="text-sm font-medium text-blue-700">Персонализированный контент</span>
         </div>
         <p className="text-xs text-blue-600">
           Мы используем лучшие практики из ведущих приложений для сна и медитации. 

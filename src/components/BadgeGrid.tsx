@@ -97,6 +97,14 @@ const availableBadges = [
     criteria: 'Выполнить все задания в течение месяца'
   },
   {
+    id: 'sleep-master',
+    title: 'Мастер сна',
+    description: 'Неделя подряд спал 8+ часов',
+    icon: '🌙',
+    color: 'bg-indigo-100 border-indigo-300 text-indigo-800',
+    criteria: 'Спать 8+ часов 7 дней подряд'
+  },
+  {
     id: 'anxiety-warrior',
     title: 'Борец с тревогой',
     description: 'Снизил уровень тревоги на 3 пункта',
@@ -247,6 +255,14 @@ export default function BadgeGrid({ userBadges }: BadgeGridProps) {
               </div>
               <Badge className="bg-accent/20 text-accent-foreground">
                 Попробовать
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
               </Badge>
             </div>
           </CardContent>

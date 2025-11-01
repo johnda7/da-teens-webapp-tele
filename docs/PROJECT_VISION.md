@@ -582,13 +582,13 @@ transition={{
 ## 🚢 DEPLOYMENT & INFRASTRUCTURE
 
 ### Current (Simple & Fast):
-- **Hosting:** Vercel (auto-deploy from main branch)
-- **Storage:** Google Sheets API (content + user data)
-- **CDN:** Vercel Edge Network
+- **Hosting:** GitHub Pages (auto-deploy from main branch)
+- **Storage:** GitHub Spark KV (localStorage for dev) → Google Sheets API (production)
+- **Deployment:** GitHub Actions автоматический деплой
 - **Analytics:** Telegram Analytics + Google Analytics 4
 
 ### Future (Scale):
-- **Frontend:** Cloudflare Workers (edge computing)
+- **Frontend:** Optimized static hosting (Netlify/Vercel if needed)
 - **Backend:** Node.js + PostgreSQL (when >10K users)
 - **AI:** OpenAI API → Fine-tuned models on user data
 - **Mobile:** App Store + Google Play

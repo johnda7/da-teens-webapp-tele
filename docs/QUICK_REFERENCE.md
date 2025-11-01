@@ -94,9 +94,9 @@
 4. Пришли тексты для родителей
 
 ### ЕСЛИ ТЫ **РАЗРАБОТЧИК:**
-1. Прочитай **FOR_AGENTS.md**
-2. Прочитай **GLOBAL_12_MONTH_ROADMAP.md**
-3. Следуй правилам из **FOR_AGENTS.md**
+1. Прочитай **LOCAL_SETUP.md** ← **НАЧНИ ОТСЮДА!** (как запустить локально)
+2. Прочитай **FOR_AGENTS.md** (правила разработки)
+3. Прочитай **GLOBAL_12_MONTH_ROADMAP.md** (архитектура)
 4. Используй **ARCHITECTURE_GUIDE.md** для структуры
 
 ### ЕСЛИ ТЫ **ДИЗАЙНЕР:**
@@ -116,14 +116,15 @@
 
 ```
 /docs/
-  ├── GLOBAL_12_MONTH_ROADMAP.md          ⭐ ГЛАВНЫЙ
-  ├── CONTENT_PRODUCTION_PLAN.md          🎬 Для Кати
-  ├── PARENT_MODULE_INTEGRATION_PLAN.md   👨‍👩‍👧‍👦 Ожидаем материалы
-  ├── QUICK_REFERENCE.md                  📚 Этот файл
-  ├── FOR_AGENTS.md                       🤖 Для AI агентов
-  ├── PROJECT_VISION.md                   💡 Визия
-  ├── ARCHITECTURE_GUIDE.md               🏗️ Архитектура
-  └── ROADMAP.md                          📅 Старый roadmap
+  ├── LOCAL_SETUP.md                     🚀 ЛОКАЛЬНЫЙ ЗАПУСК (читай первым!)
+  ├── GLOBAL_12_MONTH_ROADMAP.md         ⭐ ГЛАВНЫЙ
+  ├── CONTENT_PRODUCTION_PLAN.md         🎬 Для Кати
+  ├── PARENT_MODULE_INTEGRATION_PLAN.md  👨‍👩‍👧‍👦 Ожидаем материалы
+  ├── QUICK_REFERENCE.md                 📚 Этот файл
+  ├── FOR_AGENTS.md                      🤖 Для AI агентов
+  ├── PROJECT_VISION.md                  💡 Визия
+  ├── ARCHITECTURE_GUIDE.md              🏗️ Архитектура
+  └── ROADMAP.md                         📅 Старый roadmap
 
 /src/data/
   ├── boundariesModule.ts                 ✅ 9 уроков для подростков
@@ -163,4 +164,5 @@
 ---
 
 **Последнее обновление:** 6 октября 2025
+
 

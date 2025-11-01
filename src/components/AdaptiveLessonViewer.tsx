@@ -23,7 +23,8 @@ import {
   Users,
   Target,
   Path,
-  Moon
+  Moon,
+  Warning
 } from '@phosphor-icons/react'
 import type { Lesson, LessonFormat } from '@/data/boundariesModule'
 import type { LessonRecommendation } from '@/lib/adaptiveLearning'
@@ -34,6 +35,13 @@ import SkillsTracker, { boundariesSkills, type Skill } from './SkillsTracker'
 import SleepIntegration from './SleepIntegration'
 import CirclesOfIntimacyDiagram from './CirclesOfIntimacyDiagram'
 import HouseMetaphorDiagram from './HouseMetaphorDiagram'
+import BodyScanTool from './BodyScanTool'
+import BoundaryChecklist from './BoundaryChecklist'
+import FearConfrontationTool from './FearConfrontationTool'
+import RoleplaySimulator from './RoleplaySimulator'
+import RelationshipAssessment from './RelationshipAssessment'
+import DigitalAuditTool from './DigitalAuditTool'
+import ManifestCreator from './ManifestCreator'
 
 interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
@@ -49,7 +57,14 @@ export default function AdaptiveLessonViewer({
   onBack
 }: AdaptiveLessonViewerProps) {
   const { lesson, reason, emotionalFit, adaptations } = recommendation
-  const [currentFormat, setCurrentFormat] = useState<keyof Lesson['formats']>('text')
+  // По умолчанию показываем интерактивный формат первым (для подростков!)
+  const getDefaultFormat = () => {
+    if (lesson.formats.interactive) return 'interactive'
+    if (lesson.formats.video) return 'video'
+    if (lesson.formats.audio) return 'audio'
+    return 'text'
+  }
+  const [currentFormat, setCurrentFormat] = useState<keyof Lesson['formats']>(getDefaultFormat())
   const [progress, setProgress] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
@@ -62,9 +77,18 @@ export default function AdaptiveLessonViewer({
   const [showXPGain, setShowXPGain] = useState(false)
 
   // Доступные форматы для этого урока
+  // Приоритет: interactive, video, audio, mindmap, text (интерактив первым!)
   const availableFormats = Object.keys(lesson.formats).filter(
     key => lesson.formats[key as keyof Lesson['formats']]
   ) as (keyof Lesson['formats'])[]
+  
+  // Сортируем: interactive первым, text последним
+  const formatOrder = ['interactive', 'video', 'audio', 'mindmap', 'text']
+  const sortedFormats = availableFormats.sort((a, b) => {
+    const aIndex = formatOrder.indexOf(a as string)
+    const bIndex = formatOrder.indexOf(b as string)
+    return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
+  })
 
   // Иконки для форматов
   const formatIcons = {
@@ -83,12 +107,12 @@ export default function AdaptiveLessonViewer({
     mindmap: 'Карта'
   }
 
-  // Цвета для emotionalFit
+  // Цвета для emotionalFit - soft pastels
   const fitColors = {
-    perfect: 'bg-green-50 border-green-200 text-green-700',
-    good: 'bg-blue-50 border-blue-200 text-blue-700',
-    okay: 'bg-yellow-50 border-yellow-200 text-yellow-700',
-    challenging: 'bg-orange-50 border-orange-200 text-orange-700'
+    perfect: 'bg-gradient-to-br from-emerald-100/60 to-green-50/40 border-emerald-200/40 backdrop-blur-sm text-emerald-700',
+    good: 'bg-gradient-to-br from-sky-100/60 to-blue-50/40 border-sky-200/40 backdrop-blur-sm text-sky-700',
+    okay: 'bg-gradient-to-br from-amber-100/60 to-yellow-50/40 border-amber-200/40 backdrop-blur-sm text-amber-700',
+    challenging: 'bg-gradient-to-br from-orange-100/60 to-peach-50/40 border-orange-200/40 backdrop-blur-sm text-orange-700'
   }
 
   const fitLabels = {
@@ -182,7 +206,7 @@ export default function AdaptiveLessonViewer({
           initial={{ opacity: 0, y: 0, scale: 0.8 }}
           animate={{ opacity: 1, y: -20, scale: 1 }}
           exit={{ opacity: 0, y: -40, scale: 0.8 }}
-          className="absolute top-4 right-4 z-50 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg"
+          className="absolute top-4 right-4 z-50 bg-green-500 text-white px-3 py-1 rounded-full text-[17px] font-bold shadow-lg"
         >
           +10 XP!
         </motion.div>
@@ -299,8 +323,8 @@ export default function AdaptiveLessonViewer({
                   </Button>
                 )}
                 <div className="flex-1 min-w-0">
-                  <CardTitle className="text-base font-semibold text-gray-900 truncate">{lesson.title}</CardTitle>
-                  <CardDescription className="text-xs text-gray-500 truncate">{lesson.subtitle}</CardDescription>
+                  <CardTitle className="text-[20px] leading-[25px] font-bold text-gray-900 truncate">{lesson.title}</CardTitle>
+                  <CardDescription className="text-[15px] leading-[20px] text-gray-500 truncate">{lesson.subtitle}</CardDescription>
                 </div>
               </div>
               <Badge variant="outline" className={`text-[10px] px-2 py-0.5 ${fitColors[emotionalFit]} border-0`}>
@@ -314,10 +338,10 @@ export default function AdaptiveLessonViewer({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="mt-2 p-2 bg-gradient-to-br from-sky-100/60 to-blue-50/40 rounded-lg border border-sky-200/40 backdrop-blur-sm">
                 <div className="flex items-center gap-1.5">
-                  <Heart className="h-3 w-3 text-blue-600" />
-                  <span className="text-xs text-blue-800">
+                  <Heart className="h-3 w-3 text-sky-600" />
+                  <span className="text-xs text-sky-800">
                     <strong>Почему этот урок:</strong> {reason}
                   </span>
                 </div>
@@ -384,7 +408,7 @@ export default function AdaptiveLessonViewer({
           <Card className="relative overflow-hidden bg-white border border-gray-200 shadow-sm">
             <CardHeader className="relative p-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-semibold text-gray-900">Выбери формат обучения</CardTitle>
+                <CardTitle className="text-[17px] leading-[22px] font-semibold text-gray-900">Выбери формат обучения</CardTitle>
                 <div className="flex items-center gap-1 text-xs text-gray-600">
                   <Clock size={12} />
                   <span>
@@ -396,8 +420,8 @@ export default function AdaptiveLessonViewer({
             <CardContent className="relative p-3">
               {/* Переключатель форматов - Telegram Wallet Style */}
               <Tabs value={currentFormat} onValueChange={(val) => setCurrentFormat(val as any)}>
-                <TabsList className="grid w-full bg-gray-100 p-1 rounded-lg" style={{ gridTemplateColumns: `repeat(${availableFormats.length}, 1fr)` }}>
-                  {availableFormats.map(format => (
+                <TabsList className="grid w-full bg-gray-100 p-1 rounded-lg" style={{ gridTemplateColumns: `repeat(${sortedFormats.length}, 1fr)` }}>
+                  {sortedFormats.map(format => (
                     <TabsTrigger 
                       key={format} 
                       value={format} 
@@ -422,7 +446,7 @@ export default function AdaptiveLessonViewer({
               </div>
 
               {/* Контент форматов */}
-              {availableFormats.map(format => (
+              {sortedFormats.map(format => (
                 <TabsContent key={format} value={format} className="mt-6">
                   {format === 'text' && lesson.formats.text && (
                     <TextLessonContent content={lesson.formats.text.content} lessonId={lesson.id} />
@@ -445,7 +469,7 @@ export default function AdaptiveLessonViewer({
 
             {/* Дополнительные материалы */}
             <div className="mt-6 border-t border-border pt-6">
-              <p className="text-sm font-semibold text-muted-foreground mb-3">
+              <p className="text-[17px] leading-[22px] font-semibold text-muted-foreground mb-3">
                 Дополнительно:
               </p>
               <div className="grid grid-cols-3 gap-1.5 mb-3">
@@ -614,8 +638,8 @@ function TextLessonContent({ content, lessonId }: { content: any, lessonId?: str
     <div className="prose prose-sm max-w-none">
       {content.sections?.map((section: any, idx: number) => (
         <div key={idx} className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">{section.heading}</h3>
-          <div className="whitespace-pre-line text-gray-700">{section.body}</div>
+          <h3 className="text-[22px] leading-[28px] font-bold mb-3 tracking-tight text-gray-900">{section.heading}</h3>
+          <div className="whitespace-pre-line text-gray-700 leading-relaxed text-[17px]">{section.body}</div>
           
           {/* Интерактивная диаграмма для секции "5 кругов близости" */}
           {section.heading.includes('круги близости') && (
@@ -630,17 +654,68 @@ function TextLessonContent({ content, lessonId }: { content: any, lessonId?: str
               <HouseMetaphorDiagram />
             </div>
           )}
+
+          {/* Интерактивный чек-лист для "10 признаков отсутствия границ" */}
+          {section.heading.includes('10 признаков') && (
+            <div className="my-8">
+              <BoundaryChecklist />
+            </div>
+          )}
+          
+          {/* Изображение для секции */}
+          {section.image && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="my-3 rounded-lg overflow-hidden shadow-md"
+            >
+              <div className="relative">
+                <img 
+                  src={section.image.src} 
+                  alt={section.image.alt || section.heading}
+                  className="w-full h-40 object-cover"
+                />
+                {section.image.caption && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                    <p className="text-white text-xs">{section.image.caption}</p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
         </div>
       ))}
 
       {content.examples && (
         <div className="mt-6 space-y-3">
-          {content.examples.map((example: any, idx: number) => (
-            <Card key={idx} className="p-4">
-              <div className="font-medium mb-2">{example.title}</div>
-              <div className="text-sm text-gray-600">{example.text}</div>
-            </Card>
-          ))}
+          {content.examples.map((example: any, idx: number) => {
+            const isPositive = example.title.includes('✅')
+            return (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+              >
+                <Card className={`p-4 border-2 transition-all hover:shadow-md cursor-pointer backdrop-blur-sm ${
+                  isPositive 
+                    ? 'bg-gradient-to-br from-emerald-100/60 to-green-50/40 border-emerald-200/40 hover:border-emerald-300/60' 
+                    : 'bg-gradient-to-br from-rose-100/60 to-red-50/40 border-rose-200/40 hover:border-rose-300/60'
+                }`}>
+                  <div className="font-semibold mb-2 text-[15px] leading-[20px] flex items-center gap-2">
+                    {isPositive ? (
+                      <CheckCircle size={18} className="text-emerald-600" weight="fill" />
+                    ) : (
+                      <div className="text-rose-600 font-bold">✕</div>
+                    )}
+                    {example.title}
+                  </div>
+                  <div className="text-[15px] leading-[20px] text-gray-700 leading-relaxed pl-6">{example.text}</div>
+                </Card>
+              </motion.div>
+            )
+          })}
         </div>
       )}
     </div>
@@ -653,12 +728,12 @@ function VideoLessonContent({ content }: { content: any }) {
       <div className="aspect-video bg-gray-100 rounded-lg flex items-center justify-center">
         <div className="text-center">
           <Video size={48} className="mx-auto mb-2 text-gray-400" />
-          <p className="text-sm text-gray-500">Видео загружается...</p>
+          <p className="text-[15px] leading-[20px] text-gray-500">Видео загружается...</p>
           <p className="text-xs text-gray-400 mt-1">{content.url}</p>
         </div>
       </div>
       {content.transcript && (
-        <details className="text-sm">
+        <details className="text-[15px] leading-[20px]">
           <summary className="cursor-pointer font-medium text-gray-700">Показать транскрипт</summary>
           <p className="mt-2 text-gray-600">{content.transcript}</p>
         </details>
@@ -670,11 +745,11 @@ function VideoLessonContent({ content }: { content: any }) {
 function AudioLessonContent({ content }: { content: any }) {
   return (
     <div className="space-y-4">
-      <Card className="p-8 bg-gradient-to-br from-blue-50 to-cyan-50">
+      <Card className="p-6 bg-gradient-to-br from-sky-100/60 to-blue-50/40 backdrop-blur-sm">
         <div className="text-center">
           <Headphones size={48} className="mx-auto mb-4 text-[#007AFF]" />
           <h3 className="font-semibold mb-2">Аудио-урок</h3>
-          <p className="text-sm text-gray-600 mb-4">Расслабься и просто слушай</p>
+          <p className="text-[15px] leading-[20px] text-gray-600 mb-4">Расслабься и просто слушай</p>
           <div className="bg-white p-4 rounded-lg">
             <div className="text-xs text-gray-400 mb-2">{content.url}</div>
             <div className="h-2 bg-gray-200 rounded-full mb-2">
@@ -689,7 +764,7 @@ function AudioLessonContent({ content }: { content: any }) {
         </div>
       </Card>
       {content.transcript && (
-        <details className="text-sm">
+        <details className="text-[15px] leading-[20px]">
           <summary className="cursor-pointer font-medium text-gray-700">Показать текст</summary>
           <p className="mt-2 text-gray-600">{content.transcript}</p>
         </details>
@@ -699,14 +774,142 @@ function AudioLessonContent({ content }: { content: any }) {
 }
 
 function InteractiveLessonContent({ content }: { content: any }) {
+  // Если это карта границ, показываем интерактивную диаграмму
+  if (content.type === 'boundary-map') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-lavender-100/60 to-indigo-50/40 border-lavender-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Sparkle size={24} className="mx-auto mb-1 text-blue-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Создай свою карту границ</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        {/* Интерактивная диаграмма кругов близости */}
+        <CirclesOfIntimacyDiagram />
+        
+        <Alert className="mt-2 border-lavender-200/40 bg-lavender-50/60 backdrop-blur-sm">
+          <Lightbulb size={12} className="text-lavender-600" />
+          <AlertDescription className="text-xs text-lavender-900">
+            Кликни на каждый круг, чтобы узнать больше
+          </AlertDescription>
+        </Alert>
+      </Card>
+    )
+  }
+  
+  // Если это body-scan-exercise, показываем BodyScanTool
+  if (content.type === 'body-scan-exercise') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-lavender-100/60 to-pink-50/40 border-lavender-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Heart size={24} className="mx-auto mb-1 text-lavender-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Сканирование сигналов тела</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        {/* Интерактивный инструмент Body Scan */}
+        <BodyScanTool onComplete={(data) => {
+          console.log('Body scan completed:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Если это fear-confrontation, показываем FearConfrontationTool
+  if (content.type === 'fear-confrontation') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-peach-100/60 to-orange-50/40 border-peach-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Warning size={24} className="mx-auto mb-1 text-peach-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Разбор твоих страхов</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        {/* Интерактивный инструмент Fear Confrontation */}
+        <FearConfrontationTool activity={content.activity} onComplete={(data) => {
+          console.log('Fear confrontation completed:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Если это roleplay-simulator, показываем RoleplaySimulator
+  if (content.type === 'roleplay-simulator') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-sky-100/60 to-indigo-50/40 border-sky-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Users size={24} className="mx-auto mb-1 text-blue-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">{content.title || 'Симулятор разговоров'}</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        <RoleplaySimulator scenarios={content.scenarios} onComplete={(data) => {
+          console.log('Roleplay completed:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Если это relationship-simulator, показываем RelationshipAssessment
+  if (content.type === 'relationship-simulator') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-rose-100/60 to-pink-50/40 border-rose-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Heart size={24} className="mx-auto mb-1 text-rose-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Симулятор отношений</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        <RelationshipAssessment questions={content.activity.questions} onComplete={(data) => {
+          console.log('Assessment completed:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Если это digital-audit, показываем DigitalAuditTool
+  if (content.type === 'digital-audit') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-indigo-100/60 to-blue-50/40 border-indigo-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Sparkle size={24} className="mx-auto mb-1 text-indigo-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Аудит цифрового пространства</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        <DigitalAuditTool onComplete={(data) => {
+          console.log('Digital audit completed:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Если это manifest-creator, показываем ManifestCreator
+  if (content.type === 'manifest-creator') {
+    return (
+      <Card className="p-1.5 bg-gradient-to-br from-lavender-100/60 to-indigo-50/40 border-lavender-200/40 backdrop-blur-sm">
+        <div className="text-center mb-2">
+          <Target size={24} className="mx-auto mb-1 text-purple-600" weight="duotone" />
+          <h3 className="font-semibold text-xs mb-0.5">Создай свой манифест</h3>
+          <p className="text-xs text-gray-600">{content.instructions}</p>
+        </div>
+        
+        <ManifestCreator onComplete={(data) => {
+          console.log('Manifest created:', data)
+        }} />
+      </Card>
+    )
+  }
+  
+  // Для других типов интерактивов
   return (
-    <Card className="p-6 bg-gradient-to-br from-green-50 to-blue-50">
+    <Card className="p-1.5 bg-gradient-to-br from-emerald-100/60 to-blue-50/40 border-emerald-200/40 backdrop-blur-sm">
       <div className="text-center">
-        <Sparkle size={48} className="mx-auto mb-4 text-green-600" />
-        <h3 className="font-semibold text-lg mb-2">{content.title}</h3>
-        <p className="text-sm text-gray-600 mb-4">{content.instructions}</p>
-        <Button size="lg" className="gap-2">
-          Начать интерактив <ArrowRight size={20} />
+        <Sparkle size={24} className="mx-auto mb-1 text-emerald-600" />
+        <h3 className="font-semibold text-xs mb-0.5">{content.title || 'Интерактивное упражнение'}</h3>
+        <p className="text-xs text-gray-600 mb-2">{content.instructions}</p>
+        <Button size="sm" className="gap-1 text-xs h-7">
+          Начать интерактив <ArrowRight size={14} />
         </Button>
       </div>
     </Card>
@@ -724,7 +927,7 @@ function MindmapLessonContent({ content }: { content: any }) {
               <h4 className="font-semibold mb-2">{branch.topic}</h4>
               <ul className="space-y-1">
                 {branch.subtopics.map((subtopic: string, subIdx: number) => (
-                  <li key={subIdx} className="text-sm text-gray-600 flex items-center gap-2">
+                  <li key={subIdx} className="text-[15px] leading-[20px] text-gray-600 flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-blue-400"></div>
                     {subtopic}
                   </li>
@@ -763,12 +966,12 @@ function QuizView({
     >
       <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-blue-50/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-sky-50/30 via-transparent to-blue-50/20 pointer-events-none" />
         
         <CardHeader className="relative pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-bold text-gray-900">Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
-            <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs">
+            <CardTitle className="text-[20px] leading-[25px] font-bold text-gray-900">Вопрос {currentQuestionIndex + 1} из {quiz.length}</CardTitle>
+            <Badge className="bg-sky-100 text-sky-700 border-sky-200 text-xs">
               {question.type === 'single' ? 'Один ответ' : 'Несколько ответов'}
             </Badge>
           </div>
@@ -808,7 +1011,7 @@ function QuizView({
                 >
                   <Button
                     variant={isSelected ? 'default' : 'outline'}
-                    className={`w-full justify-start text-left h-auto py-3 px-4 text-sm leading-tight transition-all ${
+                    className={`w-full justify-start text-left h-auto py-3 px-4 text-[15px] leading-tight transition-all ${
                       isSelected && !showExplanation
                         ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600'
                         : ''
@@ -849,11 +1052,11 @@ function QuizView({
               animate={{ opacity: 1, height: 'auto' }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
             >
-              <Alert className="bg-blue-50/80 backdrop-blur-[20px] border-blue-200">
-                <AlertDescription className="text-sm leading-snug">
-                  <strong className="text-blue-900">Объяснение:</strong> {question.explanation}
+              <Alert className="bg-sky-50/80 backdrop-blur-[20px] border-sky-200/60">
+                <AlertDescription className="text-[15px] leading-snug">
+                  <strong className="text-sky-900">Объяснение:</strong> {question.explanation}
                   {question.emotionalContext && (
-                    <p className="mt-1.5 text-xs italic text-blue-700">💙 {question.emotionalContext}</p>
+                    <p className="mt-1.5 text-xs italic text-sky-700">💙 {question.emotionalContext}</p>
                   )}
                 </AlertDescription>
               </Alert>
@@ -865,7 +1068,7 @@ function QuizView({
               <Button 
                 onClick={onSubmit} 
                 disabled={!isAnswered}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm py-2 px-4"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-[15px] py-2 px-4"
               >
                 Проверить
               </Button>
@@ -873,7 +1076,7 @@ function QuizView({
             {showExplanation && (
               <Button 
                 onClick={onNext}
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-sm gap-2 py-2 px-4"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-[17px] gap-2 py-2 px-4"
               >
                 {currentQuestionIndex < quiz.length - 1 ? 'Дальше' : 'К практике'} 
                 <ArrowRight size={18} />
@@ -901,14 +1104,14 @@ function PracticeView({ exercise, onComplete }: any) {
     >
       <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-blue-100/50 shadow-ios-soft">
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50/30 via-transparent to-blue-50/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-transparent to-sky-50/20 pointer-events-none" />
         
         <CardHeader className="relative">
-          <CardTitle className="ios-headline text-gray-900">{exercise.title}</CardTitle>
-          <CardDescription className="ios-body text-gray-600">{exercise.description}</CardDescription>
+          <CardTitle className="text-[17px] leading-[22px] font-semibold text-gray-900">{exercise.title}</CardTitle>
+          <CardDescription className="text-[15px] leading-[20px] text-gray-600">{exercise.description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 relative">
-          <div className="flex items-center gap-2 ios-caption1 text-gray-600">
+          <div className="flex items-center gap-2 text-xs text-gray-600">
             <Clock size={14} />
             <span>~{exercise.duration} минут</span>
           </div>
@@ -919,18 +1122,18 @@ function PracticeView({ exercise, onComplete }: any) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h4 className="ios-body font-semibold text-gray-900">Инструкция:</h4>
+            <h4 className="text-[17px] leading-[22px] font-semibold text-gray-900">Инструкция:</h4>
             <ol className="space-y-3">
               {exercise.steps.map((step: string, idx: number) => (
                 <motion.li 
                   key={idx} 
-                  className="ios-caption1 text-gray-700 flex gap-3"
+                  className="text-xs text-gray-700 flex gap-3"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + idx * 0.05 }}
                 >
                   {step.startsWith('**') ? (
-                    <strong className="flex-1 ios-body">{step.replace(/\*\*/g, '')}</strong>
+                    <strong className="flex-1 text-[15px] leading-[20px]">{step.replace(/\*\*/g, '')}</strong>
                   ) : step.startsWith('  ') ? (
                     <span className="ml-8 flex-1">{step.trim()}</span>
                   ) : (
@@ -954,11 +1157,11 @@ function PracticeView({ exercise, onComplete }: any) {
             >
               <Alert className="bg-yellow-50/80 backdrop-blur-[20px] border-yellow-200">
                 <Lightbulb className="h-5 w-5 text-yellow-600" />
-                <AlertDescription className="ios-body">
+                <AlertDescription className="text-[15px] leading-[20px]">
                   <strong className="text-yellow-900">Советы:</strong>
                   <ul className="mt-3 space-y-2">
                     {exercise.tips.map((tip: string, idx: number) => (
-                      <li key={idx} className="ios-caption1 text-yellow-800 flex gap-2">
+                      <li key={idx} className="text-xs text-yellow-800 flex gap-2">
                         <span className="text-yellow-500">•</span>
                         <span>{tip}</span>
                       </li>
@@ -980,15 +1183,15 @@ function PracticeView({ exercise, onComplete }: any) {
               onChange={(e) => setCompleted(e.target.checked)}
               className="w-5 h-5 rounded accent-[#007AFF] cursor-pointer"
             />
-            <label htmlFor="practice-completed" className="ios-body cursor-pointer flex-1 text-gray-700">
+            <label htmlFor="practice-completed" className="text-[15px] leading-[20px] cursor-pointer flex-1 text-gray-700">
               Я выполнил(а) эту практику
             </label>
           </motion.div>
 
           <Button 
             onClick={onComplete} 
-            disabled={!completed}
-            className="w-full gap-2 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-sm"
+                disabled={!completed}
+            className="w-full gap-2 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 text-[17px]"
           >
             Завершить урок <CheckCircle size={20} />
           </Button>
@@ -1009,13 +1212,13 @@ function CompletionView({ lesson, score, onContinue }: any) {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
     >
-      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-green-200/50 shadow-ios-soft">
+      <Card className="relative overflow-hidden bg-white/70 backdrop-blur-[40px] border-emerald-200/50 shadow-ios-soft">
         {/* Celebration gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-50/40 via-blue-50/30 to-cyan-50/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/40 via-sky-50/30 to-blue-50/40 pointer-events-none" />
         
         <CardContent className="pt-10 pb-10 text-center space-y-8 relative">
           <motion.div 
-            className="mx-auto w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg"
+            className="mx-auto w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-lg"
             animate={{ 
               scale: [1, 1.1, 1],
               rotate: [0, 5, -5, 0]
@@ -1034,12 +1237,12 @@ function CompletionView({ lesson, score, onContinue }: any) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <h2 className="ios-title2 font-bold mb-3 text-gray-900">Урок завершен! 🎉</h2>
-            <p className="ios-body text-gray-600">Ты отлично справился с "{lesson.title}"</p>
+            <h2 className="text-[22px] leading-[28px] font-bold mb-3 text-gray-900">Урок завершен! 🎉</h2>
+            <p className="text-[15px] leading-[20px] text-gray-600">Ты отлично справился с "{lesson.title}"</p>
           </motion.div>
 
           <motion.div 
-            className="bg-blue-50/80 backdrop-blur-[20px] p-8 rounded-2xl border border-blue-100"
+            className="bg-sky-50/80 backdrop-blur-[20px] p-6 rounded-2xl border border-sky-100/40"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
@@ -1051,7 +1254,7 @@ function CompletionView({ lesson, score, onContinue }: any) {
             >
               {score}%
             </motion.div>
-            <div className="ios-caption1 text-gray-600 font-medium">Результат теста</div>
+            <div className="text-xs text-gray-600 font-medium">Результат теста</div>
           </motion.div>
 
           <motion.div
@@ -1059,9 +1262,9 @@ function CompletionView({ lesson, score, onContinue }: any) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Alert className="text-left bg-blue-50/80 backdrop-blur-[20px] border-blue-200">
+            <Alert className="text-left bg-sky-50/80 backdrop-blur-[20px] border-sky-200/60">
               <Heart className="h-5 w-5 text-[#007AFF]" weight="fill" />
-              <AlertDescription className="ios-body text-blue-900">
+              <AlertDescription className="text-[15px] leading-[20px] text-sky-900">
                 {score >= 90 ? 'Невероятно! Ты отлично усвоил(а) материал! 🌟' :
                  score >= 70 ? 'Отличная работа! Ты хорошо понял(а) урок! 💪' :
                  score >= 50 ? 'Неплохо! Но стоит повторить некоторые моменты 📚' :
@@ -1077,8 +1280,8 @@ function CompletionView({ lesson, score, onContinue }: any) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <h4 className="ios-body font-semibold mb-3 text-yellow-900">📝 Домашнее задание</h4>
-              <p className="ios-caption1 text-yellow-800 mb-4">{lesson.homework.description}</p>
+              <h4 className="text-[15px] leading-[20px] font-semibold mb-3 text-yellow-900">📝 Домашнее задание</h4>
+              <p className="text-xs text-yellow-800 mb-4">{lesson.homework.description}</p>
               <Button 
                 variant="outline" 
                 size="sm"
@@ -1119,3 +1322,4 @@ function CompletionView({ lesson, score, onContinue }: any) {
     </motion.div>
   )
 }
+

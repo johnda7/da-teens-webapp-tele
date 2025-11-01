@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { 
   Users, 
-  ChatCircleDots, 
+  ChatDots, 
   Path, 
   CheckCircle, 
   XCircle,
@@ -86,7 +86,7 @@ export default function RealWorldScenario({
         <CardContent className="pt-6">
           <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
             <div className="flex items-start gap-3">
-              <ChatCircleDots className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" weight="fill" />
+              <ChatDots className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" weight="fill" />
               <p className="text-sm text-blue-900 leading-relaxed">
                 {scenario.situation}
               </p>
