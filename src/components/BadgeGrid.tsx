@@ -1,106 +1,323 @@
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Trophy, Star, CheckCircle, Flame, Target } from '@phosphor-icons/react'
+import { motion } from 'framer-motion'
 
 interface BadgeGridProps {
   userBadges: string[]
 }
 
-const availableBadges = [
+interface BadgeItem {
+  id: string
+  title: string
+  description: string
+  icon: string
+  category: string
+  color: string
+  criteria: string
+}
+
+const availableBadges: BadgeItem[] = [
+  // 🎯 РАСПОЗНАВАНИЕ
   {
     id: 'first-step',
     title: 'Первый шаг',
     description: 'Прошёл регистрацию и начал путешествие',
     icon: '🎯',
+    category: 'recognition',
     color: 'bg-blue-100 border-blue-300 text-blue-800',
     criteria: 'Зарегистрироваться в приложении'
   },
   {
-    id: 'check-in-streak-7',
-    title: 'Неделя осознанности',
-    description: '7 дней подряд делал чек-ины',
-    icon: '🔥',
-    color: 'bg-orange-100 border-orange-300 text-orange-800',
-    criteria: 'Сделать чек-ин 7 дней подряд'
+    id: 'detective',
+    title: 'Детектив',
+    description: 'Заметил 10 нарушений границ',
+    icon: '🔍',
+    category: 'recognition',
+    color: 'bg-cyan-100 border-cyan-300 text-cyan-800',
+    criteria: 'Определить нарушения в 10 ситуациях'
   },
   {
-    id: 'module-complete',
-    title: 'Покоритель модуля',
-    description: 'Полностью завершил первый модуль',
-    icon: '📚',
-    color: 'bg-green-100 border-green-300 text-green-800',
-    criteria: 'Завершить любой модуль'
-  },
-  {
-    id: 'practice-master',
-    title: 'Мастер практик',
-    description: 'Выполнил 20 дыхательных практик',
-    icon: '🧘',
+    id: 'analyst',
+    title: 'Аналитик',
+    description: 'Прошёл все квизы на 100%',
+    icon: '🧠',
+    category: 'recognition',
     color: 'bg-purple-100 border-purple-300 text-purple-800',
-    criteria: 'Выполнить 20 практик осознанности'
+    criteria: 'Набрать 100% во всех квизах'
   },
   {
-    id: 'reflection-writer',
-    title: 'Мыслитель',
-    description: 'Написал 15 рефлексий',
-    icon: '✍️',
+    id: 'intuit',
+    title: 'Интуит',
+    description: 'Угадал все сигналы тела',
+    icon: '👁️',
+    category: 'recognition',
     color: 'bg-indigo-100 border-indigo-300 text-indigo-800',
-    criteria: 'Написать 15 рефлексий'
+    criteria: 'Правильно определить все телесные сигналы'
   },
   {
     id: 'first-adaptive-lesson',
     title: 'Адаптивный старт',
     description: 'Прошёл первый адаптивный урок',
-    icon: '🧠',
-    color: 'bg-purple-100 border-purple-300 text-purple-800',
-    criteria: 'Пройти первый урок в Модуле #13'
+    icon: '⭐',
+    category: 'recognition',
+    color: 'bg-yellow-100 border-yellow-300 text-yellow-800',
+    criteria: 'Пройти первый урок в Модуле #1'
   },
   {
     id: 'perfect-score',
     title: 'Перфекционист',
     description: 'Набрал 90+ баллов в квизе',
-    icon: '⭐',
+    icon: '💯',
+    category: 'recognition',
     color: 'bg-yellow-100 border-yellow-300 text-yellow-800',
     criteria: 'Набрать 90% или больше в любом квизе'
+  },
+  
+  // 🛡️ ЗАЩИТА
+  {
+    id: 'assert',
+    title: 'Ассерт',
+    description: 'Сказал "нет" 10 раз уверенно',
+    icon: '💪',
+    category: 'protection',
+    color: 'bg-red-100 border-red-300 text-red-800',
+    criteria: 'Практиковать ассертивный отказ 10 раз'
+  },
+  {
+    id: 'castle-defender',
+    title: 'Защитник',
+    description: 'Защитил замок на всех уровнях',
+    icon: '🏰',
+    category: 'protection',
+    color: 'bg-orange-100 border-orange-300 text-orange-800',
+    criteria: 'Пройти все 9 частей Castle Game'
+  },
+  {
+    id: 'persistent',
+    title: 'Настойчивый',
+    description: 'Не отступил от границы под давлением',
+    icon: '🔥',
+    category: 'protection',
+    color: 'bg-red-100 border-red-300 text-red-800',
+    criteria: 'Выдержать 5 атак на границы'
   },
   {
     id: 'boundaries-master',
     title: 'Мастер границ',
     description: 'Завершил все 9 уроков о личных границах',
     icon: '🛡️',
+    category: 'protection',
     color: 'bg-green-100 border-green-300 text-green-800',
-    criteria: 'Пройти все уроки Модуля #13'
+    criteria: 'Пройти все уроки Модуля #1'
+  },
+  {
+    id: 'no-expert',
+    title: 'Эксперт по "Нет"',
+    description: 'Использовал все техники отказа',
+    icon: '🚫',
+    category: 'protection',
+    color: 'bg-rose-100 border-rose-300 text-rose-800',
+    criteria: 'Применить 5 техник отказа'
+  },
+  
+  // 💬 КОММУНИКАЦИЯ
+  {
+    id: 'actor',
+    title: 'Актёр',
+    description: 'Прошёл все role-play scenarios',
+    icon: '🎭',
+    category: 'communication',
+    color: 'bg-pink-100 border-pink-300 text-pink-800',
+    criteria: 'Завершить все интерактивные диалоги'
+  },
+  {
+    id: 'mediator',
+    title: 'Медиатор',
+    description: 'Нашёл баланс в 5 ситуациях',
+    icon: '🤝',
+    category: 'communication',
+    color: 'bg-blue-100 border-blue-300 text-blue-800',
+    criteria: 'Найти компромисс в 5 случаях'
+  },
+  {
+    id: 'orator',
+    title: 'Оратор',
+    description: 'Использовал все техники коммуникации',
+    icon: '💬',
+    category: 'communication',
+    color: 'bg-purple-100 border-purple-300 text-purple-800',
+    criteria: 'Применить все формы общения'
+  },
+  {
+    id: 'communicator',
+    title: 'Коммуникатор',
+    description: 'Эффективно установил 10 границ',
+    icon: '📢',
+    category: 'communication',
+    color: 'bg-violet-100 border-violet-300 text-violet-800',
+    criteria: 'Успешно сказать "нет" 10 раз'
+  },
+  
+  // ⏰ ДИСЦИПЛИНА
+  {
+    id: 'check-in-streak-7',
+    title: 'Неделя осознанности',
+    description: '7 дней подряд делал чек-ины',
+    icon: '🔥',
+    category: 'discipline',
+    color: 'bg-orange-100 border-orange-300 text-orange-800',
+    criteria: 'Сделать чек-ин 7 дней подряд'
+  },
+  {
+    id: 'streak-master',
+    title: 'Streak Master',
+    description: '30 дней подряд обучения',
+    icon: '🔥',
+    category: 'discipline',
+    color: 'bg-red-100 border-red-300 text-red-800',
+    criteria: 'Поддерживать streak 30 дней'
+  },
+  {
+    id: 'consistency',
+    title: 'Консистентность',
+    description: 'Учишься 3 недели подряд',
+    icon: '📅',
+    category: 'discipline',
+    color: 'bg-blue-100 border-blue-300 text-blue-800',
+    criteria: 'Активность 21 день подряд'
+  },
+  {
+    id: 'graduate',
+    title: 'Выпускник',
+    description: 'Прошёл все 9 уроков модуля',
+    icon: '🎓',
+    category: 'discipline',
+    color: 'bg-green-100 border-green-300 text-green-800',
+    criteria: 'Завершить весь модуль'
+  },
+  {
+    id: 'early-bird',
+    title: 'Ранняя пташка',
+    description: 'Делал утренние чек-ины 14 дней',
+    icon: '🌅',
+    category: 'discipline',
+    color: 'bg-cyan-100 border-cyan-300 text-cyan-800',
+    criteria: 'Чек-ины до 9:00 утра 14 дней подряд'
   },
   {
     id: 'consistent-learner',
     title: 'Постоянство',
     description: 'Прошёл 3 урока подряд',
     icon: '📈',
+    category: 'discipline',
     color: 'bg-blue-100 border-blue-300 text-blue-800',
     criteria: 'Пройти 3 адаптивных урока подряд'
   },
+  
+  // ❤️ ЭМПАТИЯ
   {
-    id: 'community-helper',
-    title: 'Помощник сообщества',
-    description: 'Активно помогает другим участникам',
-    icon: '🤝',
-    color: 'bg-pink-100 border-pink-300 text-pink-800',
-    criteria: 'Получить 10 благодарностей от участников'
+    id: 'listener',
+    title: 'Слушатель',
+    description: 'Использовал активное слушание',
+    icon: '👂',
+    category: 'empathy',
+    color: 'bg-green-100 border-green-300 text-green-800',
+    criteria: 'Применить технику активного слушания'
   },
   {
-    id: 'goal-achiever',
-    title: 'Достигатор целей',
-    description: 'Выполнил все задания месяца',
-    icon: '🎯',
-    color: 'bg-emerald-100 border-emerald-300 text-emerald-800',
-    criteria: 'Выполнить все задания в течение месяца'
+    id: 'support',
+    title: 'Поддержка',
+    description: 'Помог другу с границами',
+    icon: '🤗',
+    category: 'empathy',
+    color: 'bg-pink-100 border-pink-300 text-pink-800',
+    criteria: 'Поделиться знаниями с другим'
+  },
+  {
+    id: 'community',
+    title: 'Сообщество',
+    description: 'Поделился в Peer Feed',
+    icon: '🌐',
+    category: 'empathy',
+    color: 'bg-cyan-100 border-cyan-300 text-cyan-800',
+    criteria: 'Написать пост в сообществе'
+  },
+  {
+    id: 'mentor',
+    title: 'Ментор',
+    description: 'Помог 5 друзьям разобраться',
+    icon: '🤝',
+    category: 'empathy',
+    color: 'bg-purple-100 border-purple-300 text-purple-800',
+    criteria: 'Помочь другим понять границы'
+  },
+  
+  // 🌐 КОНТЕКСТ
+  {
+    id: 'family-expert',
+    title: 'Семейный эксперт',
+    description: 'Установил границы с родителями',
+    icon: '👨‍👩‍👧',
+    category: 'context',
+    color: 'bg-orange-100 border-orange-300 text-orange-800',
+    criteria: 'Практиковать границы в семье'
+  },
+  {
+    id: 'friend-guardian',
+    title: 'Защитник дружбы',
+    description: 'Границы с друзьями работают',
+    icon: '👥',
+    category: 'context',
+    color: 'bg-blue-100 border-blue-300 text-blue-800',
+    criteria: 'Здоровые границы в дружбе'
+  },
+  {
+    id: 'digital-warrior',
+    title: 'Цифровой воин',
+    description: 'Защитил границы онлайн',
+    icon: '📱',
+    category: 'context',
+    color: 'bg-indigo-100 border-indigo-300 text-indigo-800',
+    criteria: 'Установить цифровые границы'
+  },
+  
+  // ⭐ ОСОБЫЕ
+  {
+    id: 'unicorn',
+    title: 'Единорог',
+    description: '100% mastery по всем навыкам',
+    icon: '🦄',
+    category: 'special',
+    color: 'bg-gradient-to-r from-purple-100 to-pink-100 border-purple-300 text-purple-800',
+    criteria: 'Максимальный уровень всех навыков'
+  },
+  {
+    id: 'boundary-king',
+    title: 'Король границ',
+    description: 'Полный модуль + все бонусы',
+    icon: '👑',
+    category: 'special',
+    color: 'bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-300 text-yellow-800',
+    criteria: 'Завершить всё + получить все бонусы'
+  },
+  {
+    id: 'legend',
+    title: 'Легенда',
+    description: '100 дней использования',
+    icon: '💎',
+    category: 'special',
+    color: 'bg-gradient-to-r from-blue-100 to-cyan-100 border-blue-300 text-blue-800',
+    criteria: 'Активность 100 дней подряд'
   },
   {
     id: 'sleep-master',
     title: 'Мастер сна',
     description: 'Неделя подряд спал 8+ часов',
     icon: '🌙',
+    category: 'special',
     color: 'bg-indigo-100 border-indigo-300 text-indigo-800',
     criteria: 'Спать 8+ часов 7 дней подряд'
   },
@@ -109,24 +326,18 @@ const availableBadges = [
     title: 'Борец с тревогой',
     description: 'Снизил уровень тревоги на 3 пункта',
     icon: '💪',
+    category: 'special',
     color: 'bg-yellow-100 border-yellow-300 text-yellow-800',
-    criteria: 'Уменьшить средний уровень тревоги на 3 пункта'
+    criteria: 'Уменьшить тревожность на 3 пункта'
   },
   {
-    id: 'early-bird',
-    title: 'Ранняя пташка',
-    description: 'Делал утренние чек-ины 14 дней',
-    icon: '🌅',
-    color: 'bg-cyan-100 border-cyan-300 text-cyan-800',
-    criteria: 'Чек-ины до 9:00 утра 14 дней подряд'
-  },
-  {
-    id: 'dream-guardian',
-    title: 'Хранитель снов',
-    description: 'Поддерживал здоровый сон 30 дней',
-    icon: '🌙',
-    color: 'bg-violet-100 border-violet-300 text-violet-800',
-    criteria: 'Спать 7-9 часов 30 дней подряд'
+    id: 'practice-master',
+    title: 'Мастер практик',
+    description: 'Выполнил 20 дыхательных практик',
+    icon: '🧘',
+    category: 'special',
+    color: 'bg-purple-100 border-purple-300 text-purple-800',
+    criteria: 'Выполнить 20 практик осознанности'
   }
 ]
 

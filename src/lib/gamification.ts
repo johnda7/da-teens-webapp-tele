@@ -66,7 +66,9 @@ export class GamificationEngine {
    */
   awardXP(
     progress: GamificationProgress,
-    action: 'lesson_completed' | 'quiz_perfect' | 'practice_done' | 'check_in' | 'homework_done' | 'helped_peer',
+    action: 'lesson_completed' | 'quiz_perfect' | 'practice_done' | 'check_in' | 'homework_done' | 'helped_peer' | 
+            'castle_unlocked' | 'castle_upgraded' | 'skill_unlocked' | 'skill_leveled_up' | 'roleplay_completed' | 
+            'roleplay_perfect' | 'challenge_task_completed' | 'challenge_week_completed' | 'mastery_achieved',
     performance?: number
   ): { newXP: number; levelUp: boolean; newLevel?: number } {
     let xpGain = 0
@@ -89,6 +91,34 @@ export class GamificationEngine {
         break
       case 'helped_peer':
         xpGain = 20
+        break
+      // New game mechanics (from USER_JOURNEY_ANALYSIS.md)
+      case 'castle_unlocked':
+        xpGain = 50 // Castle part unlock
+        break
+      case 'castle_upgraded':
+        xpGain = 25 // Castle part upgrade
+        break
+      case 'skill_unlocked':
+        xpGain = 30 // Skill tree unlock
+        break
+      case 'skill_leveled_up':
+        xpGain = 15 // Skill level up
+        break
+      case 'roleplay_completed':
+        xpGain = 40 // Role-play scenario completed
+        break
+      case 'roleplay_perfect':
+        xpGain = 20 // Perfect role-play score bonus
+        break
+      case 'challenge_task_completed':
+        xpGain = 20 // Weekly challenge task
+        break
+      case 'challenge_week_completed':
+        xpGain = 100 // Weekly challenge completed
+        break
+      case 'mastery_achieved':
+        xpGain = 50 // Mastery 100% bonus
         break
     }
     
@@ -487,6 +517,84 @@ export const TEEN_BADGES: Badge[] = [
     },
     rarity: 'epic',
     emotionalMessage: 'Ты заботишься о своем отдыхе! Хороший сон = больше энергии для жизни 🌙'
+  },
+
+  // ========== NEW GAME MECHANICS BADGES ==========
+  {
+    id: 'castle-defender',
+    name: 'Защитник замка',
+    description: 'Построил свой замок до максимума',
+    icon: '🏰',
+    category: 'special',
+    criteria: {
+      type: 'special_achievement',
+      threshold: {
+        check: (progress: any) => {
+          // Check if all 9 castle parts unlocked (future implementation)
+          return false
+        },
+        description: 'Все 9 частей замка открыты'
+      } as SpecialCriteria
+    },
+    rarity: 'epic',
+    emotionalMessage: 'Твой замок границ крепок! Никто не сможет нарушить твоё пространство!'
+  },
+  {
+    id: 'skill-unicorn',
+    name: 'Единорог',
+    description: 'Открыл все 20 навыков',
+    icon: '🦄',
+    category: 'special',
+    criteria: {
+      type: 'special_achievement',
+      threshold: {
+        check: (progress: any) => {
+          // Check if all skills unlocked (future implementation)
+          return false
+        },
+        description: 'Все навыки в дереве открыты'
+      } as SpecialCriteria
+    },
+    rarity: 'legendary',
+    emotionalMessage: 'Ты единорог среди подростков! Уникальные способности!'
+  },
+  {
+    id: 'roleplay-actor',
+    name: 'Актёр',
+    description: 'Прошёл все сценарии с идеальным счётом',
+    icon: '🎭',
+    category: 'special',
+    criteria: {
+      type: 'special_achievement',
+      threshold: {
+        check: (progress: any) => {
+          // Check if all role-play scenarios completed perfectly (future implementation)
+          return false
+        },
+        description: 'Все сценарии на 100%'
+      } as SpecialCriteria
+    },
+    rarity: 'epic',
+    emotionalMessage: 'Ты мастер общения! Твои навыки в реальных ситуациях безупречны!'
+  },
+  {
+    id: 'challenge-master',
+    name: 'Челлендж-мастер',
+    description: 'Завершил все недельные челленджи',
+    icon: '🎪',
+    category: 'special',
+    criteria: {
+      type: 'special_achievement',
+      threshold: {
+        check: (progress: any) => {
+          // Check if all weekly challenges completed (future implementation)
+          return false
+        },
+        description: 'Все челленджи пройдены'
+      } as SpecialCriteria
+    },
+    rarity: 'rare',
+    emotionalMessage: 'Ты боец! Постоянно бросаешь себе вызовы и выигрываешь!'
   }
 ]
 

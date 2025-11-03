@@ -42,6 +42,7 @@ import RoleplaySimulator from './RoleplaySimulator'
 import RelationshipAssessment from './RelationshipAssessment'
 import DigitalAuditTool from './DigitalAuditTool'
 import ManifestCreator from './ManifestCreator'
+import MicroCelebration from './MicroCelebration'
 
 interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
@@ -75,6 +76,9 @@ export default function AdaptiveLessonViewer({
   const [userSkills, setUserSkills] = useState<Skill[]>(boundariesSkills)
   const [currentXP, setCurrentXP] = useState(0)
   const [showXPGain, setShowXPGain] = useState(false)
+  const [celebrationType, setCelebrationType] = useState<'xp' | 'correct' | 'streak' | 'skill' | 'badge' | null>(null)
+  const [celebrationValue, setCelebrationValue] = useState<number | undefined>(undefined)
+  const [celebrationMessage, setCelebrationMessage] = useState<string | undefined>(undefined)
 
   // Доступные форматы для этого урока
   // Приоритет: interactive, video, audio, mindmap, text (интерактив первым!)
@@ -191,16 +195,35 @@ export default function AdaptiveLessonViewer({
     setTimeout(() => setShowXPGain(false), 2000)
   }
 
+  // Micro-Celebration trigger
+  const triggerCelebration = (type: 'xp' | 'correct' | 'streak' | 'skill' | 'badge', value?: number, message?: string) => {
+    setCelebrationType(type)
+    setCelebrationValue(value)
+    setCelebrationMessage(message)
+    setTimeout(() => setCelebrationType(null), 2000)
+  }
+
   // Update XP when progress changes
   useEffect(() => {
     if (progress > 0 && progress % 25 === 0) {
+      triggerCelebration('xp', 10)
       showXPGainAnimation(10)
     }
   }, [progress])
 
   return (
     <div className="max-w-4xl mx-auto p-2 space-y-2 relative">
-      {/* XP Gain Animation */}
+      {/* Micro-Celebration */}
+      {celebrationType && (
+        <MicroCelebration 
+          type={celebrationType} 
+          value={celebrationValue}
+          message={celebrationMessage}
+          onComplete={() => setCelebrationType(null)}
+        />
+      )}
+      
+      {/* XP Gain Animation (legacy) */}
       {showXPGain && (
         <motion.div
           initial={{ opacity: 0, y: 0, scale: 0.8 }}

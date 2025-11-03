@@ -14,6 +14,11 @@ import InteractiveExercise from './InteractiveExercise'
 import MultimodalContent from './MultimodalContent'
 import LessonImages from './LessonImages'
 import SleepMeditationHub from './SleepMeditationHub'
+import RolePlayScenarios from './RolePlayScenarios'
+import SkillsTree from './SkillsTree'
+import WeeklyChallenges from './WeeklyChallenges'
+import CastleGame from './CastleGame'
+import LearningPath from './LearningPath'
 import { useEmotionalState } from './EmotionalDesignSystem'
 import { boundariesModule } from '@/data/boundariesModule'
 import type { CheckInData } from './CheckInModal'
@@ -42,6 +47,11 @@ export default function BoundariesModule({ onBack }: Props) {
   const [showMultimodalContent, setShowMultimodalContent] = useState(false)
   const [showLessonImages, setShowLessonImages] = useState(false)
   const [showSleepMeditation, setShowSleepMeditation] = useState(false)
+  const [showRolePlayScenarios, setShowRolePlayScenarios] = useState(false)
+  const [showSkillsTree, setShowSkillsTree] = useState(false)
+  const [showWeeklyChallenges, setShowWeeklyChallenges] = useState(false)
+  const [showCastleGame, setShowCastleGame] = useState(false)
+  const [showLearningPath, setShowLearningPath] = useState(false)
   
   // Эмоциональное состояние
   const { emotionalState, updateEmotionalState } = useEmotionalState()
@@ -479,7 +489,27 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
 
         {/* Кнопки для демо - Telegram Wallet Style (супер компактные) */}
-        <div className="grid grid-cols-4 md:grid-cols-6 gap-1.5 mb-4">
+        <div className="grid grid-cols-4 md:grid-cols-9 gap-1.5 mb-4">
+          <motion.button
+            onClick={() => setShowCastleGame(!showCastleGame)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="text-sm">🏰</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Замок</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setShowLearningPath(!showLearningPath)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-cyan-500 to-blue-500 text-white shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="text-sm">🛤️</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Путь</span>
+          </motion.button>
+          
           <motion.button
             onClick={() => setShowVisualLessons(!showVisualLessons)}
             whileHover={{ scale: 1.02 }}
@@ -488,6 +518,36 @@ export default function BoundariesModule({ onBack }: Props) {
           >
             <div className="text-sm">🎨</div>
             <span className="text-[10px] font-medium leading-tight text-center">Визуальные</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setShowSkillsTree(!showSkillsTree)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-teal-500 to-green-500 text-white shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="text-sm">🌳</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Навыки</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setShowWeeklyChallenges(!showWeeklyChallenges)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-yellow-500 to-amber-500 text-white shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="text-sm">🎪</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Челлендж</span>
+          </motion.button>
+          
+          <motion.button
+            onClick={() => setShowRolePlayScenarios(!showRolePlayScenarios)}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="text-sm">🎭</div>
+            <span className="text-[10px] font-medium leading-tight text-center">Ролевые</span>
           </motion.button>
           
           <motion.button
@@ -511,16 +571,6 @@ export default function BoundariesModule({ onBack }: Props) {
           </motion.button>
           
           <motion.button
-            onClick={() => setShowLessonImages(!showLessonImages)}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex flex-col items-center gap-0.5 p-1.5 rounded-md bg-gradient-to-br from-orange-500 to-red-500 text-white shadow-sm hover:shadow-md transition-all"
-          >
-            <div className="text-sm">🖼️</div>
-            <span className="text-[10px] font-medium leading-tight text-center">Картинки</span>
-          </motion.button>
-          
-          <motion.button
             onClick={() => setShowSleepMeditation(!showSleepMeditation)}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -532,6 +582,56 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
 
         {/* Демо компонентов */}
+        {showLearningPath && (
+          <div className="mb-4">
+            <div className="mb-2">
+              <h3 className="text-xs font-bold text-gray-900 mb-0.5">🛤️ Learning Path</h3>
+              <p className="text-[10px] text-gray-600">Твой путь обучения как в Duolingo</p>
+            </div>
+            <LearningPath completedLessons={progress.completedLessons} currentLesson={progress.currentLesson} />
+          </div>
+        )}
+        
+        {showCastleGame && (
+          <div className="mb-4">
+            <div className="mb-2">
+              <h3 className="text-xs font-bold text-gray-900 mb-0.5">🏰 Castle Game</h3>
+              <p className="text-[10px] text-gray-600">Защити свой замок границ</p>
+            </div>
+            <CastleGame completedLessons={progress.completedLessons} totalXP={progress.xpEarned} />
+          </div>
+        )}
+        
+        {showWeeklyChallenges && (
+          <div className="mb-4">
+            <div className="mb-2">
+              <h3 className="text-xs font-bold text-gray-900 mb-0.5">🎪 Weekly Challenges</h3>
+              <p className="text-[10px] text-gray-600">7-дневные микро-миссии</p>
+            </div>
+            <WeeklyChallenges />
+          </div>
+        )}
+        
+        {showSkillsTree && (
+          <div className="mb-4">
+            <div className="mb-2">
+              <h3 className="text-xs font-bold text-gray-900 mb-0.5">🌳 Skills Tree</h3>
+              <p className="text-[10px] text-gray-600">Дерево навыков RPG-стиль</p>
+            </div>
+            <SkillsTree completedLessons={progress.completedLessons} totalXP={progress.xpEarned} />
+          </div>
+        )}
+        
+        {showRolePlayScenarios && (
+          <div className="mb-4">
+            <div className="mb-2">
+              <h3 className="text-xs font-bold text-gray-900 mb-0.5">🎭 Role-Play Scenarios</h3>
+              <p className="text-[10px] text-gray-600">Интерактивные диалоги с AI персонажами</p>
+            </div>
+            <RolePlayScenarios />
+          </div>
+        )}
+        
         {showVisualLessons && (
           <div className="mb-8">
             <h3 className="text-xl font-semibold mb-4">Демо визуального урока</h3>
