@@ -30,6 +30,7 @@ import type { Lesson, LessonFormat } from '@/data/boundariesModule'
 import type { LessonRecommendation } from '@/lib/adaptiveLearning'
 import MicroLearningCard from './MicroLearningCard'
 import RealWorldScenario, { exampleScenarios } from './RealWorldScenario'
+import ChatScenario from './ChatScenario'
 import PeerLearningFeed, { examplePeerStories } from './PeerLearningFeed'
 import SkillsTracker, { boundariesSkills, type Skill } from './SkillsTracker'
 import SleepIntegration from './SleepIntegration'
@@ -43,6 +44,10 @@ import RelationshipAssessment from './RelationshipAssessment'
 import DigitalAuditTool from './DigitalAuditTool'
 import ManifestCreator from './ManifestCreator'
 import MicroCelebration from './MicroCelebration'
+import SectionFeedback from './SectionFeedback'
+import ExampleChips from './ExampleChips'
+import QuestTrail from './QuestTrail'
+import { toast } from 'sonner'
 
 interface AdaptiveLessonViewerProps {
   recommendation: LessonRecommendation
@@ -79,6 +84,8 @@ export default function AdaptiveLessonViewer({
   const [celebrationType, setCelebrationType] = useState<'xp' | 'correct' | 'streak' | 'skill' | 'badge' | null>(null)
   const [celebrationValue, setCelebrationValue] = useState<number | undefined>(undefined)
   const [celebrationMessage, setCelebrationMessage] = useState<string | undefined>(undefined)
+  const [objectivesDone, setObjectivesDone] = useState<Record<number, boolean>>({})
+  const [quest, setQuest] = useState({ learn: false, map: false, practice: false })
 
   // Доступные форматы для этого урока
   // Приоритет: interactive, video, audio, mindmap, text (интерактив первым!)
@@ -134,6 +141,30 @@ export default function AdaptiveLessonViewer({
       setCurrentFormat('audio')
     }
   }, [adaptations, lesson.formats])
+
+  const handleSectionComplete = () => {
+    setCurrentXP((x) => x + 5)
+    setProgress((p) => Math.min(100, p + 8))
+    setShowXPGain(true)
+    setCelebrationType('xp')
+    setCelebrationValue(5)
+    toast.success('+5 XP')
+    if (!quest.learn) setQuest((q) => ({ ...q, learn: true }))
+  }
+
+  useEffect(() => {
+    if (quest.learn && quest.map && quest.practice) {
+      const key = `quest-done-${lesson.id}`
+      if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, '1')
+        setCelebrationType('badge')
+        setCelebrationMessage('Квест выполнен!')
+        setShowXPGain(true)
+        setCurrentXP(x => x + 20)
+        toast.success('Квест выполнен: +20 XP')
+      }
+    }
+  }, [quest.learn, quest.map, quest.practice, lesson.id])
 
   const handleLessonComplete = () => {
     setViewMode('quiz')
@@ -394,28 +425,35 @@ export default function AdaptiveLessonViewer({
               </motion.div>
             )}
 
-            {/* Цели обучения - Супер компактно */}
+            {/* Цели обучения - чипы */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
               className="mt-2"
             >
-              <h4 className="text-xs font-semibold text-gray-700 mb-1.5">Ты научишься:</h4>
-              <ul className="space-y-1">
-                {lesson.learningObjectives.map((obj, idx) => (
-                  <motion.li 
+              <h4 className="text-xs font-semibold text-gray-700 mb-1.5">Цели на сегодня:</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {lesson.learningObjectives.slice(0,3).map((obj, idx) => (
+                  <button
                     key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.5 + idx * 0.05 }}
-                    className="flex items-start gap-1.5 text-xs text-gray-600"
+                    onClick={() => {
+                      setObjectivesDone(prev => ({ ...prev, [idx]: !prev[idx] }))
+                      if (!objectivesDone[idx]) {
+                        setCurrentXP(x => x + 3)
+                        setProgress(p => Math.min(100, p + 5))
+                        toast.success('+3 XP')
+                      }
+                    }}
+                    className={`px-2.5 py-1 text-xs rounded-full border active:scale-[0.99] ${
+                      objectivesDone[idx] ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-white border-gray-200 text-gray-700'
+                    }`}
                   >
-                    <CheckCircle size={10} className="text-green-500 mt-0.5 flex-shrink-0" />
-                    <span className="leading-tight">{obj}</span>
-                  </motion.li>
+                    <CheckCircle size={10} className={`inline mr-1 ${objectivesDone[idx] ? 'text-emerald-600' : 'text-gray-300'}`} />
+                    {obj}
+                  </button>
                 ))}
-              </ul>
+              </div>
             </motion.div>
           </CardHeader>
         </Card>
@@ -439,10 +477,45 @@ export default function AdaptiveLessonViewer({
                   </span>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="relative p-3">
+          </CardHeader>
+          <CardContent className="relative p-3">
+            {lesson.id === 'boundaries-1' && (
+              <QuestTrail
+                steps={[
+                  { id: 'learn', title: 'Понять', done: quest.learn, onJump: () => window.scrollBy({ top: 300, behavior: 'smooth' }) },
+                  { id: 'map', title: 'Карта', done: quest.map, onJump: () => setCurrentFormat('mindmap') },
+                  { id: 'practice', title: 'Практика', done: quest.practice, onJump: () => setViewMode('scenarios') },
+                ]}
+              />
+            )}
+              {/* Quick start shortcuts for Lesson 1 */}
+              {lesson.id === 'boundaries-1' && (
+                <div className="mb-3 -mt-1 flex gap-2 overflow-x-auto no-scrollbar">
+                  <button
+                    onClick={() => setViewMode('scenarios')}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs"
+                  >
+                    <CheckCircle size={12} className="text-emerald-600" /> Скажи «нет» — практика
+                  </button>
+                  {lesson.formats.mindmap && (
+                    <button
+                      onClick={() => setCurrentFormat('mindmap')}
+                      className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-xs"
+                    >
+                      <Brain size={12} /> Карта границ
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowSleepIntegration(true)}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs"
+                  >
+                    <Moon size={12} /> Аудио‑пауза 3 мин
+                  </button>
+                </div>
+              )}
+
               {/* Переключатель форматов - Telegram Wallet Style */}
-              <Tabs value={currentFormat} onValueChange={(val) => setCurrentFormat(val as any)}>
+              <Tabs value={currentFormat} onValueChange={(val) => { setCurrentFormat(val as any); if (val === 'mindmap' && !quest.map) setQuest(q => ({...q, map: true})) }}>
                 <TabsList className="grid w-full bg-gray-100 p-1 rounded-lg" style={{ gridTemplateColumns: `repeat(${sortedFormats.length}, 1fr)` }}>
                   {sortedFormats.map(format => (
                     <TabsTrigger 
@@ -472,7 +545,12 @@ export default function AdaptiveLessonViewer({
               {sortedFormats.map(format => (
                 <TabsContent key={format} value={format} className="mt-6">
                   {format === 'text' && lesson.formats.text && (
-                    <TextLessonContent content={lesson.formats.text.content} lessonId={lesson.id} />
+                    <TextLessonContent 
+                      content={lesson.formats.text.content} 
+                      lessonId={lesson.id}
+                      onSectionComplete={handleSectionComplete}
+                      onStartScenario={() => { setViewMode('scenarios'); setQuest((q) => ({ ...q, practice: true })) }}
+                    />
                   )}
                   {format === 'video' && lesson.formats.video && (
                     <VideoLessonContent content={lesson.formats.video.content} />
@@ -596,11 +674,21 @@ export default function AdaptiveLessonViewer({
           >
             ← Вернуться к уроку
           </Button>
-          <RealWorldScenario
-            scenario={exampleScenarios[0]}
+          <ChatScenario
+            title={exampleScenarios[0].title}
+            intro={[
+              { id: 'm1', role: 'friend', text: 'Эй, не спишь? Сможешь поговорить? Очень нужно.' },
+              { id: 'm2', role: 'system', text: 'Сейчас 02:00. Завтра у тебя контрольная.' }
+            ]}
+            options={exampleScenarios[0].choices.map(c => ({ id: c.id, text: c.text, isHealthy: c.isHealthy, feedback: c.feedback }))}
             onComplete={(choice) => {
-              console.log('Scenario completed:', choice)
+              setCurrentXP(x => x + (choice.isHealthy ? 15 : 5))
+              setProgress(p => Math.min(100, p + 15))
+              setQuest(q => ({ ...q, practice: true }))
               setViewMode('lesson')
+              setShowXPGain(true)
+              setCelebrationType('xp')
+              setCelebrationValue(choice.isHealthy ? 15 : 5)
             }}
           />
         </div>
@@ -656,13 +744,21 @@ export default function AdaptiveLessonViewer({
 // Компоненты форматов
 // ============================================
 
-function TextLessonContent({ content, lessonId }: { content: any, lessonId?: string }) {
+function TextLessonContent({ content, lessonId, onSectionComplete, onStartScenario }: { content: any, lessonId?: string, onSectionComplete?: () => void, onStartScenario?: () => void }) {
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({})
   return (
     <div className="prose prose-sm max-w-none">
       {content.sections?.map((section: any, idx: number) => (
         <div key={idx} className="mb-6">
           <h3 className="text-[22px] leading-[28px] font-bold mb-3 tracking-tight text-gray-900">{section.heading}</h3>
-          <div className="whitespace-pre-line text-gray-700 leading-relaxed text-[17px]">{section.body}</div>
+          <div className="whitespace-pre-line text-gray-700 leading-relaxed text-[17px]">
+            {expanded[idx] ? section.body : (section.body?.slice(0, 180) + (section.body?.length > 180 ? '…' : ''))}
+          </div>
+          {section.body?.length > 180 && (
+            <button className="mt-1 text-xs text-blue-600" onClick={() => setExpanded(prev => ({ ...prev, [idx]: !prev[idx] }))}>
+              {expanded[idx] ? 'Свернуть' : 'Показать подробнее'}
+            </button>
+          )}
           
           {/* Интерактивная диаграмма для секции "5 кругов близости" */}
           {section.heading.includes('круги близости') && (
@@ -684,7 +780,7 @@ function TextLessonContent({ content, lessonId }: { content: any, lessonId?: str
               <BoundaryChecklist />
             </div>
           )}
-          
+
           {/* Изображение для секции */}
           {section.image && (
             <motion.div
@@ -707,40 +803,30 @@ function TextLessonContent({ content, lessonId }: { content: any, lessonId?: str
               </div>
             </motion.div>
           )}
+
+          {/* Мини-обратная связь по секции */}
+          <SectionFeedback sectionKey={`${lessonId}-${idx}`} onComplete={onSectionComplete} />
         </div>
       ))}
 
       {content.examples && (
-        <div className="mt-6 space-y-3">
-          {content.examples.map((example: any, idx: number) => {
-            const isPositive = example.title.includes('✅')
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <Card className={`p-4 border-2 transition-all hover:shadow-md cursor-pointer backdrop-blur-sm ${
-                  isPositive 
-                    ? 'bg-gradient-to-br from-emerald-100/60 to-green-50/40 border-emerald-200/40 hover:border-emerald-300/60' 
-                    : 'bg-gradient-to-br from-rose-100/60 to-red-50/40 border-rose-200/40 hover:border-rose-300/60'
-                }`}>
-                  <div className="font-semibold mb-2 text-[15px] leading-[20px] flex items-center gap-2">
-                    {isPositive ? (
-                      <CheckCircle size={18} className="text-emerald-600" weight="fill" />
-                    ) : (
-                      <div className="text-rose-600 font-bold">✕</div>
-                    )}
-                    {example.title}
-                  </div>
-                  <div className="text-[15px] leading-[20px] text-gray-700 leading-relaxed pl-6">{example.text}</div>
-                </Card>
-              </motion.div>
-            )
-          })}
+        <div className="mt-4">
+          <ExampleChips
+            items={content.examples.map((e: any) => ({ title: e.title, text: e.text }))}
+            onAcknowledge={() => handleSectionComplete()}
+          />
         </div>
       )}
+
+      {/* Быстрая практика: сценарий из жизни */}
+      <div className="mt-6">
+        <button
+          onClick={onStartScenario}
+          className="w-full px-3 py-2 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 text-sm active:scale-[0.99]"
+        >
+          Попрактиковаться на сценарии «Звонок в 2 часа ночи» →
+        </button>
+      </div>
     </div>
   )
 }
@@ -1345,4 +1431,3 @@ function CompletionView({ lesson, score, onContinue }: any) {
     </motion.div>
   )
 }
-

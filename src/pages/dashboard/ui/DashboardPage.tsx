@@ -4,6 +4,8 @@ import { ModuleGrid } from '@/widgets/module-grid'
 import { CheckInPanel } from '@/features/check-in'
 import type { CheckInData } from '@/features/check-in'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import QuickActionsRibbon from '@/components/QuickActionsRibbon'
+import SleepMeditationHub from '@/components/SleepMeditationHub'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Heart, Target, Trophy, Calendar } from '@phosphor-icons/react'
 
@@ -39,6 +41,7 @@ export function DashboardPage({
   onCheckInComplete
 }: DashboardPageProps) {
   const [showCheckIn, setShowCheckIn] = useState(false)
+  const [showSleep, setShowSleep] = useState(false)
 
   const handleCheckInClick = () => {
     setShowCheckIn(true)
@@ -74,11 +77,34 @@ export function DashboardPage({
         onCheckIn={handleCheckInClick}
       />
 
+      {/* Quick actions under hero */}
+      <div className="container mx-auto px-4 mt-4">
+        <QuickActionsRibbon
+          onStartLesson={handleContinueLearning}
+          onCheckIn={handleCheckInClick}
+          onOpenSleep={() => setShowSleep(true)}
+        />
+      </div>
+
       {/* Check-In Modal/Panel */}
       {showCheckIn && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
           <div className="w-full max-w-2xl">
             <CheckInPanel onCheckIn={handleCheckIn} lastCheckIn={lastCheckIn} />
+          </div>
+        </div>
+      )}
+
+      {/* Sleep/Meditation Hub */}
+      {showSleep && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="w-full max-w-3xl bg-white rounded-xl overflow-hidden">
+            <div className="flex justify-end p-2">
+              <button onClick={() => setShowSleep(false)} className="px-3 py-1.5 text-sm rounded-md border">Закрыть</button>
+            </div>
+            <div className="p-4">
+              <SleepMeditationHub currentMood={5} onContentSelect={() => setShowSleep(false)} />
+            </div>
           </div>
         </div>
       )}

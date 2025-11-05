@@ -5,7 +5,7 @@
  * УЛУЧШЕНО: drag-and-drop, изменение размера, персонализация
  */
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, useDragControls, PanInfo } from 'framer-motion'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -74,6 +74,7 @@ export default function CirclesOfIntimacyDiagram({
   mode = 'view',
   onComplete 
 }: CirclesOfIntimacyDiagramProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const [selectedCircle, setSelectedCircle] = useState<string | null>(null)
   const [hoveredCircle, setHoveredCircle] = useState<string | null>(null)
   const [isEditMode, setIsEditMode] = useState(mode === 'edit')
@@ -91,6 +92,25 @@ export default function CirclesOfIntimacyDiagram({
     })
     return positions
   })
+
+  const ringRadii = [80, 120, 160, 200, 240]
+
+  const snapToRing = (x: number, y: number) => {
+    const r = Math.sqrt(x * x + y * y)
+    // найти ближайший радиус
+    let nearest = ringRadii[0]
+    let minDiff = Math.abs(r - nearest)
+    for (const rr of ringRadii) {
+      const d = Math.abs(r - rr)
+      if (d < minDiff) {
+        minDiff = d
+        nearest = rr
+      }
+    }
+    if (r === 0) return { x, y }
+    const k = nearest / r
+    return { x: x * k, y: y * k }
+  }
 
   const handleCircleClick = (circleId: string) => {
     if (isEditingLabel && selectedCircle === circleId) return
@@ -140,11 +160,46 @@ export default function CirclesOfIntimacyDiagram({
   const lineWidths = [3, 2.5, 2, 1.5, 1]
   const baseSize = 300 // Размер холста
 
+  // Presets
+  function applyPreset(name: 'family' | 'school' | 'online') {
+    setCirclePositions(prev => {
+      const sizesLocal: Record<string, number> = {}
+      Object.keys(prev).forEach(k => sizesLocal[k] = prev[k].size)
+      const p: Record<string, { x: number; y: number; size: number }> = { ...prev }
+      if (name === 'family') {
+        p.self = { x: 0, y: 0, size: sizesLocal.self }
+        p.family = { x: 90, y: 10, size: sizesLocal.family }
+        p.friends = { x: -120, y: 40, size: sizesLocal.friends }
+        p.acquaintances = { x: -170, y: -30, size: sizesLocal.acquaintances }
+        p.strangers = { x: 210, y: -20, size: sizesLocal.strangers }
+      } else if (name === 'school') {
+        p.self = { x: 0, y: 0, size: sizesLocal.self }
+        p.friends = { x: 90, y: 0, size: sizesLocal.friends }
+        p.acquaintances = { x: 160, y: 40, size: sizesLocal.acquaintances }
+        p.family = { x: -140, y: -20, size: sizesLocal.family }
+        p.strangers = { x: -210, y: 10, size: sizesLocal.strangers }
+      } else {
+        // online
+        p.self = { x: 0, y: 0, size: sizesLocal.self }
+        p.strangers = { x: 230, y: 0, size: sizesLocal.strangers }
+        p.acquaintances = { x: 170, y: 60, size: sizesLocal.acquaintances }
+        p.friends = { x: 110, y: -40, size: sizesLocal.friends }
+        p.family = { x: -120, y: -10, size: sizesLocal.family }
+      }
+      return p
+    })
+  }
+
   return (
     <div className="w-full max-w-sm mx-auto relative">
       {/* Кнопки управления (только в режиме редактирования) */}
       {isEditMode && (
-        <div className="flex gap-2 mb-2 justify-center">
+        <div className="flex flex-col gap-2 mb-2 items-center">
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => applyPreset('family')}>Семья</Button>
+            <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => applyPreset('school')}>Школа</Button>
+            <Button variant="outline" size="sm" className="text-xs h-7" onClick={() => applyPreset('online')}>Онлайн</Button>
+          </div>
           <Button
             variant="outline"
             size="sm"
@@ -166,7 +221,7 @@ export default function CirclesOfIntimacyDiagram({
       )}
 
       {/* SVG Диаграмма */}
-      <div className="relative h-64 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl overflow-hidden border border-gray-200">
+      <div ref={containerRef} className="relative h-64 bg-gradient-to-br from-gray-50 to-blue-50 rounded-xl overflow-hidden border border-gray-200">
         <svg viewBox="0 0 300 300" className="w-full h-full">
           {/* Концентрические круги (фон) */}
           {circles.map((circle, index) => {
@@ -215,9 +270,9 @@ export default function CirclesOfIntimacyDiagram({
                 key={circle.id}
                 className="absolute"
                 style={{
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate(${pos.x}px, ${pos.y}px) translate(-50%, -50%)`,
+                  left: `calc(50% + ${pos.x}px)`,
+                  top: `calc(50% + ${pos.y}px)`,
+                  transform: 'translate(-50%, -50%)',
                   cursor: isEditMode ? 'grab' : 'pointer'
                 }}
                 whileHover={isEditMode ? {} : { scale: 1.1 }}
@@ -228,13 +283,15 @@ export default function CirclesOfIntimacyDiagram({
                 drag={isEditMode}
                 dragMomentum={false}
                 dragElastic={0.1}
+                dragConstraints={containerRef}
                 onDragEnd={(event, info) => {
                   if (isEditMode) {
                     const newX = pos.x + info.offset.x
                     const newY = pos.y + info.offset.y
+                    const snapped = snapToRing(newX, newY)
                     setCirclePositions(prev => ({
                       ...prev,
-                      [circle.id]: { ...prev[circle.id], x: newX, y: newY }
+                      [circle.id]: { ...prev[circle.id], x: snapped.x, y: snapped.y }
                     }))
                   }
                 }}
@@ -286,6 +343,7 @@ export default function CirclesOfIntimacyDiagram({
             drag={isEditMode}
             dragMomentum={false}
             dragElastic={0.1}
+            dragConstraints={containerRef}
             onDragEnd={(event, info) => {
               if (isEditMode) {
                 const pos = circlePositions.self

@@ -3,6 +3,11 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import BoundariesHero from './BoundariesHero'
+import FirstScreenHero from './FirstScreenHero'
+import ShareProgressButton from './ShareProgressButton'
+import CelebrationAnimation from './CelebrationAnimation'
+import { toast } from 'sonner'
+import QuickActionsRibbon from './QuickActionsRibbon'
 import LessonTimeline from './LessonTimeline'
 import CheckInModal from './CheckInModal'
 import AdaptiveLessonViewer from './AdaptiveLessonViewer'
@@ -20,7 +25,7 @@ import WeeklyChallenges from './WeeklyChallenges'
 import CastleGame from './CastleGame'
 import LearningPath from './LearningPath'
 import { useEmotionalState } from './EmotionalDesignSystem'
-import { boundariesModule } from '@/data/boundariesModule'
+import boundariesModule from '@/data/boundariesModule'
 import type { CheckInData } from './CheckInModal'
 
 type Props = {
@@ -96,12 +101,15 @@ export default function BoundariesModule({ onBack }: Props) {
     )
     if (firstIncomplete) {
       setSelectedLesson(firstIncomplete.id)
+      toast.success('Поехали! Первый урок готов.', { description: '5–10 минут и маленький прогресс уже твой' })
     }
   }
 
   const handleLessonClick = (lessonId: string) => {
     setSelectedLesson(lessonId)
   }
+
+  const [streakCelebration, setStreakCelebration] = useState<number | null>(null)
 
   const handleLessonComplete = (lessonId: string, xpEarned: number) => {
     setProgress(prev => {
@@ -112,7 +120,7 @@ export default function BoundariesModule({ onBack }: Props) {
       // Count skills from completed lessons (estimate 3 skills per lesson)
       const skillsUnlocked = newCompleted.length * 3
 
-      return {
+      const updated = {
         ...prev,
         completedLessons: newCompleted,
         currentLesson: nextLesson?.id || lessonId,
@@ -120,6 +128,13 @@ export default function BoundariesModule({ onBack }: Props) {
         skillsUnlocked,
         streak: prev.streak + 1
       }
+      // Celebration milestones
+      const s = updated.streak
+      if (s === 7 || s === 30 || s === 100) {
+        setTimeout(() => setStreakCelebration(s), 300)
+      }
+      toast.success('+XP за урок', { description: `${xpEarned} XP • ${newCompleted.length}/${prev.totalLessons} уроков` })
+      return updated
     })
     
     // Go back to timeline
@@ -406,6 +421,20 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
       </motion.div>
 
+      {/* First-time emotional hook */}
+      {progress.completedLessons.length === 0 && (
+        <div className="container mx-auto px-4 py-3">
+          <FirstScreenHero
+            onStartLearning={handleStartLearning}
+            userProgress={{
+              lessonsCompleted: progress.completedLessons.length,
+              totalLessons: progress.totalLessons,
+              xpEarned: progress.xpEarned
+            }}
+          />
+        </div>
+      )}
+
       {/* Hero Section */}
       <BoundariesHero
         onStartLearning={handleStartLearning}
@@ -420,6 +449,16 @@ export default function BoundariesModule({ onBack }: Props) {
         onCheckIn={() => setShowCheckIn(true)}
       />
 
+      {/* Quick Actions Ribbon */}
+      <div className="container mx-auto px-4 py-2">
+        <QuickActionsRibbon
+          onStartLesson={handleStartLearning}
+          onCheckIn={() => setShowCheckIn(true)}
+          onOpenSleep={() => setShowSleepMeditation(true)}
+          onOpenRoleplay={() => setShowRolePlayScenarios(true)}
+        />
+      </div>
+
       {/* Week Tabs Navigation - компактнее */}
       <div className="container mx-auto px-4 py-2">
         <WeekTabs
@@ -427,6 +466,13 @@ export default function BoundariesModule({ onBack }: Props) {
           onWeekChange={setCurrentWeek}
           progress={weekProgress}
         />
+        {/* Sharing */}
+        <div className="mt-2 flex justify-end">
+          <ShareProgressButton
+            text={`Я изучаю модуль "Личные границы" и уже прошёл(ла) ${progress.completedLessons.length}/${progress.totalLessons} уроков!`}
+            className="px-3 py-1.5 rounded-lg bg-white/80 backdrop-blur border text-xs hover:bg-white"
+          />
+        </div>
       </div>
 
       {/* Adaptive Recommendations - компактнее */}
@@ -833,6 +879,11 @@ export default function BoundariesModule({ onBack }: Props) {
             />
           </div>
         )}
+
+      {/* Celebration Overlay */}
+      {streakCelebration && (
+        <CelebrationAnimation milestone={streakCelebration} type="streak" onClose={() => setStreakCelebration(null)} />
+      )}
 
       {/* CheckIn Modal */}
       <CheckInModal
