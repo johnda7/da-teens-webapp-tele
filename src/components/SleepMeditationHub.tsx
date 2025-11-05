@@ -447,27 +447,27 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
       <div className="mb-4">
         <h3 className="text-sm font-semibold text-gray-800 mb-2 px-1">Все программы</h3>
         <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-          {sleepContent.map((content, index) => {
-            const typeConfig = typeIcons[content.type]
-            const Icon = typeConfig.icon
-            const isSelected = selectedContent?.id === content.id
+        {sleepContent.map((content, index) => {
+          const typeConfig = typeIcons[content.type]
+          const Icon = typeConfig.icon
+          const isSelected = selectedContent?.id === content.id
 
-            return (
-              <motion.div
-                key={content.id}
+          return (
+            <motion.div
+              key={content.id}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                whileTap={{ scale: 0.98 }}
+              whileTap={{ scale: 0.98 }}
                 className="flex-shrink-0"
-              >
-                <Card 
+            >
+              <Card 
                   className={`cursor-pointer transition-all duration-300 border-0 w-[140px] bg-white/90 backdrop-blur-sm shadow-sm overflow-hidden ${
                     isSelected ? 'ring-2 ring-blue-500 shadow-md' : 'hover:shadow-md'
-                  }`}
-                  onClick={() => handleContentSelect(content)}
-                >
-                  <CardContent className="p-0">
+                }`}
+                onClick={() => handleContentSelect(content)}
+              >
+                <CardContent className="p-0">
                     {/* Real image */}
                     {content.image ? (
                       <div className="relative h-20 w-full overflow-hidden">
@@ -477,12 +477,12 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
                           className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                        {/* Type badge */}
+                    {/* Type badge */}
                         <div className="absolute top-1 left-1">
                           <Badge className={`bg-black/40 text-white text-[9px] px-1 py-0 border-0 backdrop-blur-sm`}>
-                            {typeConfig.label}
-                          </Badge>
-                        </div>
+                        {typeConfig.label}
+                      </Badge>
+                    </div>
                       </div>
                     ) : (
                       <div className={`relative bg-gradient-to-br ${getImageGradient(content.type)} h-20 w-full flex items-center justify-center`}>
@@ -491,26 +491,26 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
                         <div className="absolute top-1 left-1">
                           <Badge className={`bg-black/40 text-white text-[9px] px-1 py-0 border-0 backdrop-blur-sm`}>
                             {typeConfig.label}
-                          </Badge>
-                        </div>
-                      </div>
+                      </Badge>
+                    </div>
+                  </div>
                     )}
 
                     {/* Content info - компактнее */}
                     <div className="p-2">
                       <h3 className="font-semibold text-[10px] mb-0.5 leading-tight line-clamp-2">{content.title}</h3>
                       <p className="text-[9px] text-gray-600 mb-1 line-clamp-2 leading-tight">{content.description}</p>
-                      
+                    
                       <div className="flex items-center gap-0.5 text-[9px] text-gray-500">
                         <Timer className="w-2.5 h-2.5" />
                         {formatDuration(content.duration)}
-                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )
-          })}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )
+        })}
         </div>
       </div>
 
@@ -534,10 +534,10 @@ export default function SleepMeditationHub({ onContentSelect, currentMood = 'cal
               </div>
             ) : (
               <div className="bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl w-12 h-12 flex items-center justify-center flex-shrink-0">
-                {(() => {
-                  const Icon = typeIcons[selectedContent.type].icon
+              {(() => {
+                const Icon = typeIcons[selectedContent.type].icon
                   return <Icon className="w-6 h-6 text-white" />
-                })()}
+              })()}
               </div>
             )}
             <div className="flex-1 min-w-0">
