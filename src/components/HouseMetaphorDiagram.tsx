@@ -301,3 +301,7 @@ export default function HouseMetaphorDiagram({ onTypeSelect }: HouseMetaphorDiag
 
 
 
+
+
+
+

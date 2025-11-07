@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import BoundariesHero from './BoundariesHero'
+import FirstScreenHero from './FirstScreenHero'
 import LessonTimeline from './LessonTimeline'
 import CheckInModal from './CheckInModal'
 import AdaptiveLessonViewer from './AdaptiveLessonViewer'
@@ -406,7 +407,18 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* Hero Section - FirstScreenHero для новых пользователей */}
+      {progress.completedLessons.length === 0 ? (
+        <FirstScreenHero
+          onStartLearning={handleStartLearning}
+          userProgress={{
+            lessonsCompleted: progress.completedLessons.length,
+            totalLessons: progress.totalLessons,
+            xpEarned: progress.xpEarned
+          }}
+          showProgress={false}
+        />
+      ) : (
       <BoundariesHero
         onStartLearning={handleStartLearning}
         progress={{
@@ -419,6 +431,7 @@ export default function BoundariesModule({ onBack }: Props) {
         hasCheckIn={progress.checkIns.length === 0}
         onCheckIn={() => setShowCheckIn(true)}
       />
+      )}
 
       {/* Week Tabs Navigation - компактнее */}
       <div className="container mx-auto px-4 py-2">
