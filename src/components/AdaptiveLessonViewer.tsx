@@ -813,7 +813,7 @@ function TextLessonContent({ content, lessonId, onSectionComplete, onStartScenar
         <div className="mt-4">
           <ExampleChips
             items={content.examples.map((e: any) => ({ title: e.title, text: e.text }))}
-            onAcknowledge={() => handleSectionComplete()}
+            onAcknowledge={() => onSectionComplete?.()}
           />
         </div>
       )}

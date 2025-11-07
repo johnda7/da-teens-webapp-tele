@@ -149,7 +149,7 @@ export default function BoundariesModule({ onBack }: Props) {
     setShowCheckIn(false)
     
     // Обновляем эмоциональное состояние на основе CheckIn
-    if (data.anxiety > 7 || data.mood < 4 || data.anxiety > 7) {
+    if (data.anxiety > 7 || data.mood < 4) {
       updateEmotionalState('anxious')
     } else if (data.energy > 7) {
       updateEmotionalState('energetic')
@@ -874,7 +874,7 @@ export default function BoundariesModule({ onBack }: Props) {
         {showSleepMeditation && (
           <div className="mb-2" data-sleep-section>
             <SleepMeditationHub
-              currentMood={emotionalState.mood === 'anxious' ? 'anxious' : emotionalState.mood === 'energetic' ? 'energetic' : emotionalState.mood === 'calm' ? 'calm' : 'calm'}
+              currentMood={emotionalState === 'anxious' ? 'anxious' : emotionalState === 'energetic' ? 'energetic' : emotionalState === 'calm' ? 'calm' : 'calm'}
               onContentSelect={(content) => console.log('Sleep content selected:', content)}
             />
           </div>
