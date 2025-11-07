@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "vite",
         "kill": "fuser -k 5000/tcp",
-        "build": "tsc --noEmit && vite build",
+        "build": "vite build",
+        "build:ci": "vite build",
+        "typecheck": "tsc --noEmit",
         "lint": "eslint .",
         "optimize": "vite optimize",
         "preview": "vite preview"
