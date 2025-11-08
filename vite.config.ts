@@ -1,23 +1,15 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, PluginOption } from "vite";
-
-import sparkPlugin from "@github/spark/spark-vite-plugin";
-import createIconImportProxy from "@github/spark/vitePhosphorIconProxyPlugin";
 import { resolve } from 'path'
 
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/da-teens-webapp-tele/',
-  plugins: [
-    react(),
-    tailwindcss(),
-    // DO NOT REMOVE
-    createIconImportProxy() as PluginOption,
-    sparkPlugin() as PluginOption,
-  ],
+  // Для локала база = '/', для продакшена (GitHub Pages) устанавливается через VITE_BASE
+  base: process.env.VITE_BASE || '/',
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': resolve(projectRoot, 'src')
@@ -28,6 +20,9 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
+      input: {
+        main: resolve(projectRoot, 'index.html'),
+      },
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -54,8 +49,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5174,
-    // ⚠️ ВАЖНО: Spark plugin переопределяет порт на 5000 по умолчанию
-    // Если 5000 занят, Vite автоматически выберет свободный (5001, 5002, и т.д.)
     strictPort: false, // Автоматический выбор порта если указанный занят
     allowedHosts: true,
   },

@@ -36,6 +36,8 @@ jobs:
 
       - name: Build
         run: npm run build:ci
+        env:
+          VITE_BASE: /da-teens-webapp-tele/
         
       - name: Setup Pages
         uses: actions/configure-pages@v4

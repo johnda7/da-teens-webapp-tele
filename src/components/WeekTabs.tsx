@@ -101,7 +101,6 @@ export default function WeekTabs({ currentWeek, onWeekChange, progress }: WeekTa
                   </svg>
                   <Icon 
                     size={12} 
-                    weight={isActive ? 'fill' : 'regular'} 
                     className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
                       isActive ? 'text-blue-600' : 'text-gray-600'
                     }`} 

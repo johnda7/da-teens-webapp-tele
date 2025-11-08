@@ -183,7 +183,7 @@ export default function MultimodalContent({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       style={{
-        background: `linear-gradient(135deg, ${emotionalStyles.colors.primary}20, ${emotionalStyles.colors.secondary}20)`
+        background: `linear-gradient(135deg, ${emotionalStyles.colors[0]}20, ${emotionalStyles.colors[1]}20)`
       }}
     >
       {/* Header */}

@@ -4,7 +4,7 @@ export const useTelegram = () => {
   const [isReady, setIsReady] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   const [viewportWidth, setViewportWidth] = useState(window.innerWidth);
-  const tg = window.Telegram?.WebApp;
+  const tg = window.Telegram?.WebApp as any;
 
   useEffect(() => {
     if (tg) {
@@ -13,10 +13,11 @@ export const useTelegram = () => {
       tg.expand();
       
       // Enable closing confirmation
-      tg.enableClosingConfirmation();
+      // Not in official types in some builds
+      tg?.enableClosingConfirmation?.();
       
       // Set header color to match theme
-      if (tg.themeParams?.bg_color) {
+      if (tg.themeParams?.bg_color && typeof tg.setHeaderColor === 'function') {
         tg.setHeaderColor(tg.themeParams.bg_color);
       }
       

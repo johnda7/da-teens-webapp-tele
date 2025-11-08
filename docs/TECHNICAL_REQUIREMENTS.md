@@ -67,7 +67,7 @@ Google Sheet: "DA Teens - Production"
 ```
 
 **Текущее состояние (MVP):**
-- localStorage / GitHub Spark KV - для локального тестирования
+- localStorage (KV) — для локального тестирования
 
 **Production (когда будут реальные ученики):**
 - Google Sheets API - полноценное хранилище
@@ -108,7 +108,7 @@ Google Sheet: "DA Teens - Production"
 - **Frontend:** React 19 + TypeScript + Vite 6.3.6
 - **UI:** Tailwind CSS 4.x + shadcn/ui (30+ компонентов)
 - **Icons:** Phosphor Icons
-- **State:** GitHub Spark KV (локальное хранилище в браузере) ⚠️
+- **State:** KV (локальное хранилище в браузере) ⚠️
 - **Deployment:** GitHub Pages (https://johnda7.github.io/da-teens-webapp-tele/)
 - **Platform:** Telegram Mini App (Web App SDK)
 
@@ -241,7 +241,7 @@ Google Sheet: "DA Teens - Production"
 ### **Текущий код (нужно заменить):**
 ```typescript
 // src/App.tsx (СЕЙЧАС)
-import { useKV } from '@github/spark/hooks'
+import { useKV } from 'src/lib/kv'
 
 const [userProfile, setUserProfile] = useKV('user-profile', {
   name: 'Алекс',

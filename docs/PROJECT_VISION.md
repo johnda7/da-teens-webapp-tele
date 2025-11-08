@@ -594,7 +594,7 @@ transition={{
 
 ### Current (Simple & Fast):
 - **Hosting:** GitHub Pages (auto-deploy from main branch)
-- **Storage:** GitHub Spark KV (localStorage for dev) → Google Sheets API (production)
+- **Storage:** KV (localStorage для dev) → Google Sheets API (production)
 - **Deployment:** GitHub Actions автоматический деплой
 - **Analytics:** Telegram Analytics + Google Analytics 4
 

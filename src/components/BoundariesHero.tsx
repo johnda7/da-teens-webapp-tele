@@ -41,13 +41,13 @@ export default function BoundariesHero({
   return (
     <div className="space-y-2">
       {/* Ultra-compact Header - Calm inspired */}
-      <div className="px-4 py-2 bg-white border-b border-gray-100">
+      <div className="px-4 py-2 bg-white/80 backdrop-blur-lg border-b border-gray-100">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
             <Shield className="w-5 h-5 text-white" weight="fill" />
           </div>
           <div className="flex-1">
-            <Badge className="text-[9px] bg-blue-100 text-blue-700 border-0 mb-0.5 px-1.5 py-0">
+            <Badge className="text-[9px] glass border-0 mb-0.5 px-1.5 py-0">
                   ✨ Адаптивный модуль
                 </Badge>
             <h1 className="text-base font-bold text-gray-900">Личные границы</h1>
@@ -57,15 +57,15 @@ export default function BoundariesHero({
 
         {/* Compact Stats - 3 numbers inline - еще компактнее */}
         <div className="grid grid-cols-3 gap-1.5 mb-2">
-          <div className="text-center bg-blue-50 rounded-lg py-1.5">
+          <div className="text-center glass rounded-lg py-1.5">
             <div className="text-sm font-bold text-blue-600">{progress.totalLessons}</div>
                 <div className="text-[9px] text-gray-600">Уроков</div>
           </div>
-          <div className="text-center bg-green-50 rounded-lg py-1.5">
+          <div className="text-center glass rounded-lg py-1.5">
             <div className="text-sm font-bold text-green-600">5</div>
                 <div className="text-[9px] text-gray-600">Форматов</div>
           </div>
-          <div className="text-center bg-orange-50 rounded-lg py-1.5">
+          <div className="text-center glass rounded-lg py-1.5">
             <div className="text-sm font-bold text-orange-600">3-4</div>
                 <div className="text-[9px] text-gray-600">Недели</div>
           </div>
@@ -73,9 +73,12 @@ export default function BoundariesHero({
 
         {/* CTA Button - Simple Telegram style - компактнее */}
         <button 
-                  onClick={onStartLearning}
-          className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
-                >
+          onClick={onStartLearning}
+          className="w-full text-white font-semibold h-10 rounded-xl transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-sm shadow-lg"
+          style={{
+            background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)'
+          }}
+        >
           <Play size={16} weight="fill" />
                   {progress.lessonsCompleted === 0 ? 'Начать' : 'Продолжить'}
         </button>

@@ -107,10 +107,10 @@ export default function LearningPath({ completedLessons = [], currentLesson }: L
               let bgColor
               
               if (lesson.isCompleted) {
-                iconComponent = <CheckCircle className="w-8 h-8 text-green-600" weight="fill" />
+                iconComponent = <CheckCircle className="w-8 h-8 text-green-600" />
                 bgColor = 'bg-green-100 border-green-300'
               } else if (lesson.isCurrent) {
-                iconComponent = <Sparkles className="w-8 h-8 text-blue-600" weight="fill" />
+                iconComponent = <Sparkles className="w-8 h-8 text-blue-600" />
                 bgColor = 'bg-blue-100 border-blue-400 ring-2 ring-blue-300'
               } else if (lesson.isUnlocked) {
                 iconComponent = <Circle className="w-8 h-8 text-gray-400" />
@@ -150,7 +150,7 @@ export default function LearningPath({ completedLessons = [], currentLesson }: L
                     {/* Completion Checkmark */}
                     {lesson.isCompleted && (
                       <div className="absolute -top-1 -right-1 bg-green-500 rounded-full p-1">
-                        <CheckCircle className="w-3 h-3 text-white" weight="fill" />
+                        <CheckCircle className="w-3 h-3 text-white" />
                       </div>
                     )}
 
@@ -199,7 +199,7 @@ export default function LearningPath({ completedLessons = [], currentLesson }: L
           <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 p-3">
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0">
-                <Sparkles className="w-6 h-6 text-blue-600" weight="fill" />
+                <Sparkles className="w-6 h-6 text-blue-600" />
               </div>
               <div className="flex-1">
                 <h4 className="text-sm font-bold text-blue-900 mb-1">Следующий урок</h4>
@@ -216,7 +216,7 @@ export default function LearningPath({ completedLessons = [], currentLesson }: L
       )}
 
       {/* Completion Message */}
-      {completedLessons === totalLessons && (
+      {completedCount === totalLessons && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}

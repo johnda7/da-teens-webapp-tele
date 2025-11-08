@@ -103,7 +103,7 @@ export function DashboardPage({
               <button onClick={() => setShowSleep(false)} className="px-3 py-1.5 text-sm rounded-md border">Закрыть</button>
             </div>
             <div className="p-4">
-              <SleepMeditationHub currentMood={5} onContentSelect={() => setShowSleep(false)} />
+              <SleepMeditationHub currentMood={'calm'} onContentSelect={() => setShowSleep(false)} />
             </div>
           </div>
         </div>

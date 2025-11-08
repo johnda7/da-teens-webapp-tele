@@ -244,7 +244,7 @@ src/
 ### Persistent State (useKV)
 
 ```typescript
-import { useKV } from '@github/spark/hooks'
+import { useKV } from 'src/lib/kv'
 
 // Данные, которые должны сохраняться между сессиями
 const [userProfile, setUserProfile] = useKV('user-profile', defaultProfile)

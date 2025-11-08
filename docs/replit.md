@@ -1,7 +1,7 @@
 # DA Teens - Replit Configuration
 
 ## Project Overview
-A Telegram WebApp for teen mental wellness programs (ages 13-18). Built with React, TypeScript, Vite, and GitHub Spark for cohort-based learning with curators and mentors.
+A Telegram WebApp for teen mental wellness programs (ages 13-18). Built with React, TypeScript, and Vite.
 
 **Last Updated**: October 5, 2025
 
@@ -15,7 +15,7 @@ A Telegram WebApp for teen mental wellness programs (ages 13-18). Built with Rea
 - **Frontend**: React 19 + TypeScript + Vite
 - **UI**: Tailwind CSS + shadcn/ui components
 - **Icons**: Phosphor Icons
-- **State Management**: GitHub Spark KV (persistent storage)
+- **State Management**: localStorage (KV) persistent storage
 - **Charts**: Recharts for data visualization
 
 ## Project Structure
@@ -64,7 +64,7 @@ src/
 None specified yet.
 
 ## Architecture Decisions
-- Using GitHub Spark KV for persistent state management
+- Using localStorage KV for persistent state management
 - Client-side only (no backend API in MVP)
 - Mobile-first responsive design for Telegram WebApp
 - Calming color scheme (deep teal, soft blues) for anxiety reduction

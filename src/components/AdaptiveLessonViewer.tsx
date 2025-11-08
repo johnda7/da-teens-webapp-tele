@@ -1417,17 +1417,7 @@ function CompletionView({ lesson, score, onContinue }: any) {
         </CardContent>
       </Card>
 
-      {/* Sleep Integration Modal */}
-      {showSleepIntegration && (
-        <SleepIntegration
-          currentMood={emotionalFit === 'good' ? 'calm' : emotionalFit === 'excellent' ? 'focused' : 'anxious'}
-          onComplete={(contentId, duration) => {
-            console.log('Sleep content completed:', contentId, duration)
-            setShowSleepIntegration(false)
-          }}
-          onClose={() => setShowSleepIntegration(false)}
-        />
-      )}
+      {/* Sleep Integration Modal removed: handled in main viewer scope */}
     </motion.div>
   )
 }

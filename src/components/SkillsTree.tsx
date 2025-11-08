@@ -29,6 +29,7 @@ interface SkillsTreeProps {
   totalXP?: number
 }
 
+// Базовый навык может включать предварительно заданные поля мастерства/доступности
 interface BaseSkill {
   id: string
   name: string
@@ -36,6 +37,8 @@ interface BaseSkill {
   icon: string
   lessonRequired: number
   color: string
+  masteryLevel?: number
+  isUnlocked?: boolean
 }
 
 interface BaseBranch {

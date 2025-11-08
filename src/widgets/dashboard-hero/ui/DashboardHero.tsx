@@ -153,23 +153,23 @@ export function DashboardHero({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Button 
+          <button
             onClick={onContinueLearning}
-            size="lg"
-            className="flex-1 bg-white text-[#007AFF] hover:bg-white/90 shadow-lg"
+            className="flex-1 h-11 rounded-xl text-white font-semibold shadow-lg active:scale-[0.98] transition-transform"
+            style={{ background: 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
           >
-            <Lightning weight="fill" className="w-5 h-5 mr-2" />
-            Продолжить обучение
-          </Button>
+            <span className="inline-flex items-center justify-center gap-2">
+              <Lightning weight="fill" className="w-5 h-5" />
+              {completedLessons > 0 ? 'Продолжить' : 'Начать'}
+            </span>
+          </button>
           
-          <Button 
+          <button
             onClick={onCheckIn}
-            size="lg"
-            variant="outline"
-            className="flex-1 border-white/30 text-white hover:bg-white/10 backdrop-blur-xl"
+            className="flex-1 h-11 rounded-xl border border-white/30 text-white hover:bg-white/10 backdrop-blur-xl"
           >
-            ❤️ Чек-ин
-          </Button>
+            ❤️ Чек‑ин
+          </button>
         </motion.div>
       </div>
     </motion.div>

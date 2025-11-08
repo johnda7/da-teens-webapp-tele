@@ -9,6 +9,8 @@ interface VisualElements {
     anxious: { colors: { primary: string, secondary: string }, image: string, animation: string }
     energetic: { colors: { primary: string, secondary: string }, image: string, animation: string }
     focused: { colors: { primary: string, secondary: string }, image: string, animation: string }
+    calm?: { colors: { primary: string, secondary: string }, image: string, animation: string }
+    excited?: { colors: { primary: string, secondary: string }, image: string, animation: string }
   }
   culturalContext: {
     russian: string
@@ -48,7 +50,7 @@ interface VisualLessonCardProps {
   progress: number
   isLocked: boolean
   isCompleted: boolean
-  emotionalState: 'anxious' | 'energetic' | 'focused'
+  emotionalState: 'anxious' | 'energetic' | 'focused' | 'calm' | 'excited'
   visualElements: VisualElements
   interactiveElements: InteractiveElements
   audioElements: AudioElements
@@ -78,10 +80,10 @@ export default function VisualLessonCard({
   
   // Получаем эмоциональные стили
   const getEmotionalStyles = () => {
-    const variant = visualElements.emotionalVariants[emotionalState]
+    const variant = (visualElements.emotionalVariants as any)[emotionalState]
     if (!variant) {
       // Fallback to calm state if variant not found
-      const fallbackVariant = visualElements.emotionalVariants.calm || {
+      const fallbackVariant = (visualElements.emotionalVariants as any).calm || {
         colors: { primary: '#A8E6CF', secondary: '#FFD93D' },
         image: '/images/emotions/calm-hero.jpg',
         animation: 'smooth'

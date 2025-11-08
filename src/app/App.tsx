@@ -11,7 +11,7 @@
 
 import { useState, useEffect, memo, useMemo, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { useKV } from '@github/spark/hooks'
+import { useKV } from '@/lib/kv'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +30,7 @@ const BadgeGrid = lazy(() => import('@/components/BadgeGrid'))
 const ProgressStats = lazy(() => import('@/components/ProgressStats'))
 const DashboardHero = lazy(() => import('@/components/DashboardHero'))
 const DailyRecommendationCard = lazy(() => import('@/components/DailyRecommendationCard'))
+const QuickActionsRibbon = lazy(() => import('@/components/QuickActionsRibbon'))
 const RoleBasedLayout = lazy(() => import('@/components/RoleBasedLayout'))
 const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
 const ParentBoundariesModule = lazy(() => import('@/components/ParentBoundariesModule'))
@@ -130,6 +131,32 @@ export function App() {
   const [showCelebration, setShowCelebration] = useState(false)
   const [celebrationMilestone, setCelebrationMilestone] = useState(0)
   const [isLoadingLesson, setIsLoadingLesson] = useState(false)
+
+  // Deep-link: open Parent Boundaries module via URL
+  // Examples:
+  //   /parent
+  //   /parent-module
+  //   /?open=parent
+  //   /?parent=1
+  useEffect(() => {
+    try {
+      const path = (typeof window !== 'undefined' ? window.location.pathname : '').toLowerCase()
+      const search = typeof window !== 'undefined' ? window.location.search : ''
+      const q = new URLSearchParams(search)
+      if (
+        q.get('open') === 'parent' ||
+        q.get('parent') === '1' ||
+        path === '/parent' ||
+        path.startsWith('/parent-module')
+      ) {
+        setShowParentModule(true)
+        // Optional: ensure top
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 0)
+      }
+    } catch (e) {
+      // noop
+    }
+  }, [])
 
   // User data with KV storage
   const [userProfile, setUserProfile] = useKV<UserProfile>('user-profile', {
@@ -444,13 +471,18 @@ export function App() {
 
       {/* Header - Telegram Wallet Style (Compact) - скрываем когда открыт урок */}
       {!selectedModule && (
-        <header className="sticky top-0 z-40 bg-white border-b border-gray-100">
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
           <div className="flex items-center justify-between px-4 py-2">
-            {/* Left: Title only (минимализм как в Wallet) */}
-            <div>
-              <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
-              <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
-          </div>
+            {/* Left: Logo + Title */}
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-xl glass-tint-blue grid place-items-center">
+                <Shield className="w-4 h-4 text-[#007AFF]" />
+              </div>
+              <div>
+                <h1 className="text-base font-semibold text-gray-900">AI Подросток</h1>
+                <p className="text-[11px] text-gray-500">Неделя {userProfile?.currentWeek || 1} • День {userProfile?.streak || 0}</p>
+              </div>
+            </div>
           
           {/* Center: DEMO Role Switcher */}
           {ENABLE_PARENT_ROLES && (
@@ -579,9 +611,9 @@ export function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <div className="glass rounded-xl p-2 mb-1 bg-blue-50/50 border border-blue-100/50">
+                            <div className="glass-tint-blue rounded-xl p-2 mb-1 min-h-[56px] flex flex-col items-center justify-center">
                               <Lightning className="w-4 h-4 text-blue-500 mx-auto mb-0.5" weight="fill" />
-                              <div className="text-sm font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                              <motion.div key={`xp-${adaptiveProgress?.totalXP || 0}`} initial={{ scale: 0.9, opacity: 0.7 }} animate={{ scale: 1, opacity: 1 }} className="text-sm font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</motion.div>
                               <div className="text-[9px] text-gray-600">XP</div>
                             </div>
                           </motion.div>
@@ -591,9 +623,9 @@ export function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <div className="glass rounded-xl p-2 mb-1 bg-green-50/50 border border-green-100/50">
+                            <div className="glass-tint-green rounded-xl p-2 mb-1 min-h-[56px] flex flex-col items-center justify-center">
                               <CheckCircle className="w-4 h-4 text-green-500 mx-auto mb-0.5" weight="fill" />
-                              <div className="text-sm font-bold text-gray-900">{userProfile?.completedModules || 0}</div>
+                              <motion.div key={`mods-${userProfile?.completedModules || 0}`} initial={{ scale: 0.9, opacity: 0.7 }} animate={{ scale: 1, opacity: 1 }} className="text-sm font-bold text-gray-900">{userProfile?.completedModules || 0}</motion.div>
                               <div className="text-[9px] text-gray-600">модулей</div>
                             </div>
                           </motion.div>
@@ -603,7 +635,7 @@ export function App() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                           >
-                            <div className="glass rounded-xl p-2 mb-1 bg-purple-50/50 border border-purple-100/50">
+                            <div className="glass-tint-purple rounded-xl p-2 mb-1 min-h-[56px] flex flex-col items-center justify-center">
                               <Users className="w-4 h-4 text-purple-500 mx-auto mb-0.5" weight="fill" />
                               <div className="text-sm font-bold text-gray-900">A</div>
                               <div className="text-[9px] text-gray-600">группа</div>
@@ -611,60 +643,20 @@ export function App() {
                           </motion.div>
                         </div>
 
-                        {/* Quick Actions - Calm-inspired Liquid Glass */}
-                        <div className="grid grid-cols-4 gap-2 mb-4">
-                          <motion.button 
-                            onClick={() => {
+                        {/* Quick Actions — Tinted Liquid Glass chips */}
+                        <Suspense fallback={null}>
+                          <QuickActionsRibbon
+                            onStartLesson={() => {
                               if (userProfile?.currentModule) {
                                 setSelectedModule(userProfile.currentModule)
                               }
                             }}
-                            className="flex flex-col items-center gap-1"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500/80 to-blue-600/80 border border-blue-300/30 shadow-lg">
-                              <Play className="w-5 h-5 text-white" weight="fill" />
-                            </div>
-                            <span className="text-[10px] text-gray-700 font-medium">Учиться</span>
-                          </motion.button>
-                          
-                          <motion.button 
-                            onClick={() => setActiveTab('checkin')}
-                            className="flex flex-col items-center gap-1"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-pink-500/80 to-pink-600/80 border border-pink-300/30 shadow-lg">
-                              <Heart className="w-5 h-5 text-white" weight="fill" />
-                            </div>
-                            <span className="text-[10px] text-gray-700 font-medium">Чек-ин</span>
-                          </motion.button>
-                          
-                          <motion.button 
-                            onClick={() => setActiveTab('cohort')}
-                            className="flex flex-col items-center gap-1"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-purple-500/80 to-purple-600/80 border border-purple-300/30 shadow-lg">
-                              <Users className="w-5 h-5 text-white" weight="fill" />
-                            </div>
-                            <span className="text-[10px] text-gray-700 font-medium">Группа</span>
-                          </motion.button>
-                          
-                          <motion.button 
-                            onClick={() => setActiveTab('badges')}
-                            className="flex flex-col items-center gap-1"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-500/80 to-yellow-600/80 border border-yellow-300/30 shadow-lg">
-                              <Trophy className="w-5 h-5 text-white" weight="fill" />
-                            </div>
-                            <span className="text-[10px] text-gray-700 font-medium">Награды</span>
-                          </motion.button>
-                        </div>
+                            onCheckIn={() => setActiveTab('checkin')}
+                            onOpenSleep={() => {
+                              try { toast.info('3‑минутная пауза'); } catch {}
+                            }}
+                          />
+                        </Suspense>
 
                         {/* Показываем только модуль "Личные границы" для учеников - Calm-inspired Liquid Glass */}
                         {isDevMode ? (
@@ -774,24 +766,24 @@ export function App() {
         ) : !showParentModule && (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
-            <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
-              <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+            <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-[22px] border bg-white/70 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] z-50 grid grid-cols-5 mx-3`}>
+              <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-[#007AFF] data-[state=active]:bg-white/40 rounded-[18px] ${isMobile ? 'tab-button' : ''}`}>
                 <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
               </TabsTrigger>
-              <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+              <TabsTrigger value="checkin" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-[#007AFF] data-[state=active]:bg-white/40 rounded-[18px] ${isMobile ? 'tab-button' : ''}`}>
                 <Heart weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Чек-ин</span>
               </TabsTrigger>
-              <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+              <TabsTrigger value="cohort" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-[#007AFF] data-[state=active]:bg-white/40 rounded-[18px] ${isMobile ? 'tab-button' : ''}`}>
                 <Users weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Группа</span>
               </TabsTrigger>
-              <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+              <TabsTrigger value="badges" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-[#007AFF] data-[state=active]:bg-white/40 rounded-[18px] ${isMobile ? 'tab-button' : ''}`}>
                 <Trophy weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Награды</span>
               </TabsTrigger>
-              <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
+              <TabsTrigger value="profile" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-[#007AFF] data-[state=active]:bg-white/40 rounded-[18px] ${isMobile ? 'tab-button' : ''}`}>
                 <Target weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Прогресс</span>
               </TabsTrigger>
@@ -813,7 +805,7 @@ export function App() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <div className="glass rounded-xl p-2 mb-1 bg-orange-50/50 border border-orange-100/50 relative overflow-hidden">
+                      <div className="glass-tint-amber rounded-xl p-2 mb-1 relative overflow-hidden min-h-[56px] flex flex-col items-center justify-center">
                         {/* Fire Animation */}
                         {(userProfile?.streak || 0) >= 7 && (
                           <motion.div
@@ -861,7 +853,7 @@ export function App() {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      <div className="glass rounded-xl p-2 mb-1 bg-purple-50/50 border border-purple-100/50">
+                      <div className="glass-tint-purple rounded-xl p-2 mb-1">
                         <Users className="w-4 h-4 text-purple-500 mx-auto mb-0.5" weight="fill" />
                         <div className="text-sm font-bold text-gray-900">A</div>
                         <div className="text-[9px] text-gray-600">группа</div>
@@ -869,60 +861,20 @@ export function App() {
                     </motion.div>
                   </div>
 
-                  {/* Quick Actions - Calm-inspired Liquid Glass */}
-                  <div className="grid grid-cols-4 gap-2 mb-4">
-                    <motion.button 
-                      onClick={() => {
-                      if (userProfile?.currentModule) {
-                        setSelectedModule(userProfile.currentModule)
-                      }
-                    }}
-                      className="flex flex-col items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500/80 to-blue-600/80 border border-blue-300/30 shadow-lg">
-                        <Play className="w-5 h-5 text-white" weight="fill" />
-                      </div>
-                      <span className="text-[10px] text-gray-700 font-medium">Учиться</span>
-                    </motion.button>
-                    
-                    <motion.button 
-                      onClick={() => setActiveTab('checkin')}
-                      className="flex flex-col items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-pink-500/80 to-pink-600/80 border border-pink-300/30 shadow-lg">
-                        <Heart className="w-5 h-5 text-white" weight="fill" />
-                      </div>
-                      <span className="text-[10px] text-gray-700 font-medium">Чек-ин</span>
-                    </motion.button>
-                    
-                    <motion.button 
-                      onClick={() => setActiveTab('cohort')}
-                      className="flex flex-col items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-purple-500/80 to-purple-600/80 border border-purple-300/30 shadow-lg">
-                        <Users className="w-5 h-5 text-white" weight="fill" />
-                      </div>
-                      <span className="text-[10px] text-gray-700 font-medium">Группа</span>
-                    </motion.button>
-                    
-                    <motion.button 
-                      onClick={() => setActiveTab('badges')}
-                      className="flex flex-col items-center gap-1"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <div className="glass rounded-xl w-12 h-12 flex items-center justify-center bg-gradient-to-br from-yellow-500/80 to-yellow-600/80 border border-yellow-300/30 shadow-lg">
-                        <Trophy className="w-5 h-5 text-white" weight="fill" />
-                      </div>
-                      <span className="text-[10px] text-gray-700 font-medium">Награды</span>
-                    </motion.button>
-                            </div>
+                  {/* Quick Actions — unified tinted chips */}
+                  <Suspense fallback={null}>
+                    <QuickActionsRibbon
+                      onStartLesson={() => {
+                        if (userProfile?.currentModule) {
+                          setSelectedModule(userProfile.currentModule)
+                        }
+                      }}
+                      onCheckIn={() => setActiveTab('checkin')}
+                      onOpenSleep={() => {
+                        try { toast.info('3‑минутная пауза'); } catch {}
+                      }}
+                    />
+                  </Suspense>
 
                   {/* Показываем только модуль "Личные границы" для учеников - Calm-inspired Liquid Glass */}
                   {isDevMode ? (
@@ -953,12 +905,16 @@ export function App() {
                         
                         <CardContent className="relative p-3">
                           <div className="flex items-center gap-2.5 mb-2.5">
-                            <div className="glass rounded-xl w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 border border-white/30 shadow-md">
-                              <Shield className="w-5 h-5 text-white" weight="fill" />
+                            <div className="glass-tint-blue w-10 h-10 rounded-full grid place-items-center border">
+                              <Shield className="w-5 h-5 text-[#007AFF]" weight="fill" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <h3 className="text-sm font-semibold text-gray-900 mb-0.5">Личные границы</h3>
-                              <p className="text-[10px] text-gray-600">9 уроков • 3 недели • 12+ лет</p>
+                              <h3 className="text-sm font-semibold text-gray-900 mb-1">Личные границы</h3>
+                              <div className="flex flex-wrap gap-1.5">
+                                <span className="px-2 h-5 inline-flex items-center rounded-full text-[10px] glass-tint-blue">9 уроков</span>
+                                <span className="px-2 h-5 inline-flex items-center rounded-full text-[10px] glass-tint-purple">3 недели</span>
+                                <span className="px-2 h-5 inline-flex items-center rounded-full text-[10px] glass-tint-indigo">12+ лет</span>
+                              </div>
                             </div>
                           </div>
                           
@@ -968,7 +924,8 @@ export function App() {
                           
                           <motion.button 
                             onClick={() => setSelectedModule(1)}
-                            className="w-full glass rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-2 text-sm transition-all border border-blue-400/30 shadow-md"
+                            className="w-full h-10 rounded-xl text-white text-sm shadow-lg"
+                            style={{ background:'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)' }}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                           >

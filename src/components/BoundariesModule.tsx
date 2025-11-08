@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import BoundariesHero from './BoundariesHero'
-import FirstScreenHero from './FirstScreenHero'
 import ShareProgressButton from './ShareProgressButton'
 import CelebrationAnimation from './CelebrationAnimation'
 import { toast } from 'sonner'
@@ -421,19 +420,7 @@ export default function BoundariesModule({ onBack }: Props) {
         </div>
       </motion.div>
 
-      {/* First-time emotional hook */}
-      {progress.completedLessons.length === 0 && (
-        <div className="container mx-auto px-4 py-3">
-          <FirstScreenHero
-            onStartLearning={handleStartLearning}
-            userProgress={{
-              lessonsCompleted: progress.completedLessons.length,
-              totalLessons: progress.totalLessons,
-              xpEarned: progress.xpEarned
-            }}
-          />
-        </div>
-      )}
+      {/* Убрали верхний дублирующий hero-блок по просьбе заказчика */}
 
       {/* Hero Section */}
       <BoundariesHero

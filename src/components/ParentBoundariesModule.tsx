@@ -6,6 +6,7 @@ import BoundariesHero from './BoundariesHero'
 import LessonTimeline from './LessonTimeline'
 import CheckInModal from './CheckInModal'
 import AdaptiveLessonViewer from './AdaptiveLessonViewer'
+import type { Lesson as TeenLesson } from '@/data/boundariesModule'
 import WeekTabs from './WeekTabs'
 import ContentCards from './ContentCards'
 import AdaptiveRecommendation from './AdaptiveRecommendation'
@@ -111,12 +112,17 @@ export default function ParentBoundariesModule({ onBack }: Props) {
     }))
     setShowCheckIn(false)
     
-    // Обновляем эмоциональное состояние на основе CheckIn
-    if (data.mood === 'anxious' || data.anxiety > 7) {
+    // Обновляем эмоциональное состояние на основе числовых шкал (1–5)
+    // Правила:
+    // - Высокая тревожность (>=4) или плохое настроение (<=2) → anxious
+    // - Высокая энергия (>=4) при низкой тревожности (<=3) → energetic
+    // - Хорошее настроение (>=4) при умеренной энергии (3–4) → focused
+    // - Иначе → calm
+    if (data.anxiety >= 4 || data.mood <= 2) {
       updateEmotionalState('anxious')
-    } else if (data.energy > 7) {
+    } else if (data.energy >= 4 && data.anxiety <= 3) {
       updateEmotionalState('energetic')
-    } else if (data.mood === 'focused') {
+    } else if (data.mood >= 4) {
       updateEmotionalState('focused')
     } else {
       updateEmotionalState('calm')
@@ -289,10 +295,10 @@ export default function ParentBoundariesModule({ onBack }: Props) {
 
         <AdaptiveLessonViewer
           recommendation={{
-            lesson,
+            lesson: (lesson as unknown as TeenLesson),
             reason: 'Ты выбрал этот урок',
             emotionalFit: 'good',
-            confidence: 0.8,
+            confidence: 80,
             adaptations: []
           }}
           onComplete={(xp) => handleLessonComplete(selectedLesson, xp)}
@@ -665,7 +671,7 @@ export default function ParentBoundariesModule({ onBack }: Props) {
           </p>
         </div>
         <LessonTimeline
-          lessons={boundariesParentModule.lessons}
+          lessons={boundariesParentModule.lessons as unknown as import('@/data/boundariesModule').Lesson[]}
           completedLessons={progress.completedLessons}
           currentLesson={progress.currentLesson}
           onLessonClick={handleLessonClick}
@@ -718,7 +724,11 @@ export default function ParentBoundariesModule({ onBack }: Props) {
           <div className="mb-8">
             <h3 className="text-xl font-semibold mb-4">💤 Сон и медитация</h3>
             <SleepMeditationHub
-              currentMood={emotionalState.mood}
+              currentMood={
+                emotionalState === 'anxious' ? 'anxious' :
+                emotionalState === 'energetic' ? 'energetic' :
+                'calm'
+              }
               onContentSelect={(content) => console.log('Sleep content selected:', content)}
             />
           </div>

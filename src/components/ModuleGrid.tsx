@@ -156,7 +156,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
           animate="animate"
         >
           {modules.map((module, index) => {
-            const status = getModuleStatus(module.id)
+            const status = getModuleStatus(Number(module.id))
             const isClickable = status === 'current' || status === 'completed'
             const isAdaptive = (module as any).isAdaptive
             
@@ -183,7 +183,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
                     ${isClickable ? 'cursor-pointer' : 'opacity-60 cursor-not-allowed'}
                     transition-all duration-200
                   `}
-                  onClick={() => isClickable && onModuleSelect(module.id)}
+                  onClick={() => isClickable && onModuleSelect(Number(module.id))}
                   style={{
                     boxShadow: isClickable 
                       ? '0 8px 32px 0 rgba(31, 38, 135, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.3)'
@@ -238,7 +238,7 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
                       
                       <div className="flex items-center justify-between">
                         <span className="text-[13px] leading-[18px] text-gray-600 dark:text-gray-400">
-                          Модуль {module.id}
+                          Модуль {Number(module.id)}
                         </span>
                         {getStatusBadge(status)}
                       </div>

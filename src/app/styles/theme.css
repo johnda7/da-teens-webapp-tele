@@ -95,7 +95,7 @@
     --brand-gradient: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
   }
 
-  #spark-app {
+  #da-app {
     --tomato-contrast: #fff;
     --red-contrast: #fff;
     --ruby-contrast: #fff;
@@ -262,7 +262,7 @@
     --font-family: var(--font-sans-serif);
   }
 
-  #spark-app.dark-theme {
+  #da-app.dark-theme {
     --color-bg: var(--color-neutral-1);
     --color-bg-inset: #000000;
     --color-bg-overlay: var(--color-neutral-3);
@@ -341,7 +341,7 @@
   }
 
   /* Dark theme adjustments */
-  #spark-app.dark-theme {
+  #da-app.dark-theme {
     --glass-bg-light: rgba(255, 255, 255, 0.1);
     --glass-bg-dark: rgba(0, 0, 0, 0.7);
     
@@ -370,6 +370,38 @@
     background: var(--glass-bg-light);
     box-shadow: var(--shadow-glass-md);
     border: 1px solid var(--glass-border-light);
+  }
+
+  /* Tinted glass chips (iOS 26 style) */
+  .glass-tint-blue {
+    background: linear-gradient(135deg, rgba(0,122,255,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(0,122,255,0.28);
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .glass-tint-purple {
+    background: linear-gradient(135deg, rgba(124,58,237,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(124,58,237,0.28);
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .glass-tint-cyan {
+    background: linear-gradient(135deg, rgba(6,182,212,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(6,182,212,0.28);
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .glass-tint-indigo {
+    background: linear-gradient(135deg, rgba(79,70,229,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(79,70,229,0.28);
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .glass-tint-green {
+    background: linear-gradient(135deg, rgba(34,197,94,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(34,197,94,0.28);
+    box-shadow: var(--shadow-glass-sm);
+  }
+  .glass-tint-amber {
+    background: linear-gradient(135deg, rgba(245,158,11,0.16), rgba(255,255,255,0.65));
+    border: 1px solid rgba(245,158,11,0.28);
+    box-shadow: var(--shadow-glass-sm);
   }
 
   .dark-theme .glass {

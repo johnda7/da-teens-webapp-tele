@@ -151,7 +151,7 @@ npm run dev
 → Возможно, ошибка JavaScript
 
 ### "Прогресс не сохраняется"
-→ GitHub Spark KV может не работать в dev
+→ KV (localStorage) в dev работает без внешних плагинов
 → Проверь localStorage в DevTools
 
 ### "Бейдж не получен"

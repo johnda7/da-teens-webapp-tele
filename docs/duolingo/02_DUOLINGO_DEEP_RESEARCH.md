@@ -1,4 +1,5 @@
 # ГЛУБОКИЙ АНАЛИЗ DUOLINGO: ИССЛЕДОВАНИЕ ИГРОВОЙ МЕХАНИКИ
+<!-- moved to docs/duolingo -->
 
 ## ЧТО Я ИЗУЧИЛ
 
@@ -425,4 +426,3 @@ function lessonToDuolingoFormat(lesson: Lesson): DuolingoLesson {
 
 *Документ создан: 2025-01-06*  
 *Статус: Исследование в процессе*
-

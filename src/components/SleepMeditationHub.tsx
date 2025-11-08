@@ -54,7 +54,7 @@ const sleepContent: SleepContent[] = [
     type: 'sleep_story',
     category: 'calm',
     image: 'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=400&q=80', // Stars
-    audioUrl: null
+    audioUrl: undefined
   },
   {
     id: 'meditation-1',
@@ -64,7 +64,7 @@ const sleepContent: SleepContent[] = [
     type: 'meditation',
     category: 'headspace',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', // Mountain landscape
-    audioUrl: null
+    audioUrl: undefined
   },
   {
     id: 'nature-1',
@@ -84,7 +84,7 @@ const sleepContent: SleepContent[] = [
     type: 'breathing',
     category: 'custom',
     image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80', // Sky with clouds
-    audioUrl: null
+    audioUrl: undefined
   },
   {
     id: 'sleep-story-2',
@@ -104,7 +104,7 @@ const sleepContent: SleepContent[] = [
     type: 'meditation',
     category: 'headspace',
     image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80', // Mountain landscape
-    audioUrl: null
+    audioUrl: undefined
   }
 ]
 
