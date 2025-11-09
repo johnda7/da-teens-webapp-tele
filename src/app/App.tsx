@@ -34,6 +34,9 @@ const QuickActionsRibbon = lazy(() => import('@/components/QuickActionsRibbon'))
 const RoleBasedLayout = lazy(() => import('@/components/RoleBasedLayout'))
 const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
 const ParentBoundariesModule = lazy(() => import('@/components/ParentBoundariesModule'))
+const loadGameModePage = () => import('@/pages/game/GameModePage')
+const preloadBoundariesModule = () => import('@/data/boundariesModule')
+const GameModePage = lazy(loadGameModePage)
 import CelebrationAnimation from '@/components/CelebrationAnimation'
 import { useTelegram } from '@/hooks/useTelegram'
 import boundariesModule from '@/data/boundariesModule'
@@ -77,6 +80,36 @@ interface CheckInData {
 
 export function App() {
   const { user, isTelegramWebApp, isMobile, isSmallMobile, viewportHeight } = useTelegram()
+
+  const isGameRoute = (() => {
+    if (typeof window === 'undefined') return false
+    const pathname = window.location.pathname.toLowerCase()
+    const base = (import.meta.env.BASE_URL || '/').toLowerCase()
+    const trimmedBase = base.endsWith('/') ? base.slice(0, -1) : base
+    let relativePath = pathname
+    if (trimmedBase && trimmedBase !== '/' && relativePath.startsWith(trimmedBase)) {
+      relativePath = relativePath.slice(trimmedBase.length)
+    }
+    if (relativePath.startsWith('/')) {
+      relativePath = relativePath.slice(1)
+    }
+    return relativePath === 'game' || relativePath.startsWith('game/')
+  })()
+
+  useEffect(() => {
+    if (!isGameRoute) {
+      void loadGameModePage()
+    void preloadBoundariesModule()
+    }
+  }, [isGameRoute])
+
+  if (isGameRoute) {
+    return (
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-500">Загрузка режима игры…</div>}>
+        <GameModePage />
+      </Suspense>
+    )
+  }
   
   // Pull-to-refresh functionality
   const [isRefreshing, setIsRefreshing] = useState(false)
@@ -89,6 +122,13 @@ export function App() {
     await new Promise(resolve => setTimeout(resolve, 1000))
     setIsRefreshing(false)
     toast.success('Обновлено!')
+  }, [])
+
+  const openGameMode = useCallback(() => {
+    if (typeof window === 'undefined') return
+    const base = import.meta.env.BASE_URL || '/'
+    const normalizedBase = base.endsWith('/') ? base : `${base}/`
+    window.location.href = `${normalizedBase}game`
   }, [])
   
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
@@ -655,6 +695,7 @@ export function App() {
                             onOpenSleep={() => {
                               try { toast.info('3‑минутная пауза'); } catch {}
                             }}
+                            onOpenDuolingo={openGameMode}
                           />
                         </Suspense>
 
@@ -873,6 +914,7 @@ export function App() {
                       onOpenSleep={() => {
                         try { toast.info('3‑минутная пауза'); } catch {}
                       }}
+                      onOpenDuolingo={openGameMode}
                     />
                   </Suspense>
 
