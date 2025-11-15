@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle, ArrowRight, ArrowLeft, MessageCircle, User, Sparkle } from '@phosphor-icons/react'
+import { CheckCircle, ArrowRight, ArrowLeft, ChatCircle, User, Sparkle } from '@phosphor-icons/react'
 
 interface NPC {
   name: string
@@ -100,7 +100,7 @@ export default function RoleplaySimulator({ scenarios, onComplete }: RoleplaySim
       {/* Context */}
       <Card className="p-2 bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
         <h3 className="font-semibold text-xs mb-1 flex items-center gap-2">
-          <MessageCircle size={14} className="text-blue-600" weight="duotone" />
+          <ChatCircle size={14} className="text-blue-600" weight="duotone" />
           {currentScenario.title}
         </h3>
         <p className="text-xs text-gray-700 leading-relaxed">{currentScenario.context}</p>

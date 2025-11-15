@@ -95,7 +95,7 @@
     --brand-gradient: linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%);
   }
 
-  #spark-app {
+  :root {
     --tomato-contrast: #fff;
     --red-contrast: #fff;
     --ruby-contrast: #fff;
@@ -262,7 +262,7 @@
     --font-family: var(--font-sans-serif);
   }
 
-  #spark-app.dark-theme {
+  :root.dark-theme {
     --color-bg: var(--color-neutral-1);
     --color-bg-inset: #000000;
     --color-bg-overlay: var(--color-neutral-3);
@@ -341,7 +341,7 @@
   }
 
   /* Dark theme adjustments */
-  #spark-app.dark-theme {
+  :root.dark-theme {
     --glass-bg-light: rgba(255, 255, 255, 0.1);
     --glass-bg-dark: rgba(0, 0, 0, 0.7);
     

@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Input } from '@/components/ui/input'
-import { CheckCircle, DeviceMobile, Clock, Users, AlertTriangle, Sparkle } from '@phosphor-icons/react'
+import { CheckCircle, DeviceMobile, Clock, Users, Warning, Sparkle } from '@phosphor-icons/react'
 
 interface DigitalAuditToolProps {
   onComplete?: (data: any) => void
@@ -314,7 +314,7 @@ export default function DigitalAuditTool({ onComplete }: DigitalAuditToolProps) 
 
             <div className="bg-white/70 p-3 rounded-lg">
               <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
-                <AlertTriangle size={16} className="text-indigo-600" />
+                <Warning size={16} className="text-indigo-600" />
                 Рекомендации:
               </h4>
               <ul className="space-y-1">

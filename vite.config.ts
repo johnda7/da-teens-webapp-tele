@@ -1,9 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, PluginOption } from "vite";
-
-import sparkPlugin from "@github/spark/spark-vite-plugin";
-import createIconImportProxy from "@github/spark/vitePhosphorIconProxyPlugin";
+import { defineConfig } from "vite";
 import { resolve } from 'path'
 
 const projectRoot = process.env.PROJECT_ROOT || import.meta.dirname
@@ -14,9 +11,6 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    // DO NOT REMOVE
-    createIconImportProxy() as PluginOption,
-    sparkPlugin() as PluginOption,
   ],
   resolve: {
     alias: {
@@ -54,8 +48,6 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5174,
-    // ⚠️ ВАЖНО: Spark plugin переопределяет порт на 5000 по умолчанию
-    // Если 5000 занят, Vite автоматически выберет свободный (5001, 5002, и т.д.)
     strictPort: false, // Автоматический выбор порта если указанный занят
     allowedHosts: true,
   },
