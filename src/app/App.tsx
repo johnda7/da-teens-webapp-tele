@@ -391,7 +391,7 @@ export function App() {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden telegram-webapp ${isMobile ? 'mobile-typography' : ''}`} 
+      className={`min-h-screen relative overflow-hidden telegram-webapp tg-app ${isMobile ? 'mobile-typography' : ''}`} 
       style={{ minHeight: `${viewportHeight}px` }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}

@@ -48,6 +48,16 @@ export const useTelegram = () => {
   const user = tg?.initDataUnsafe?.user;
   const isTelegramWebApp = !!tg;
 
+  // Haptic feedback functions for better UX
+  const haptic = {
+    light: () => tg?.HapticFeedback?.impactOccurred('light'),
+    medium: () => tg?.HapticFeedback?.impactOccurred('medium'),
+    heavy: () => tg?.HapticFeedback?.impactOccurred('heavy'),
+    success: () => tg?.HapticFeedback?.notificationOccurred('success'),
+    error: () => tg?.HapticFeedback?.notificationOccurred('error'),
+    warning: () => tg?.HapticFeedback?.notificationOccurred('warning'),
+  };
+
   return {
     tg,
     user,
@@ -59,5 +69,6 @@ export const useTelegram = () => {
     // Определяем мобильность по ширине вьюпорта (надёжнее для десктопа)
     isMobile: viewportWidth < 768,
     isSmallMobile: viewportWidth < 360 || viewportHeight < 600,
+    haptic,
   };
 };
