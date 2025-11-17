@@ -32,12 +32,12 @@ interface UseBackButtonOptions {
  * })
  */
 export function useBackButton({ onBack, show = true }: UseBackButtonOptions = {}) {
-  const { webApp } = useTelegram()
+  const { tg } = useTelegram()
 
   useEffect(() => {
-    if (!webApp?.BackButton) return
+    if (!tg?.BackButton) return
 
-    const backButton = webApp.BackButton
+    const backButton = tg.BackButton
 
     if (show && onBack) {
       // Показываем кнопку
@@ -55,14 +55,14 @@ export function useBackButton({ onBack, show = true }: UseBackButtonOptions = {}
       // Скрываем кнопку если show = false
       backButton.hide()
     }
-  }, [webApp, show, onBack])
+  }, [tg, show, onBack])
 
   return {
     /** Показать кнопку вручную */
-    show: () => webApp?.BackButton?.show(),
+    show: () => tg?.BackButton?.show(),
     /** Скрыть кнопку вручную */
-    hide: () => webApp?.BackButton?.hide(),
+    hide: () => tg?.BackButton?.hide(),
     /** Доступна ли кнопка */
-    isAvailable: !!webApp?.BackButton
+    isAvailable: !!tg?.BackButton
   }
 }

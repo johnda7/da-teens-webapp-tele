@@ -22,6 +22,10 @@ export default defineConfig({
     sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {
+      input: {
+        main: resolve(projectRoot, 'index.html'),
+        parent: resolve(projectRoot, 'parent.html')
+      },
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -33,6 +37,11 @@ export default defineConfig({
             './src/components/BoundariesModule.tsx',
             './src/components/BoundariesHero.tsx',
             './src/components/AdaptiveLessonViewer.tsx'
+          ],
+          parent: [
+            './src/components/ParentDashboard.tsx',
+            './src/components/ParentBoundariesModule.tsx',
+            './src/data/boundariesParentModule.ts'
           ],
           features: [
             './src/components/CheckInPanel.tsx',

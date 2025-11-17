@@ -33,13 +33,15 @@ const DailyRecommendationCard = lazy(() => import('@/components/DailyRecommendat
 const RoleBasedLayout = lazy(() => import('@/components/RoleBasedLayout'))
 const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
 const ParentBoundariesModule = lazy(() => import('@/components/ParentBoundariesModule'))
+import { FamilyLinking } from '@/components/FamilyLinking'
 import CelebrationAnimation from '@/components/CelebrationAnimation'
 import { useTelegram } from '@/hooks/useTelegram'
 import { useBackButton } from '@/hooks/useBackButton'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
+import { usePageTransition } from '@/hooks/usePageTransition'
+import { useAdaptiveLearning } from '@/hooks/useAdaptiveLearning'
 import { PullToRefresh } from '@/components/PullToRefresh'
 import boundariesModule from '@/data/boundariesModule'
-import { adaptiveLearning } from '@/lib/adaptiveLearning'
 import type { LessonRecommendation, CheckInData as AdaptiveCheckInData } from '@/lib/adaptiveLearning'
 
 // Import styles
@@ -161,6 +163,16 @@ export function App() {
 
   const [checkIns, setCheckIns] = useState<CheckInData[]>([])
 
+  // ✨ Adaptive Learning Hook - персонализированные рекомендации
+  const {
+    userProgress: adaptiveUserProgress,
+    currentRecommendation,
+    isLoadingRecommendation,
+    getNextLesson,
+    completeLesson: completeLessonAdaptive,
+    addCheckIn: addCheckInAdaptive
+  } = useAdaptiveLearning(1) // moduleId = 1 (Личные границы)
+
   // ✨ Telegram BackButton для навигации
   useBackButton({
     show: selectedModule !== null || showParentModule,
@@ -190,6 +202,13 @@ export function App() {
     }
   })
 
+  // ✨ Page transitions для табов
+  const { variants, transition } = usePageTransition({
+    direction: 'fade',
+    duration: 200,
+    haptic: true
+  })
+
   // Sync Telegram user name with profile
   useEffect(() => {
     if (user && userProfile && userProfile.name !== user.first_name) {
@@ -207,63 +226,34 @@ export function App() {
   //   }
   // }, [selectedModule])
 
-  // Adaptive Learning Functions - оптимизировано с useCallback
+  // Adaptive Learning Functions - теперь через useAdaptiveLearning hook
   const selectNextLesson = useCallback(async () => {
     setIsLoadingLesson(true)
     try {
-      // Create default check-in if none exists
-      const defaultCheckIn: AdaptiveCheckInData = lastCheckIn ? {
+      // Create check-in data for recommendation
+      const checkInData: AdaptiveCheckInData | undefined = lastCheckIn ? {
         mood: lastCheckIn.mood,
         anxiety: lastCheckIn.anxiety,
         sleepHours: lastCheckIn.sleepHours,
         energy: 7,
         note: lastCheckIn.note,
         timestamp: new Date(lastCheckIn.date)
-      } : {
-        mood: 7,
-        anxiety: 5,
-        sleepHours: 7,
-        energy: 7,
-        note: 'Начальное состояние',
-        timestamp: new Date()
-      }
+      } : undefined
       
-      const adaptiveCheckIns: AdaptiveCheckInData[] = checkIns.map(ci => ({
-        mood: ci.mood,
-        anxiety: ci.anxiety,
-        sleepHours: ci.sleepHours,
-        energy: 7,
-        note: ci.note,
-        timestamp: new Date(ci.date)
-      }))
+      const recommendation = await getNextLesson(checkInData)
       
-      const userProgressData = {
-        userId: user?.id?.toString() || 'guest',
-        completedLessons: [],
-        quizScores: {},
-        timeSpent: {},
-        practiceCompleted: {},
-        checkIns: adaptiveCheckIns.length > 0 ? adaptiveCheckIns : [defaultCheckIn],
-        lastActiveDate: new Date(),
-        streak: userProfile?.streak || 0
-      }
-      
-      const recommendation = await adaptiveLearning.selectNextLesson(
-        boundariesModule.lessons,
-        userProgressData,
-        defaultCheckIn
-      )
-      
-      setCurrentLesson(recommendation)
-      
-      if (!lastCheckIn) {
-        toast.info('Используем стандартные настройки', {
-          description: 'Пройди check-in для более точных рекомендаций'
-        })
-      } else {
-        toast.success(`Рекомендуем: ${recommendation.lesson.title}`, {
-          description: recommendation.reason
-        })
+      if (recommendation) {
+        setCurrentLesson(recommendation)
+        
+        if (!lastCheckIn) {
+          toast.info('Используем стандартные настройки', {
+            description: 'Пройди check-in для более точных рекомендаций'
+          })
+        } else {
+          toast.success(`Рекомендуем: ${recommendation.lesson.title}`, {
+            description: recommendation.reason
+          })
+        }
       }
     } catch (error) {
       console.error('Error selecting lesson:', error)
@@ -273,7 +263,7 @@ export function App() {
     } finally {
       setIsLoadingLesson(false)
     }
-  }, [lastCheckIn, checkIns, user?.id, userProfile?.streak, adaptiveLearning, boundariesModule.lessons])
+  }, [lastCheckIn, getNextLesson])
 
   const handleLessonComplete = useCallback(async (score: number) => {
     if (!currentLesson || !adaptiveProgress || !userBadges) return
@@ -613,7 +603,7 @@ export function App() {
                           >
                             <div className="glass rounded-xl p-2 mb-1 bg-blue-50/50 border border-blue-100/50">
                               <Lightning className="w-4 h-4 text-blue-500 mx-auto mb-0.5" weight="fill" />
-                              <div className="text-sm font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                              <div className="text-sm font-bold text-gray-900">{adaptiveUserProgress?.totalXP || 0}</div>
                               <div className="text-[9px] text-gray-600">XP</div>
                             </div>
                           </motion.div>
@@ -772,19 +762,25 @@ export function App() {
                   </TabsContent>
 
                   <TabsContent value="profile" className="mt-0">
-                    <ProgressStats 
-                      userProfile={userProfile || {
-                        name: defaultName,
-                        age: 16,
-                        currentModule: 1,
-                        currentWeek: 2,
-                        completedModules: 0,
-                        streak: 7,
-                        cohortId: 'teens-14-16-cohort-a'
-                      }} 
-                      checkIns={lastCheckIn ? [lastCheckIn] : []} 
-                      badgeCount={userBadges?.length || 0}
-                    />
+                    <div className="p-4 space-y-4">
+                      {/* Family Linking for Teens */}
+                      <FamilyLinking mode="teen" />
+                      
+                      {/* Progress Stats */}
+                      <ProgressStats 
+                        userProfile={userProfile || {
+                          name: defaultName,
+                          age: 16,
+                          currentModule: 1,
+                          currentWeek: 2,
+                          completedModules: 0,
+                          streak: 7,
+                          cohortId: 'teens-14-16-cohort-a'
+                        }} 
+                        checkIns={lastCheckIn ? [lastCheckIn] : []} 
+                        badgeCount={userBadges?.length || 0}
+                      />
+                    </div>
                   </TabsContent>
                 </Tabs>
               }
@@ -873,7 +869,7 @@ export function App() {
                     >
                       <div className="glass rounded-xl p-2 mb-1 bg-blue-50/50 border border-blue-100/50">
                         <Lightning className="w-4 h-4 text-blue-500 mx-auto mb-0.5" weight="fill" />
-                        <div className="text-sm font-bold text-gray-900">{adaptiveProgress?.totalXP || 0}</div>
+                        <div className="text-sm font-bold text-gray-900">{adaptiveUserProgress?.totalXP || 0}</div>
                         <div className="text-[9px] text-gray-600">XP</div>
                       </div>
                     </motion.div>
@@ -1033,19 +1029,25 @@ export function App() {
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0">
-              <ProgressStats 
-                userProfile={userProfile || {
-                  name: defaultName,
-                  age: 16,
-                  currentModule: 1,
-                  currentWeek: 2,
-                  completedModules: 0,
-                  streak: 7,
-                  cohortId: 'teens-14-16-cohort-a'
-                }} 
-                checkIns={lastCheckIn ? [lastCheckIn] : []} 
-                badgeCount={userBadges?.length || 0}
-              />
+              <div className="p-4 space-y-4">
+                {/* Family Linking for Teens */}
+                <FamilyLinking mode="teen" />
+                
+                {/* Progress Stats */}
+                <ProgressStats 
+                  userProfile={userProfile || {
+                    name: defaultName,
+                    age: 16,
+                    currentModule: 1,
+                    currentWeek: 2,
+                    completedModules: 0,
+                    streak: 7,
+                    cohortId: 'teens-14-16-cohort-a'
+                  }} 
+                  checkIns={lastCheckIn ? [lastCheckIn] : []} 
+                  badgeCount={userBadges?.length || 0}
+                />
+              </div>
             </TabsContent>
           </Tabs>
           </div>

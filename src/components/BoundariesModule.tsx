@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { useUserProgress } from '@/hooks/useUserProgress'
 import BoundariesHero from './BoundariesHero'
 import LessonTimeline from './LessonTimeline'
 import CheckInModal from './CheckInModal'
@@ -55,27 +56,55 @@ export default function BoundariesModule({ onBack }: Props) {
   
   // Эмоциональное состояние
   const { emotionalState, updateEmotionalState } = useEmotionalState()
+  
+  // ✨ User Progress from CloudStorage
+  const {
+    progress: userProgress,
+    isLoading: isLoadingProgress,
+    completeLesson,
+    isLessonCompleted,
+    getQuizScore,
+    addCheckIn
+  } = useUserProgress()
+  
   const [progress, setProgress] = useState<ProgressData>(() => {
-    // Load from localStorage or use defaults
-    const saved = localStorage.getItem('boundaries-progress')
-    if (saved) {
-      return JSON.parse(saved)
-    }
     return {
-      completedLessons: [],
+      completedLessons: userProgress.completedLessons,
       currentLesson: boundariesModule.lessons[0].id,
-      xpEarned: 0,
+      xpEarned: userProgress.totalXP,
       skillsUnlocked: 0,
-      streak: 0,
+      streak: userProgress.streak,
       totalLessons: boundariesModule.lessons.length,
-      checkIns: []
+      checkIns: userProgress.checkIns.map(ci => ({
+        mood: ci.mood,
+        anxiety: ci.anxiety,
+        energy: 7,
+        sleepHours: ci.sleepHours,
+        note: ci.note,
+        timestamp: new Date(ci.date)
+      }))
     }
   })
 
-  // Save progress to localStorage whenever it changes
+  // Sync progress with CloudStorage
   useEffect(() => {
-    localStorage.setItem('boundaries-progress', JSON.stringify(progress))
-  }, [progress])
+    if (!isLoadingProgress) {
+      setProgress(prev => ({
+        ...prev,
+        completedLessons: userProgress.completedLessons,
+        xpEarned: userProgress.totalXP,
+        streak: userProgress.streak,
+        checkIns: userProgress.checkIns.map(ci => ({
+          mood: ci.mood,
+          anxiety: ci.anxiety,
+          energy: 7,
+          sleepHours: ci.sleepHours,
+          note: ci.note,
+          timestamp: new Date(ci.date)
+        }))
+      }))
+    }
+  }, [userProgress, isLoadingProgress])
 
   // Auto-scroll to sleep section when opened
   useEffect(() => {
@@ -103,10 +132,20 @@ export default function BoundariesModule({ onBack }: Props) {
     setSelectedLesson(lessonId)
   }
 
-  const handleLessonComplete = (lessonId: string, xpEarned: number) => {
+  const handleLessonComplete = async (lessonId: string, xpEarned: number) => {
+    const lessonIndex = boundariesModule.lessons.findIndex(l => l.id === lessonId)
+    
+    // ✨ Save to CloudStorage via useUserProgress
+    await completeLesson(
+      1, // moduleId = 1 (Личные границы)
+      lessonIndex,
+      xpEarned, // quiz score
+      10 // estimated time in minutes
+    )
+    
+    // Update local UI state
     setProgress(prev => {
       const newCompleted = [...prev.completedLessons, lessonId]
-      const lessonIndex = boundariesModule.lessons.findIndex(l => l.id === lessonId)
       const nextLesson = boundariesModule.lessons[lessonIndex + 1]
       
       // Count skills from completed lessons (estimate 3 skills per lesson)
@@ -126,7 +165,16 @@ export default function BoundariesModule({ onBack }: Props) {
     setSelectedLesson(null)
   }
 
-  const handleCheckInSubmit = (data: CheckInData) => {
+  const handleCheckInSubmit = async (data: CheckInData) => {
+    // ✨ Save to CloudStorage
+    await addCheckIn({
+      date: new Date().toISOString(),
+      mood: data.mood,
+      anxiety: data.anxiety,
+      sleepHours: 8, // default
+      note: data.notes
+    })
+    
     setProgress(prev => ({
       ...prev,
       checkIns: [...prev.checkIns, data]
@@ -134,11 +182,11 @@ export default function BoundariesModule({ onBack }: Props) {
     setShowCheckIn(false)
     
     // Обновляем эмоциональное состояние на основе CheckIn
-    if (data.mood === 'anxious' || data.anxiety > 7) {
+    if (data.anxiety > 3) {
       updateEmotionalState('anxious')
-    } else if (data.energy > 7) {
+    } else if (data.energy > 3) {
       updateEmotionalState('energetic')
-    } else if (data.mood === 'focused') {
+    } else if (data.mood > 3) {
       updateEmotionalState('focused')
     } else {
       updateEmotionalState('calm')
