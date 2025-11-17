@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { Trophy, Star, CheckCircle, Flame, Target } from '@phosphor-icons/react'
+import { useShare } from '@/hooks/useShare'
+import { Trophy, Star, CheckCircle, Flame, Target, ShareFat } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 
 interface BadgeGridProps {
@@ -347,6 +349,19 @@ export default function BadgeGrid({ userBadges }: BadgeGridProps) {
   
   const progress = Math.round((earnedBadges.length / availableBadges.length) * 100)
 
+  // Share functionality
+  const { share, isSharing } = useShare({
+    onSuccess: () => console.log('Достижения поделены!')
+  })
+
+  const handleShare = () => {
+    share({
+      title: 'Мои достижения в DA Teens',
+      text: `Я получил ${earnedBadges.length} из ${availableBadges.length} наград! 🏆`,
+      url: window.location.href
+    })
+  }
+
   return (
     <div className="space-y-6">
       {/* Progress Overview */}
@@ -368,6 +383,18 @@ export default function BadgeGrid({ userBadges }: BadgeGridProps) {
           <Progress value={progress} className="h-3" />
           
           {earnedBadges.length > 0 && (
+            <Button
+              onClick={handleShare}
+              disabled={isSharing}
+              className="w-full mt-2"
+              variant="outline"
+            >
+              <ShareFat className="w-4 h-4 mr-2" weight="fill" />
+              {isSharing ? 'Отправка...' : 'Поделиться достижениями'}
+            </Button>
+          )}
+          
+          {earnedBadges.length > 5 && (
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-yellow-500" weight="fill" />
               <span className="text-sm text-muted-foreground">

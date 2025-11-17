@@ -35,6 +35,9 @@ const ParentDashboard = lazy(() => import('@/components/ParentDashboard'))
 const ParentBoundariesModule = lazy(() => import('@/components/ParentBoundariesModule'))
 import CelebrationAnimation from '@/components/CelebrationAnimation'
 import { useTelegram } from '@/hooks/useTelegram'
+import { useBackButton } from '@/hooks/useBackButton'
+import { useSwipeGesture } from '@/hooks/useSwipeGesture'
+import { PullToRefresh } from '@/components/PullToRefresh'
 import boundariesModule from '@/data/boundariesModule'
 import { adaptiveLearning } from '@/lib/adaptiveLearning'
 import type { LessonRecommendation, CheckInData as AdaptiveCheckInData } from '@/lib/adaptiveLearning'
@@ -157,6 +160,35 @@ export function App() {
   })
 
   const [checkIns, setCheckIns] = useState<CheckInData[]>([])
+
+  // ✨ Telegram BackButton для навигации
+  useBackButton({
+    show: selectedModule !== null || showParentModule,
+    onBack: () => {
+      if (selectedModule !== null) {
+        setSelectedModule(null)
+      } else if (showParentModule) {
+        setShowParentModule(false)
+      }
+    }
+  })
+
+  // ✨ Swipe navigation для табов
+  const tabs = ['dashboard', 'checkin', 'cohort', 'badges', 'profile']
+  const currentTabIndex = tabs.indexOf(activeTab)
+  
+  const swipeRef = useSwipeGesture({
+    onSwipeLeft: () => {
+      if (currentTabIndex < tabs.length - 1) {
+        setActiveTab(tabs[currentTabIndex + 1])
+      }
+    },
+    onSwipeRight: () => {
+      if (currentTabIndex > 0) {
+        setActiveTab(tabs[currentTabIndex - 1])
+      }
+    }
+  })
 
   // Sync Telegram user name with profile
   useEffect(() => {
@@ -772,9 +804,10 @@ export function App() {
             />
           </Suspense>
         ) : !showParentModule && (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
-            <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
+          <div ref={swipeRef as any}>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              {/* Tab Navigation - Telegram Wallet Style (адаптивный) */}
+              <TabsList className={`${isMobile ? 'fixed bottom-0 left-0 right-0 h-14 mobile-nav mobile-tabs' : 'relative h-12 mt-4'} rounded-lg border-t bg-white z-50 grid grid-cols-5`}>
               <TabsTrigger value="dashboard" className={`touch-target flex-col gap-0.5 h-full data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 ${isMobile ? 'tab-button' : ''}`}>
                 <BookOpen weight="fill" className={`mobile-icon ${isSmallMobile ? 'w-4 h-4' : 'w-4 h-4'}`} />
                 <span className={`${isSmallMobile ? 'text-[9px]' : 'text-[10px]'}`}>Модули</span>
@@ -799,12 +832,13 @@ export function App() {
 
             {/* Tab Contents */}
             <TabsContent value="dashboard" className="mt-0 p-4">
-              {selectedModule ? (
-                <UniversalModuleViewer 
-                  moduleId={selectedModule} 
-                  onBack={() => setSelectedModule(null)} 
-                />
-              ) : (
+              <PullToRefresh onRefresh={handleRefresh}>
+                {selectedModule ? (
+                  <UniversalModuleViewer 
+                    moduleId={selectedModule} 
+                    onBack={() => setSelectedModule(null)} 
+                  />
+                ) : (
                 <>
                   {/* Compact Stats Grid - Telegram Wallet Style */}
                       <div className="grid grid-cols-4 gap-1.5 mb-3">
@@ -980,6 +1014,7 @@ export function App() {
                   )}
                 </>
               )}
+              </PullToRefresh>
             </TabsContent>
 
             <TabsContent value="checkin" className="mt-0">
@@ -1013,6 +1048,7 @@ export function App() {
               />
             </TabsContent>
           </Tabs>
+          </div>
         )}
       </main>
     </div>

@@ -2,9 +2,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import { CheckCircle, Circle, Lock, Play, Sparkle } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { getAllModules } from '@/data/modulesRegistry'
+import { useState, useEffect } from 'react'
 
 interface ModuleGridProps {
   currentModule: number
@@ -30,6 +32,14 @@ const modules = allModules.map(mod => ({
 }))
 
 export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGridProps) {
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 800)
+    return () => clearTimeout(timer)
+  }, [])
+
   const getModuleStatus = (moduleId: number) => {
     // Модуль #1 (адаптивный "Личные границы") всегда доступен для тестирования
     if (moduleId === 1) return 'current'
@@ -62,6 +72,38 @@ export default function ModuleGrid({ currentModule, onModuleSelect }: ModuleGrid
   }
 
   const currentModuleData = modules.find(m => m.id === currentModule)
+
+  // Show skeletons while loading
+  if (isLoading) {
+    return (
+      <div className="space-y-8 px-4 md:px-6">
+        {/* Hero Skeleton */}
+        <div className="space-y-4">
+          <Skeleton className="h-48 w-full rounded-2xl" />
+        </div>
+
+        {/* Grid Skeletons */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="overflow-hidden">
+              <CardHeader className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <Skeleton className="h-5 w-20 rounded-full" />
+                </div>
+                <Skeleton className="h-6 w-3/4" />
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-10 w-full rounded-lg" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-8 px-4 md:px-6">

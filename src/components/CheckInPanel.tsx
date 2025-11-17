@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Heart, Moon, Brain, CheckCircle, Sparkle, ArrowLeft } from '@phosphor-icons/react'
+import { useVoiceInput } from '@/hooks/useVoiceInput'
+import { Heart, Moon, Brain, CheckCircle, Sparkle, ArrowLeft, Microphone, Stop } from '@phosphor-icons/react'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
 
@@ -30,6 +31,30 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
   const [sleepHours, setSleepHours] = useState<number[]>([7])
   const [note, setNote] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Voice input для заметок
+  const {
+    isListening,
+    transcript,
+    isSupported: isVoiceSupported,
+    startListening,
+    stopListening,
+    resetTranscript
+  } = useVoiceInput({
+    lang: 'ru-RU',
+    onResult: (text) => {
+      setNote(prev => prev ? `${prev} ${text}` : text)
+    }
+  })
+
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      stopListening()
+    } else {
+      resetTranscript()
+      startListening()
+    }
+  }
 
   const today = new Date().toISOString().split('T')[0]
   const hasCheckedInToday = lastCheckIn?.date === today
@@ -425,18 +450,43 @@ export default function CheckInPanel({ onCheckIn, lastCheckIn }: CheckInPanelPro
               </p>
             </div>
             
-            <Textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Например: 'Хорошо прошла контрольная' или 'Поссорился с другом'..."
-              className="min-h-[120px] resize-none text-[17px] leading-[22px] rounded-xl border-gray-300 dark:border-gray-700"
-              style={{
-                backdropFilter: 'blur(10px)',
-              }}
-              maxLength={200}
-            />
+            <div className="relative">
+              <Textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Например: 'Хорошо прошла контрольная' или 'Поссорился с другом'..."
+                className="min-h-[120px] resize-none text-[17px] leading-[22px] rounded-xl border-gray-300 dark:border-gray-700 pr-12"
+                style={{
+                  backdropFilter: 'blur(10px)',
+                }}
+                maxLength={200}
+              />
+              
+              {/* Voice Input Button */}
+              {isVoiceSupported && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant={isListening ? "destructive" : "ghost"}
+                  onClick={toggleVoiceInput}
+                  className="absolute bottom-2 right-2"
+                >
+                  {isListening ? (
+                    <>
+                      <Stop className="w-4 h-4" weight="fill" />
+                    </>
+                  ) : (
+                    <Microphone className="w-4 h-4" weight="fill" />
+                  )}
+                </Button>
+              )}
+            </div>
+            
             <div className="text-[13px] leading-[18px] text-gray-600 dark:text-gray-400 mt-3 text-right">
               {note.length}/200 символов
+              {isListening && transcript && (
+                <span className="ml-2 text-blue-600 italic">• Распознаю...</span>
+              )}
             </div>
           </div>
         </motion.div>
